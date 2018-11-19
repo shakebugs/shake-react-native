@@ -1,0 +1,32 @@
+{
+  "author": {
+    "name": "Decode"
+  },
+  "bugs": {},
+  "dependencies": {},
+  "description": "Official Shake SDK for react-native",
+  "devDependencies": {},
+  "homepage": "",
+  "keywords": [
+    "react-native",
+    "shake",
+    "bugreporting",
+    "ios",
+    "android"
+  ],
+  "license": "",
+  "main": "index.js",
+  "name": "shake",
+  "peerDependencies": {
+    "react-native": ">=0.55.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "rnpm": {},
+  "scripts": {},
+  "typescript": {},
+  "typings": "",
+  "version": "0.1.0"
+}
