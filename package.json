@@ -1,32 +1,33 @@
 {
-  "author": {
-    "name": "Decode"
-  },
-  "bugs": {},
-  "dependencies": {},
-  "description": "Official Shake SDK for react-native",
-  "devDependencies": {},
-  "homepage": "",
-  "keywords": [
-    "react-native",
-    "shake",
-    "bugreporting",
-    "ios",
-    "android"
-  ],
-  "license": "",
+  "name": "react-native-shake",
+  "title": "React Native Shake",
+  "version": "1.0.0",
+  "description": "TODO",
   "main": "index.js",
-  "name": "shake",
-  "peerDependencies": {
-    "react-native": ">=0.55.0"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/github_account/react-native-shake.git",
+    "baseUrl": "https://github.com/github_account/react-native-shake"
   },
-  "rnpm": {},
-  "scripts": {},
-  "typescript": {},
-  "typings": "",
-  "version": "0.1.0"
+  "keywords": [
+    "react-native"
+  ],
+  "author": {
+    "name": "Your Name",
+    "email": "yourname@email.com"
+  },
+  "license": "MIT",
+  "licenseFilename": "LICENSE",
+  "readmeFilename": "README.md",
+  "peerDependencies": {
+    "react": "^16.8.1",
+    "react-native": ">=0.60.0-rc.0 <1.0.x"
+  },
+  "devDependencies": {
+    "react": "^16.9.0",
+    "react-native": "^0.61.5"
+  }
 }

@@ -1,18 +1,17 @@
-<p align="center">
-<br/>
-    <h1>Shake SDK for React Native</h1>
-</p>
+# react-native-shake
 
-**This is a beta release**
+## Getting started
 
-*Requirements:*
+`$ npm install react-native-shake --save`
 
-* `react-native >= 0.55` for iOS
-* `react-native >= 0.55` for Android
+### Mostly automatic installation
 
-With this SDK, Shake description...
+`$ react-native link react-native-shake`
 
-## Documentation
+## Usage
+```javascript
+import Shake from 'react-native-shake';
 
-Documentition url
-
+// TODO: What to do with the module?
+Shake;
+```
