@@ -18,6 +18,7 @@ export default class App extends Component<{}> {
     message: '--'
   };
   componentDidMount() {
+	// ios - Shake.start();
     Shake.sampleMethod('Testing', 123, (message) => {
       this.setState({
         status: 'native callback received',
