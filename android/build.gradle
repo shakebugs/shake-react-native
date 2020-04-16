@@ -68,13 +68,13 @@ repositories {
     }
     google()
     jcenter()
-    maven { url 'MAVEN_REPOSITORY' }
+    maven { url 'https://dl.bintray.com/shake/shake' }
 }
 
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation 'ANDROID_DEPENDENCY'
+    implementation 'ANDROID_DEPENDENCY:9.0.0'
 }
 
 def configureReactNativePom(def pom) {
