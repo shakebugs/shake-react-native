@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import Shake from 'react-native-shake';
+import Shake, {ShakeInvocationEvent} from 'react-native-shake';
 
 export default class App extends Component<{}> {
   state = {
@@ -18,13 +18,14 @@ export default class App extends Component<{}> {
     message: '--'
   };
   componentDidMount() {
-	// ios - Shake.start();
-    Shake.sampleMethod('Testing', 123, (message) => {
-      this.setState({
-        status: 'native callback received',
-        message
-      });
-    });
+	Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON, ShakeInvocationEvent.SHAKE]);
+	Shake.attachFiles(['file.txt', 'alo.txt']);
+   //Shake.sampleMethod('Testing', 123, (message) => {
+   //   this.setState({
+   //     status: 'native callback received',
+   //     message
+   //   });
+  //  });
   }
   render() {
     return (
