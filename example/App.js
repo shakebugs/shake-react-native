@@ -9,7 +9,7 @@
  */
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import Shake, {ShakeInvocationEvent} from 'react-native-shake';
 
 export default class App extends Component<{}> {
@@ -18,6 +18,14 @@ export default class App extends Component<{}> {
     message: '--'
   };
   componentDidMount() {
+	Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON, ShakeInvocationEvent.SHAKE]);
+	Shake.attachFiles(['file.txt', 'alo.txt']);
+   //Shake.sampleMethod('Testing', 123, (message) => {
+   //   this.setState({
+   //     status: 'native callback received',
+   //     message
+   //   });
+  //  });
   }
   render() {
     return (
@@ -26,27 +34,6 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions}>STATUS: {this.state.status}</Text>
         <Text style={styles.welcome}>☆NATIVE CALLBACK MESSAGE☆</Text>
         <Text style={styles.instructions}>{this.state.message}</Text>
-        <Button title={"Start"} onPress={()=>{
-          Shake.start();
-
-        }}/>
-        <Button title={"Stop"} onPress={()=>{
-          Shake.stop();
-        }}/>
-        <Button title={"Manual"} onPress={()=>{
-          Shake.manualTrigger();
-        }}/>
-        <Button title={"Invocation"} onPress={() =>{
-          Shake.setInvocationEvents([
-          ShakeInvocationEvent.SHAKE
-          ]);
-        }}/>
-        <Button title={"Attachfiles"} onPress={()=>{
-          Shake.attachFiles(["data/", "data/"])
-        }}/>
-        <Button title={"Facts"} onPress={()=>{
-          Shake.setQuickFacts("Abcd")
-        }}/>
       </View>
     );
   }
