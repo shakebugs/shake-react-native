@@ -14,47 +14,65 @@ import Shake, {ShakeInvocationEvent} from 'react-native-shake';
 import RNFS from 'react-native-fs';
 
 export default class App extends Component<{}> {
-    componentDidMount() {
-        this.createFile();
-    }
-
-    createFile = () => {
-        let path = RNFS.DocumentDirectoryPath + '/file.txt';
-        RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
-            .then((success) => {
-                console.log('File written');
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
-    };
-
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>☆Shake example☆</Text>
                 <View style={styles.buttons}>
-                    <Button title="start" onPress={() => Shake.start()}/>
-                    <Button title="stop" onPress={() => Shake.stop()}/>
-                    <Button title="attach files"
-                            onPress={() => Shake.attachFiles([RNFS.DocumentDirectoryPath + '/file.txt'])}/>
-                    <Button title="quick facts" onPress={() => Shake.setQuickFacts('Sample quick facts')}/>
-                    <Button title="enable blackbox" onPress={() => Shake.setBlackBoxEnabled(true)}/>
-                    <Button title="disable blackbox" onPress={() => Shake.setBlackBoxEnabled(false)}/>
-                    <Button title="manual trigger" onPress={() => Shake.manualTrigger()}/>
-                    <Button
-                        title="setEvents"
-                        onPress={() => {
-                            Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON,
-                                ShakeInvocationEvent.SHAKE,
-                                ShakeInvocationEvent.SCREENSHOT])
-                        }
-                        }
-                    />
+                    <Button title="start" onPress={() => this.start()}/>
+                    <Button title="stop" onPress={() => this.stop()}/>
+                    <Button title="attach files" onPress={() => this.attachFiles()}/>
+                    <Button title="quick facts" onPress={() => this.setQuickFacts()}/>
+                    <Button title="enable blackbox" onPress={() => this.setBlackBoxEnabled()}/>
+                    <Button title="disable blackbox" onPress={() => this.setBlackBoxDisabled()}/>
+                    <Button title="manual trigger" onPress={() => this.manualTrigger()}/>
+                    <Button title="setEvents" onPress={() => this.setInvocationEvents()}/>
                 </View>
             </View>
         );
     }
+
+    start = () => {
+        Shake.start();
+    };
+
+    stop = () => {
+        Shake.stop();
+    };
+
+    setInvocationEvents = () => {
+        Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON,
+            ShakeInvocationEvent.SHAKE,
+            ShakeInvocationEvent.SCREENSHOT])
+    };
+
+    manualTrigger = () => {
+        Shake.manualTrigger();
+    };
+
+    setBlackBoxDisabled = () => {
+        Shake.setBlackBoxEnabled(false);
+    };
+
+    setBlackBoxEnabled = () => {
+        Shake.setBlackBoxEnabled(true);
+    };
+
+    setQuickFacts = () => {
+        Shake.setQuickFacts('Sample quick facts');
+    };
+
+    attachFiles = () => {
+        let path = RNFS.DocumentDirectoryPath + '/file.txt';
+        RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
+            .then((success) => {
+                console.log('File written');
+                Shake.attachFiles([path]);
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
+    };
 }
 
 const styles = StyleSheet.create({
