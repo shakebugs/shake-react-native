@@ -18,6 +18,10 @@
 }
 RCT_EXPORT_MODULE()
 
+RCT_EXPORT_METHOD(manualTrigger)
+{
+	NSLog(@"This functionality is not supported in iOS SDK");
+}
 
 RCT_EXPORT_METHOD(start)
 {
