@@ -1,11 +1,11 @@
 {
   "name": "react-native-shake",
   "title": "React Native Shake",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "TODO",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No test specified\""
   },
   "repository": {
     "type": "git",

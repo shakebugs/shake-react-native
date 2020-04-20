@@ -74,7 +74,7 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation 'com.shakebugs.android:shake-uat:9.0.0'
+    implementation "$System.env.ANDROID_DEPENDENCY:9.0.0"
 }
 
 def configureReactNativePom(def pom) {
