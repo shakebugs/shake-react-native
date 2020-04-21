@@ -8,52 +8,88 @@
  * https://github.com/facebook/react-native
  */
 
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import Shake, {ShakeInvocationEvent} from 'react-native-shake';
+import RNFS from 'react-native-fs';
 
 export default class App extends Component<{}> {
-  state = {
-    status: 'starting',
-    message: '--'
-  };
-  componentDidMount() {
-	Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON, ShakeInvocationEvent.SHAKE]);
-	Shake.attachFiles(['file.txt', 'alo.txt']);
-   //Shake.sampleMethod('Testing', 123, (message) => {
-   //   this.setState({
-   //     status: 'native callback received',
-   //     message
-   //   });
-  //  });
-  }
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>☆Shake example☆</Text>
-        <Text style={styles.instructions}>STATUS: {this.state.status}</Text>
-        <Text style={styles.welcome}>☆NATIVE CALLBACK MESSAGE☆</Text>
-        <Text style={styles.instructions}>{this.state.message}</Text>
-      </View>
-    );
-  }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.welcome}>☆Shake example☆</Text>
+                <View style={styles.buttons}>
+                    <Button title="start" onPress={() => this.start()}/>
+                    <Button title="stop" onPress={() => this.stop()}/>
+                    <Button title="attach files" onPress={() => this.attachFiles()}/>
+                    <Button title="quick facts" onPress={() => this.setQuickFacts()}/>
+                    <Button title="enable blackbox" onPress={() => this.setBlackBoxEnabled()}/>
+                    <Button title="disable blackbox" onPress={() => this.setBlackBoxDisabled()}/>
+                    <Button title="manual trigger" onPress={() => this.manualTrigger()}/>
+                    <Button title="setEvents" onPress={() => this.setInvocationEvents()}/>
+                </View>
+            </View>
+        );
+    }
+
+    start = () => {
+        Shake.start();
+    };
+
+    stop = () => {
+        Shake.stop();
+    };
+
+    setInvocationEvents = () => {
+        Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON,
+            ShakeInvocationEvent.SHAKE,
+            ShakeInvocationEvent.SCREENSHOT])
+    };
+
+    manualTrigger = () => {
+        Shake.manualTrigger();
+    };
+
+    setBlackBoxDisabled = () => {
+        Shake.setBlackBoxEnabled(false);
+    };
+
+    setBlackBoxEnabled = () => {
+        Shake.setBlackBoxEnabled(true);
+    };
+
+    setQuickFacts = () => {
+        Shake.setQuickFacts('Sample quick facts');
+    };
+
+    attachFiles = () => {
+        let path = RNFS.DocumentDirectoryPath + '/file.txt';
+        RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
+            .then((success) => {
+                console.log('File written');
+                Shake.attachFiles([path]);
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
+    };
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    buttons: {
+        width: '50%',
+        height: '50%',
+        justifyContent: 'space-between',
+    },
+    welcome: {
+        fontSize: 32,
+        textAlign: 'center',
+        margin: 20,
+    },
 });

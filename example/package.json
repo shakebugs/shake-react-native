@@ -22,6 +22,7 @@
   "dependencies": {
     "react": "16.11.0",
     "react-native": "0.62.2",
+    "react-native-fs": ">=2.16.6",
     "react-native-shake": "file:../"
   },
   "devDependencies": {
