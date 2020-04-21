@@ -16,13 +16,13 @@ Pod::Spec.new do |s|
   # s.license    = { :type => "MIT", :file => "LICENSE" }
   s.authors      = { "Your Name" => "yourname@email.com" }
   s.platforms    = { :ios => "9.0" }
-  s.source       = { :git => "#{ENV['IOS_DEPENDENCY']}", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/github_account/react-native-shake.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,swift}"
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "Shake"
+  s.dependency "#{ENV['IOS_DEPENDENCY']}", "~> 9.0.0"
   # ...
   # s.dependency "..."
 end
