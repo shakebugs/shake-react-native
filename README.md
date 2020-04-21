@@ -135,9 +135,3 @@ Attaching files
 ```javascript
 Shake.attachFiles([filePath]);
 ```
-
-
-
-
-
-
