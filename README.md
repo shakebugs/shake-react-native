@@ -95,6 +95,15 @@ public void onCreate() {
  Shake.start(this);
 }
 ```
+Adjust client id and client secret for your account in AndroidManifest.xml
+```xml
+<meta-data
+       android:name="com.shakebugs.APIClientID"
+       android:value="jULjX6ntQODCC6ao0uea0bLvAG9FTb8oByeJWYQx" />
+<meta-data
+       android:name="com.shakebugs.APIClientSecret"
+       android:value="eIFuGOnX8CjeEvm0bkoZGe5BYv46cWlUQ95mceW2PEfYphWXW3oyNAJ" />
+```
 ### iOS
 No additional configuration needed
 
