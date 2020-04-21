@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "#{ENV['IOS_DEPENDENCY']}", "~> 9.0.0"
+  s.dependency "#{ENV['IOS_DEPENDENCY']}", "9.0.0"
   # ...
   # s.dependency "..."
 end
