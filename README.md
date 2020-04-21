@@ -105,7 +105,21 @@ Adjust client id and client secret for your account in AndroidManifest.xml
        android:value="eIFuGOnX8CjeEvm0bkoZGe5BYv46cWlUQ95mceW2PEfYphWXW3oyNAJ" />
 ```
 ### iOS
-No additional configuration needed
+Add client id and client secret for your account in Info.plist
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<plist version="1.0">
+  <dict>
+      <key>Shake</key>
+        <dict>
+          <key>APIClientID</key>
+          <string>your-api-client-id</string>
+          <key>APIClientSecret</key>
+          <string>your-api-client-secret</string>
+        </dict>
+  </dict>
+</plist>
+```
 
 ## Usage
 Import
