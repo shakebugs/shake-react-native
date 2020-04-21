@@ -1,23 +1,30 @@
 {
   "name": "react-native-shake",
-  "title": "React Native Shake",
+  "title": "React Native Shake SDK",
   "version": "2.1.0",
-  "description": "TODO",
+  "description": "Shake SDK wrapper",
   "main": "index.js",
   "scripts": {
     "test": "echo \"No test specified\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_account/react-native-shake.git",
-    "baseUrl": "https://github.com/github_account/react-native-shake"
+    "url": "git+https://bitbucket.org/decodehq/shake-react-native.git",
+    "baseUrl": "https://bitbucket.org/decodehq/shake-react-native"
   },
   "keywords": [
+    "shakebugs",
+    "shake",
+    "sdk",
+    "bug",
+    "report",
+    "android",
+    "ios",
     "react-native"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "yourname@email.com"
+    "name": "Shake",
+    "email": "support@shakebugs.com"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",
