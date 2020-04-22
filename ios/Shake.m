@@ -44,10 +44,6 @@ RCT_EXPORT_METHOD(setInvocationEvents:(nonnull NSArray *)eventsArray)
 	[SHKShake startWithInvocationEvents:event];
 }
 
-RCT_EXPORT_METHOD(manualStart)
-{
-    [SHKShake manualStart];
-}
 RCT_EXPORT_METHOD(setQuickFacts:(nonnull NSString *)quickFacts)
 {
 	[[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData * 
