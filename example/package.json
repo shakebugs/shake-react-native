@@ -15,7 +15,7 @@
     "mac:ios:uat": "IOS_DEPENDENCY=Shake-UAT && npm run clean && react-native run-ios",
     "mac:ios:stg": "IOS_DEPENDENCY=Shake-Staging && npm run clean && react-native run-ios",
     "mac:ios:prd": "IOS_DEPENDENCY=Shake && npm run clean && react-native run-ios",
-    "clean": "rm -rf ios/Pods ios/Podfile.lock; cd ios && pod install && cd ..",
+    "mac:ios:clean": "rm -rf ios/Pods ios/Podfile.lock; cd ios && pod install && cd ..",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
