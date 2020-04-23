@@ -1,5 +1,18 @@
 # Shake SDK
 
+## Requirements
+Android API version should be at least 17.
+
+Update minSdkVersion in project level build.gradle 
+```javascript
+ext {
+    buildToolsVersion = "28.0.3"
+    minSdkVersion = 17
+    compileSdkVersion = 28
+    targetSdkVersion = 28
+}
+```
+
 ## Getting started
 
 `$ npm install @shakebugs/react-native-shake --save`
@@ -72,7 +85,6 @@ allprojects {
    }
 }
 ```
-
 Add dependency to your app level build.gradle file
 ```javascript
 dependencies {
