@@ -88,7 +88,7 @@ allprojects {
 Add dependency to your app level build.gradle file
 ```javascript
 dependencies {
-    implementation 'com.shakebugs.android:shake:<version>'
+    implementation 'com.shakebugs.android:shake:9.0.+'
 }
 ```
 
@@ -134,39 +134,64 @@ Add client id and client secret for your account in Info.plist
 ```
 
 ## Usage
-Import
+### Import
 ```javascript
 import Shake, {ShakeInvocationEvent} from '@shakebugs/react-native-shake';
 ```
-Start shake
+### Start shake
 ```javascript
 Shake.start();
 ```
-Stop shake
+### Stop shake
 ```javascript
 Shake.stop();
 ```
-Set invocation events
+### Set invocation events
 ```javascript
 Shake.setInvocationEvents([
     ShakeInvocationEvent.BUTTON,
     ShakeInvocationEvent.SHAKE,
     ShakeInvocationEvent.SCREENSHOT])
 ```
-Manual trigger (only Android)
+### Manual trigger
+Supported only for Android
 ```javascript
 Shake.manualTrigger();
 ```
-Blackbox
+### Blackbox
 ```javascript
 Shake.setBlackBoxEnabled(false);
 Shake.setBlackBoxEnabled(true);
 ```
-Quick facts
+### Quick facts
 ```javascript
 Shake.setQuickFacts('Sample quick facts');
 ```
-Attaching files
+### Attaching files
 ```javascript
 Shake.attachFiles([filePath]);
+```
+### Touch tracking
+#### Android
+
+Add following code into the MainActivity.java, touch tracking will be automatically enabled when this snippet is inserted into your project.
+
+```java
+import android.view.MotionEvent;
+import com.shakebugs.shake.Shake;
+```
+Kotlin
+```java
+override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+  Shake.handleTouchEvent(event, this)
+  return super.dispatchTouchEvent(event)
+}
+```
+Java
+```java
+@Override
+public boolean dispatchTouchEvent(MotionEvent event) {
+  Shake.handleTouchEvent(event, this);
+  return super.dispatchTouchEvent(event);
+}
 ```
