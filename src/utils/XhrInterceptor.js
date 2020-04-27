@@ -132,8 +132,6 @@ const XHRInterceptor = {
         XMLHttpRequest.prototype.send = originalXHRSend;
         XMLHttpRequest.prototype.open = originalXHROpen;
         XMLHttpRequest.prototype.setRequestHeader = originalXHRSetRequestHeader;
-        onDoneCallback = null;
-        onProgressCallback = null;
     }
 };
 
