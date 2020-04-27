@@ -7,9 +7,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.reactlibrary.db.SqliteDatabase;
 import com.reactlibrary.utils.Mapper;
 import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInvocationEvent;
+import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
@@ -17,12 +20,10 @@ import java.util.List;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
     private final Application application;
-    private final ReactApplicationContext reactContext;
 
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.application = (Application) reactContext.getApplicationContext();
-        this.reactContext = reactContext;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ShakeInvocationEvent[] invocationEvents = Mapper.mapToInvocationEvents(stringList);
+                ShakeInvocationEvent[] invocationEvents = Mapper.mapToShakeInvocationEvents(stringList);
                 Shake.setInvocationEvents(invocationEvents);
             }
         });
@@ -105,7 +106,12 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 });
             }
         });
+    }
 
+    @ReactMethod
+    public void insertNetworkRequest(ReadableMap networkRequestMap) {
+        NetworkRequest networkRequest = Mapper.mapToNetworkRequest(networkRequestMap);
+        SqliteDatabase.insertNetworkRequest(application, networkRequest);
     }
 
     private void runOnUiThread(Runnable runnable) {
