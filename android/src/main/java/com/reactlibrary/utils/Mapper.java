@@ -44,7 +44,7 @@ public class Mapper {
         networkRequest.requestHeaders = new HashMap<>(requestsHeaderMap);
         networkRequest.responseBody = object.getString("responseBody");
         networkRequest.responseHeaders = new HashMap<>(responseHeadersMap);
-        networkRequest.statusCode = String.valueOf(object.getDouble("statusCode"));
+        networkRequest.statusCode = String.valueOf(object.getInt("statusCode"));
         networkRequest.timestamp = object.getString("timestamp");
         networkRequest.duration = (float) object.getDouble("duration");
 
