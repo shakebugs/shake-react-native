@@ -25,7 +25,6 @@ export default class App extends Component<{}> {
                     <Button title="quick facts" onPress={() => this.setQuickFacts()}/>
                     <Button title="enable blackbox" onPress={() => this.setBlackBoxEnabled()}/>
                     <Button title="disable blackbox" onPress={() => this.setBlackBoxDisabled()}/>
-                    <Button title="manual trigger" onPress={() => this.manualTrigger()}/>
                     <Button title="set invocation events" onPress={() => this.setInvocationEvents()}/>
                     <Button title="enable network tracker" onPress={() => this.enableNetworkTracker()}/>
                     <Button title="disable network tracker" onPress={() => this.disableNetworkTracker()}/>
@@ -47,10 +46,6 @@ export default class App extends Component<{}> {
         Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON,
             ShakeInvocationEvent.SHAKE,
             ShakeInvocationEvent.SCREENSHOT])
-    };
-
-    manualTrigger = () => {
-        Shake.manualTrigger();
     };
 
     setBlackBoxDisabled = () => {

@@ -33,17 +33,24 @@ public class Mapper {
         return shakeFiles;
     }
 
-    public static NetworkRequest mapToNetworkRequest(ReadableMap object) {
-        Map requestsHeaderMap = toMap(object.getMap("requestHeaders"));
-        Map responseHeadersMap = toMap(object.getMap("requestHeaders"));
+    public static List<ShakeFile> mapToShakeFiles(ReadableMap filePaths) {
+        Map<String, String> filesMap = toStringMap(filePaths);
 
+        List<ShakeFile> shakeFiles = new ArrayList<>();
+        for (Map.Entry<String, String> entry : filesMap.entrySet()) {
+            shakeFiles.add(new ShakeFile(entry.getKey(), entry.getValue()));
+        }
+        return shakeFiles;
+    }
+
+    public static NetworkRequest mapToNetworkRequest(ReadableMap object) {
         NetworkRequest networkRequest = new NetworkRequest();
         networkRequest.url = object.getString("url");
         networkRequest.method = object.getString("method");
         networkRequest.requestBody = object.getString("requestBody");
-        networkRequest.requestHeaders = new HashMap<>(requestsHeaderMap);
+        networkRequest.requestHeaders = toStringMap(object.getMap("requestHeaders"));
         networkRequest.responseBody = object.getString("responseBody");
-        networkRequest.responseHeaders = new HashMap<>(responseHeadersMap);
+        networkRequest.responseHeaders = toStringMap(object.getMap("responseHeaders"));
         networkRequest.statusCode = String.valueOf(object.getInt("statusCode"));
         networkRequest.timestamp = object.getString("timestamp");
         networkRequest.duration = (float) object.getDouble("duration");
@@ -82,6 +89,19 @@ public class Mapper {
         }
 
         return map;
+    }
+
+    private static Map<String, String> toStringMap(ReadableMap readableMap) {
+        Map<String, Object> map = toMap(readableMap);
+
+        Map<String, String> stringMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof String) {
+                stringMap.put(entry.getKey(), (String) entry.getValue());
+            }
+        }
+
+        return stringMap;
     }
 
     private static Object[] toArray(ReadableArray readableArray) {
