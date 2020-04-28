@@ -99,7 +99,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void attachFiles(final ReadableMap filesMap) {
+    public void attachFilesWithName(final ReadableMap filesMap) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
