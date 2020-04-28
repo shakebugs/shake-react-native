@@ -10,7 +10,7 @@
 
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
-import Shake, {ShakeInvocationEvent} from 'react-native-shake';
+import Shake, {NetworkTracker, ShakeInvocationEvent} from 'react-native-shake';
 import RNFS from 'react-native-fs';
 
 export default class App extends Component<{}> {
@@ -26,7 +26,10 @@ export default class App extends Component<{}> {
                     <Button title="enable blackbox" onPress={() => this.setBlackBoxEnabled()}/>
                     <Button title="disable blackbox" onPress={() => this.setBlackBoxDisabled()}/>
                     <Button title="manual trigger" onPress={() => this.manualTrigger()}/>
-                    <Button title="setEvents" onPress={() => this.setInvocationEvents()}/>
+                    <Button title="set invocation events" onPress={() => this.setInvocationEvents()}/>
+                    <Button title="enable network tracker" onPress={() => this.enableNetworkTracker()}/>
+                    <Button title="disable network tracker" onPress={() => this.disableNetworkTracker()}/>
+                    <Button title="send network request" onPress={() => this.sendNetworkRequest()}/>
                 </View>
             </View>
         );
@@ -73,6 +76,31 @@ export default class App extends Component<{}> {
                 console.log(error.message);
             });
     };
+
+    enableNetworkTracker = () => {
+        NetworkTracker.enable();
+    };
+
+    disableNetworkTracker = () => {
+        NetworkTracker.disable();
+    };
+
+    sendNetworkRequest = () => {
+        fetch('https://postman-echo.com/post', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                firstParam: 'firstParam',
+                secondParam: 'secondParam',
+            }),
+        }).then(res => {
+            alert('Request sent.');
+        });
+    };
+
 }
 
 const styles = StyleSheet.create({
