@@ -136,7 +136,7 @@ Add client id and client secret for your account in Info.plist
 ## Usage
 ### Import
 ```javascript
-import Shake, {ShakeInvocationEvent, NetworkTracker} from '@shakebugs/react-native-shake';
+import Shake, {ShakeInvocationEvent} from '@shakebugs/react-native-shake';
 ```
 ### Start shake
 ```javascript
@@ -176,6 +176,8 @@ Shake.attachFilesWithName({
 ```
 ### Network tracking
 ```javascript
+import {NetworkTracker} from '@shakebugs/react-native-shake';
+
 NetworkTracker.enable();
 NetworkTracker.disable();
 ```
