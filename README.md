@@ -136,7 +136,7 @@ Add client id and client secret for your account in Info.plist
 ## Usage
 ### Import
 ```javascript
-import Shake, {ShakeInvocationEvent} from '@shakebugs/react-native-shake';
+import Shake, {ShakeInvocationEvent, NetworkTracker} from '@shakebugs/react-native-shake';
 ```
 ### Start shake
 ```javascript
@@ -153,11 +153,6 @@ Shake.setInvocationEvents([
     ShakeInvocationEvent.SHAKE,
     ShakeInvocationEvent.SCREENSHOT])
 ```
-### Manual trigger
-Supported only for Android
-```javascript
-Shake.manualTrigger();
-```
 ### Blackbox
 ```javascript
 Shake.setBlackBoxEnabled(false);
@@ -168,8 +163,21 @@ Shake.setBlackBoxEnabled(true);
 Shake.setQuickFacts('Sample quick facts');
 ```
 ### Attaching files
+Attach files with default names
 ```javascript
 Shake.attachFiles([filePath]);
+```
+Attach files with custom names
+```javascript
+Shake.attachFilesWithName({
+  "file1": filePath1,
+  "file2": filePath2
+});
+```
+### Network tracking
+```javascript
+NetworkTracker.enable();
+NetworkTracker.disable();
 ```
 ### Touch tracking
 #### Android
