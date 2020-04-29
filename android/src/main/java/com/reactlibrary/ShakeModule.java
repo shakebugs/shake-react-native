@@ -52,16 +52,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void manualTrigger() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.manualTrigger();
-            }
-        });
-    }
-
-    @ReactMethod
     public void setInvocationEvents(final ReadableArray stringList) {
         runOnUiThread(new Runnable() {
             @Override
@@ -93,11 +83,27 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void attachFiles(final ReadableArray stringList) {
+    public void attachFiles(final ReadableArray filesArray) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(stringList);
+                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesArray);
+                Shake.onPrepareData(new ShakeReportData() {
+                    @Override
+                    public List<ShakeFile> attachedFiles() {
+                        return shakeFiles;
+                    }
+                });
+            }
+        });
+    }
+
+    @ReactMethod
+    public void attachFilesWithName(final ReadableMap filesMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesMap);
                 Shake.onPrepareData(new ShakeReportData() {
                     @Override
                     public List<ShakeFile> attachedFiles() {

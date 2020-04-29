@@ -22,10 +22,10 @@ export default class App extends Component<{}> {
                     <Button title="start" onPress={() => this.start()}/>
                     <Button title="stop" onPress={() => this.stop()}/>
                     <Button title="attach files" onPress={() => this.attachFiles()}/>
+                    <Button title="attach files by name" onPress={() => this.attachFilesWithName()}/>
                     <Button title="quick facts" onPress={() => this.setQuickFacts()}/>
                     <Button title="enable blackbox" onPress={() => this.setBlackBoxEnabled()}/>
                     <Button title="disable blackbox" onPress={() => this.setBlackBoxDisabled()}/>
-                    <Button title="manual trigger" onPress={() => this.manualTrigger()}/>
                     <Button title="set invocation events" onPress={() => this.setInvocationEvents()}/>
                     <Button title="enable network tracker" onPress={() => this.enableNetworkTracker()}/>
                     <Button title="disable network tracker" onPress={() => this.disableNetworkTracker()}/>
@@ -49,10 +49,6 @@ export default class App extends Component<{}> {
             ShakeInvocationEvent.SCREENSHOT])
     };
 
-    manualTrigger = () => {
-        Shake.manualTrigger();
-    };
-
     setBlackBoxDisabled = () => {
         Shake.setBlackBoxEnabled(false);
     };
@@ -66,15 +62,55 @@ export default class App extends Component<{}> {
     };
 
     attachFiles = () => {
-        let path = RNFS.DocumentDirectoryPath + '/file.txt';
-        RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
-            .then((success) => {
-                console.log('File written');
-                Shake.attachFiles([path]);
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
+        this.createFiles().then((files) => {
+            if (files) {
+                console.log('Files written');
+                Shake.attachFiles([
+                    files[0],
+                    files[1]
+                ]);
+            } else {
+                console.log('Failed to write files');
+            }
+        });
+    };
+
+    attachFilesWithName = () => {
+        this.createFiles().then((files) => {
+            if (files) {
+                console.log('Files written');
+                Shake.attachFilesWithName({
+                    "name1": files[0],
+                    "name2": files[1]
+                });
+            } else {
+                console.log('Failed to write files');
+            }
+        });
+    };
+
+    createFiles = async () => {
+        let path1 = RNFS.DocumentDirectoryPath + '/file1.txt';
+        let path2 = RNFS.DocumentDirectoryPath + '/file2.txt';
+
+        const file1Created = await this.createFile(path1, "File 1");
+        const file2Created = await this.createFile(path2, "File 2");
+
+        console.log(file1Created);
+
+        if (file1Created && file2Created) {
+            return [path1, path2];
+        }
+
+        return false;
+    };
+
+    createFile = async (path, text) => {
+        return RNFS.writeFile(path, text, 'utf8').then(() => {
+            return true;
+        }).catch(() => {
+            return false;
+        });
     };
 
     enableNetworkTracker = () => {
