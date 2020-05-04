@@ -13,9 +13,6 @@ import com.reactlibrary.utils.Strings;
 import com.reactlibrary.utils.Views;
 import com.shakebugs.shake.internal.data.TouchEvent;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * Used for tracking user touches.
  */
@@ -39,16 +36,13 @@ public class TouchTracker {
     private static final String TOUCH_TYPE_PAN = "Pan";
     private static final String TOUCH_TYPE_LONG_PRESS = "LongPress";
 
-    private Context context;
-
-    private final ExecutorService executorService;
+    private final Context context;
     private final GestureDetector gestureDetector;
 
     private View currentRootView;
 
     public TouchTracker(Context context) {
         this.context = context;
-        this.executorService = Executors.newCachedThreadPool();
         this.gestureDetector = new GestureDetector(
                 context,
                 new UserTouchEventListener());
@@ -198,12 +192,7 @@ public class TouchTracker {
      * @param touchEvent touch event
      */
     private void insertTouchEvent(final TouchEvent touchEvent) {
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                SqliteDatabase.insertTouchEvent(context, touchEvent);
-            }
-        });
+        SqliteDatabase.insertTouchEvent(context, touchEvent);
     }
 
     private class UserTouchEventListener extends UserTouchEventGestureListener {
