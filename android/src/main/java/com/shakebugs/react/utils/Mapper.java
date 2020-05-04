@@ -1,4 +1,4 @@
-package com.reactlibrary.utils;
+package com.shakebugs.react.utils;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;

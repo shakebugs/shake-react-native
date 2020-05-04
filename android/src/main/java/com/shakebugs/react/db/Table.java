@@ -1,4 +1,4 @@
-package com.reactlibrary.db;
+package com.shakebugs.react.db;
 
 /**
  * Database entities

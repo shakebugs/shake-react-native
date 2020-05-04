@@ -1,4 +1,4 @@
-package com.reactlibrary.touch;
+package com.shakebugs.react.helpers;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;

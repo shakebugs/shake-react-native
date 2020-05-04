@@ -1,4 +1,4 @@
-package com.reactlibrary.utils;
+package com.shakebugs.react.utils;
 
 /**
  * String utils.

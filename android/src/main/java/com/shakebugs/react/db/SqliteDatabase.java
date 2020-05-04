@@ -1,11 +1,11 @@
-package com.reactlibrary.db;
+package com.shakebugs.react.db;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.reactlibrary.utils.Strings;
+import com.shakebugs.react.utils.Strings;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.internal.data.TouchEvent;
 

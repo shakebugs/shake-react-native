@@ -1,4 +1,4 @@
-package com.reactlibrary.touch;
+package com.shakebugs.react;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,10 +7,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.reactlibrary.db.SqliteDatabase;
-import com.reactlibrary.utils.Dates;
-import com.reactlibrary.utils.Strings;
-import com.reactlibrary.utils.Views;
+import com.shakebugs.react.db.SqliteDatabase;
+import com.shakebugs.react.helpers.UserTouchEventGestureListener;
+import com.shakebugs.react.utils.Dates;
+import com.shakebugs.react.utils.Strings;
+import com.shakebugs.react.utils.Views;
 import com.shakebugs.shake.internal.data.TouchEvent;
 
 /**

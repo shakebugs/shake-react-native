@@ -1,4 +1,4 @@
-package com.reactlibrary.utils;
+package com.shakebugs.react.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

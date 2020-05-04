@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 
 import com.facebook.react.ReactActivity;
-import com.reactlibrary.touch.TouchTracker;
+import com.shakebugs.react.TouchTracker;
 
 public class MainActivity extends ReactActivity {
     TouchTracker touchTracker;
@@ -12,7 +12,7 @@ public class MainActivity extends ReactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         touchTracker = new TouchTracker(getApplicationContext());
     }
 
