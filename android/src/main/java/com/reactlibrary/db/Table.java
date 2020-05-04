@@ -23,4 +23,19 @@ class Table {
         String TIMESTAMP = "timestamp";
         String DURATION = "duration";
     }
+
+    /**
+     * Represents touch events table.
+     */
+    interface TouchEvent {
+        // Table
+        String TABLE_NAME = "touch_events";
+
+        // Fields
+        String ID = "id";
+        String CLASS_NAME = "class_name";
+        String PROPERTY = "property";
+        String TOUCH_TYPE = "touch_type";
+        String TIMESTAMP = "timestamp";
+    }
 }

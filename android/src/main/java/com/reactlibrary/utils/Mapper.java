@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Maps ReactNative objects to models
+ * Maps React Native data to models
  */
 public class Mapper {
     public static ShakeInvocationEvent[] mapToShakeInvocationEvents(ReadableArray stringInvocationEvents) {
