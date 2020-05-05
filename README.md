@@ -185,23 +185,35 @@ NetworkTracker.disable();
 #### Android
 
 Add following code into the MainActivity.java, touch tracking will be automatically enabled when this snippet is inserted into your project.
+```java
+package com.example;
 
-```java
+import android.os.Bundle;
 import android.view.MotionEvent;
-import com.shakebugs.shake.Shake;
-```
-Kotlin
-```java
-override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-  Shake.handleTouchEvent(event, this)
-  return super.dispatchTouchEvent(event)
-}
-```
-Java
-```java
-@Override
-public boolean dispatchTouchEvent(MotionEvent event) {
-  Shake.handleTouchEvent(event, this);
-  return super.dispatchTouchEvent(event);
+
+import com.facebook.react.ReactActivity;
+import com.shakebugs.react.TouchTracker;
+
+public class MainActivity extends ReactActivity {
+    private TouchTracker touchTracker; 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        touchTracker = new TouchTracker(getApplicationContext()); 
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        touchTracker.handleTouchEvent(ev, this); 
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected String getMainComponentName() {
+        return "example";
+    }
 }
 ```
