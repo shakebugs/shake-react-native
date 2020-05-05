@@ -1,4 +1,4 @@
-package com.reactlibrary.utils;
+package com.shakebugs.react.utils;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Maps ReactNative objects to models
+ * Maps React Native data to models
  */
 public class Mapper {
     public static ShakeInvocationEvent[] mapToShakeInvocationEvents(ReadableArray stringInvocationEvents) {

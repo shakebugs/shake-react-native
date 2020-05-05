@@ -1,4 +1,4 @@
-package com.reactlibrary.db;
+package com.shakebugs.react.db;
 
 /**
  * Database entities
@@ -22,5 +22,20 @@ class Table {
         String RESPONSE_HEADERS = "response_headers";
         String TIMESTAMP = "timestamp";
         String DURATION = "duration";
+    }
+
+    /**
+     * Represents touch events table.
+     */
+    interface TouchEvent {
+        // Table
+        String TABLE_NAME = "touch_events";
+
+        // Fields
+        String ID = "id";
+        String CLASS_NAME = "class_name";
+        String PROPERTY = "property";
+        String TOUCH_TYPE = "touch_type";
+        String TIMESTAMP = "timestamp";
     }
 }

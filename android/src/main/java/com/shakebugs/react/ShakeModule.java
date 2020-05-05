@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.shakebugs.react;
 
 import android.app.Activity;
 import android.app.Application;
@@ -8,8 +8,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.reactlibrary.db.SqliteDatabase;
-import com.reactlibrary.utils.Mapper;
+import com.shakebugs.react.db.SqliteDatabase;
+import com.shakebugs.react.utils.Mapper;
 import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInvocationEvent;
 import com.shakebugs.shake.internal.data.NetworkRequest;
