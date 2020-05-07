@@ -40,13 +40,13 @@ RCT_EXPORT_METHOD(setInvocationEvents:(nonnull NSArray *)eventsArray)
 			event |= ShakeInvocationEventShake;
 		else if([[eventsArray objectAtIndex:i] isEqual:@"SCREENSHOT"])
 			event |= ShakeInvocationEventScreenshot;
-	}	
+	}
 	[SHKShake startWithInvocationEvents:event];
 }
 
 RCT_EXPORT_METHOD(setQuickFacts:(nonnull NSString *)quickFacts)
 {
-	[[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData * 
+	[[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
 	_Nonnull(SHKShakeReportData * _Nonnull reportData) {
 		reportData.quickFacts = quickFacts;
 		return reportData;
@@ -55,7 +55,7 @@ RCT_EXPORT_METHOD(setQuickFacts:(nonnull NSString *)quickFacts)
 RCT_EXPORT_METHOD(attachFiles:(nonnull NSArray *)files)
 {
 	NSUInteger count  = [files count];
-	NSMutableArray *shakeFiles; 
+	NSMutableArray *shakeFiles;
 	[[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
 	_Nonnull(SHKShakeReportData * _Nonnull reportData) {
 		for(int i = 0; i < count; i++)
@@ -66,6 +66,19 @@ RCT_EXPORT_METHOD(attachFiles:(nonnull NSArray *)files)
 		reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
 		return reportData;
 	}];
+}
+RCT_EXPORT_METHOD(attachFilesWithName:(nonnull NSDictionary *)filesDictionary)
+{
+    NSMutableArray *shakeFiles;
+    [[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
+	_Nonnull(SHKShakeReportData * _Nonnull reportData) {
+        for (NSMutableString *key in filesDictionary) {
+            SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:key andFileURL:[filesDictionary objectForKey:key]];
+			[shakeFiles addObject:attachedFile];
+        }
+        reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
+		return reportData;
+    }];
 }
 RCT_EXPORT_METHOD(setBlackBoxEnabled:(BOOL)isBlackBoxEnabled)
 {
