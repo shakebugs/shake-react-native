@@ -10,7 +10,9 @@ const HomeScreen = ({navigation}) => {
     const showListScreen = () => navigation.navigate('ListScreen');
     const showModalScreen = () => navigation.navigate('ModalScreen');
     const showWebViewScreen = () => navigation.navigate('WebViewScreen');
+    const showTabScreen = () => navigation.navigate('TabScreen');
     const showDrawerScreen = () => navigation.navigate('DrawerScreen');
+    const showMapScreen = () => navigation.navigate('MapScreen');
 
 
     const sectionTitle = (text) => {
@@ -29,6 +31,8 @@ const HomeScreen = ({navigation}) => {
                 {menuButton("List test", showListScreen)}
                 {menuButton("Modal test", showModalScreen)}
                 {menuButton("WebView test", showWebViewScreen)}
+                {menuButton("Map test", showMapScreen)}
+                {menuButton("Tab test", showTabScreen)}
                 {menuButton("Drawer test (Android)", showDrawerScreen)}
             </View>
         </View>
