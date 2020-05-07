@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.shakebugs.react;
 
 import android.app.Activity;
 import android.app.Application;
@@ -7,9 +7,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
-import com.reactlibrary.utils.Mapper;
+import com.facebook.react.bridge.ReadableMap;
+import com.shakebugs.react.db.SqliteDatabase;
+import com.shakebugs.react.utils.Mapper;
 import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInvocationEvent;
+import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
@@ -17,12 +20,10 @@ import java.util.List;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
     private final Application application;
-    private final ReactApplicationContext reactContext;
 
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.application = (Application) reactContext.getApplicationContext();
-        this.reactContext = reactContext;
     }
 
     @Override
@@ -51,21 +52,11 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void manualTrigger() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.manualTrigger();
-            }
-        });
-    }
-
-    @ReactMethod
     public void setInvocationEvents(final ReadableArray stringList) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ShakeInvocationEvent[] invocationEvents = Mapper.mapToInvocationEvents(stringList);
+                ShakeInvocationEvent[] invocationEvents = Mapper.mapToShakeInvocationEvents(stringList);
                 Shake.setInvocationEvents(invocationEvents);
             }
         });
@@ -92,11 +83,11 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void attachFiles(final ReadableArray stringList) {
+    public void attachFiles(final ReadableArray filesArray) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(stringList);
+                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesArray);
                 Shake.onPrepareData(new ShakeReportData() {
                     @Override
                     public List<ShakeFile> attachedFiles() {
@@ -105,7 +96,28 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 });
             }
         });
+    }
 
+    @ReactMethod
+    public void attachFilesWithName(final ReadableMap filesMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesMap);
+                Shake.onPrepareData(new ShakeReportData() {
+                    @Override
+                    public List<ShakeFile> attachedFiles() {
+                        return shakeFiles;
+                    }
+                });
+            }
+        });
+    }
+
+    @ReactMethod
+    public void insertNetworkRequest(ReadableMap networkRequestMap) {
+        NetworkRequest networkRequest = Mapper.mapToNetworkRequest(networkRequestMap);
+        SqliteDatabase.insertNetworkRequest(application, networkRequest);
     }
 
     private void runOnUiThread(Runnable runnable) {
