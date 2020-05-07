@@ -1,5 +1,18 @@
 # Shake SDK
 
+## Requirements
+Android API version should be at least 17.
+
+Update minSdkVersion in project level build.gradle 
+```javascript
+ext {
+    buildToolsVersion = "28.0.3"
+    minSdkVersion = 17
+    compileSdkVersion = 28
+    targetSdkVersion = 28
+}
+```
+
 ## Getting started
 
 `$ npm install @shakebugs/react-native-shake --save`
@@ -72,11 +85,10 @@ allprojects {
    }
 }
 ```
-
 Add dependency to your app level build.gradle file
 ```javascript
 dependencies {
-    implementation 'com.shakebugs.android:shake:<version>'
+    implementation 'com.shakebugs.android:shake:9.0.+'
 }
 ```
 
@@ -122,39 +134,86 @@ Add client id and client secret for your account in Info.plist
 ```
 
 ## Usage
-Import
+### Import
 ```javascript
 import Shake, {ShakeInvocationEvent} from '@shakebugs/react-native-shake';
 ```
-Start shake
+### Start shake
 ```javascript
 Shake.start();
 ```
-Stop shake
+### Stop shake
 ```javascript
 Shake.stop();
 ```
-Set invocation events
+### Set invocation events
 ```javascript
 Shake.setInvocationEvents([
     ShakeInvocationEvent.BUTTON,
     ShakeInvocationEvent.SHAKE,
     ShakeInvocationEvent.SCREENSHOT])
 ```
-Manual trigger (only Android)
-```javascript
-Shake.manualTrigger();
-```
-Blackbox
+### Blackbox
 ```javascript
 Shake.setBlackBoxEnabled(false);
 Shake.setBlackBoxEnabled(true);
 ```
-Quick facts
+### Quick facts
 ```javascript
 Shake.setQuickFacts('Sample quick facts');
 ```
-Attaching files
+### Attaching files
+Attach files with default names
 ```javascript
 Shake.attachFiles([filePath]);
+```
+Attach files with custom names
+```javascript
+Shake.attachFilesWithName({
+  "file1": filePath1,
+  "file2": filePath2
+});
+```
+### Network tracking
+```javascript
+import {NetworkTracker} from '@shakebugs/react-native-shake';
+
+NetworkTracker.enable();
+NetworkTracker.disable();
+```
+### Touch tracking
+#### Android
+
+Add following code into the MainActivity.java, touch tracking will be automatically enabled when this snippet is inserted into your project.
+```java
+package com.example;
+
+import android.os.Bundle;
+import android.view.MotionEvent;
+
+import com.facebook.react.ReactActivity;
+import com.shakebugs.react.TouchTracker;
+
+public class MainActivity extends ReactActivity {
+    private TouchTracker touchTracker; 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        touchTracker = new TouchTracker(getApplicationContext()); 
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        touchTracker.handleTouchEvent(ev, this); 
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected String getMainComponentName() {
+        return "example";
+    }
+}
 ```

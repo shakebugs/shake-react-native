@@ -1,29 +1,67 @@
 {
   "name": "example",
-  "version": "0.0.1",
+  "version": "2.2.7",
   "private": true,
+  "config": {
+    "android": {
+      "uat": "com.shakebugs.android:shake-uat",
+      "stg": "com.shakebugs.android:shake-staging",
+      "prd": "com.shakebugs.android:shake"
+    },
+    "ios": {
+      "uat": "Shake-UAT",
+      "stg": "Shake-Staging",
+      "prd": "Shake"
+    }
+  },
   "scripts": {
-    "win:android:uat": "set ANDROID_DEPENDENCY=com.shakebugs.android:shake-uat&& react-native run-android",
-    "win:android:stg": "set ANDROID_DEPENDENCY=com.shakebugs.android:shake-staging&& react-native run-android",
-    "win:android:prd": "set ANDROID_DEPENDENCY=com.shakebugs.android:shake&& react-native run-android",
+    "win:android:uat": "set 'ANDROID_DEPENDENCY=%npm_package_config_android_uat%' && react-native run-android",
+    "win:android:stg": "set 'ANDROID_DEPENDENCY=%npm_package_config_android_stg%' && react-native run-android",
+    "win:android:prd": "set 'ANDROID_DEPENDENCY=%npm_package_config_android_prd%' && react-native run-android",
+    "mac:android:uat": "export ANDROID_DEPENDENCY=$npm_package_config_android_uat && react-native run-android",
+    "mac:android:stg": "export ANDROID_DEPENDENCY=$npm_package_config_android_stg && react-native run-android",
+    "mac:android:prd": "export ANDROID_DEPENDENCY=$npm_package_config_android_prd && react-native run-android",
     "win:ios:uat": "powershell write-host -fore White -back DarkRed Running iOS app is not supported on Windows OS.",
     "win:ios:stg": "powershell write-host -fore White -back DarkRed Running iOS app is not supported on Windows OS.",
     "win:ios:prd": "powershell write-host -fore White -back DarkRed Running iOS app is not supported on Windows OS.",
-    "mac:android:uat": "ANDROID_DEPENDENCY=com.shakebugs.android:shake-uat && react-native run-android",
-    "mac:android:stg": "ANDROID_DEPENDENCY=com.shakebugs.android:shake-staging && react-native run-android",
-    "mac:android:prd": "ANDROID_DEPENDENCY=com.shakebugs.android:shake && react-native run-android",
-    "mac:ios:uat": "IOS_DEPENDENCY=Shake-UAT && react-native run-ios",
-    "mac:ios:stg": "IOS_DEPENDENCY=Shake-Staging && react-native run-ios",
-    "mac:ios:prd": "IOS_DEPENDENCY=Shake && react-native run-ios",
+    "mac:ios:uat": "export IOS_DEPENDENCY=$npm_package_config_ios_uat && npm run mac:ios:clean && react-native run-ios",
+    "mac:ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run mac:ios:clean && react-native run-ios",
+    "mac:ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd && npm run mac:ios:clean && react-native run-ios",
+    "win:android:uat:build": "set 'ANDROID_DEPENDENCY=%npm_package_config_android_uat%' && npm run bundle:android && cd android && gradlew assembleRelease",
+    "win:android:stg:build": "set 'ANDROID_DEPENDENCY=%npm_package_config_android_stg%' && npm run bundle:android && cd android && gradlew assembleRelease",
+    "win:android:prd:build": "set 'ANDROID_DEPENDENCY=%npm_package_config_android_prd%' && npm run bundle:android && cd android && gradlew assembleRelease",
+    "mac:android:uat:build": "export ANDROID_DEPENDENCY=$npm_package_config_android_uat && npm run bundle:android && cd android && ./gradlew assembleRelease",
+    "mac:android:stg:build": "export ANDROID_DEPENDENCY=$npm_package_config_android_stg && npm run bundle:android && cd android && ./gradlew assembleRelease",
+    "mac:android:prd:build": "export ANDROID_DEPENDENCY=$npm_package_config_android_prd && npm run bundle:android && cd android && ./gradlew assembleRelease",
+    "win:ios:uat:build": "powershell write-host -fore White -back DarkRed Building iOS app is not supported on Windows OS.",
+    "win:ios:stg:build": "powershell write-host -fore White -back DarkRed Building iOS app is not supported on Windows OS.",
+    "win:ios:prd:build": "powershell write-host -fore White -back DarkRed Building iOS app is not supported on Windows OS.",
+    "mac:ios:uat:build": "",
+    "mac:ios:stg:build": "",
+    "mac:ios:prd:build": "",
+    "bundle:android": "react-native bundle --verbose --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
+    "bundle:ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
+    "mac:ios:clean": "rm -rf ios/Pods ios/Podfile.lock; cd ios && pod install && cd ..",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.3.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/picker": "^1.3.0",
+    "@react-native-community/slider": "^2.0.9",
+    "@react-navigation/native": "^5.1.7",
+    "@react-navigation/stack": "^5.2.14",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-fs": ">=2.16.6",
-    "react-native-shake": "file:../"
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-reanimated": "^1.8.0",
+    "react-native-safe-area-context": "^0.7.3",
+    "react-native-screens": "^2.7.0",
+    "react-native-shake": "file:../",
+    "react-native-webview": "^9.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -33,6 +71,7 @@
     "eslint": "^6.8.0",
     "jest": "^25.3.0",
     "metro-react-native-babel-preset": "^0.59.0",
+    "npm-run-all": "^4.1.5",
     "react-test-renderer": "16.11.0"
   },
   "jest": {

@@ -129,11 +129,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example"
+        applicationId "com.shakebugs.react.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.2.7"
     }
     splits {
         abi {
@@ -188,7 +188,7 @@ android {
 }
 
 dependencies {
-    implementation "$System.env.ANDROID_DEPENDENCY:9.0.0"
+    implementation "$System.env.ANDROID_DEPENDENCY:9.0.+"
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
