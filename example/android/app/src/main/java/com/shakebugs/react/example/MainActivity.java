@@ -1,4 +1,4 @@
-package com.example;
+package com.shakebugs.react.example;
 
 import android.os.Bundle;
 import android.view.MotionEvent;
