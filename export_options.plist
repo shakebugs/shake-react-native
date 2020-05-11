@@ -9,10 +9,10 @@
         <key>provisioningProfiles</key>
         <dict>
             <key>com.shakebugs.react.example</key>
-            <string>myawesomeapp_profile_name</string>
+            <string>Shake Example</string>
         </dict>
         <key>signingCertificate</key>
-        <string>iPhone Distribution: NAME_OF_YOUR_SIGNING_CERTIFICATE (L32X45HDEH)</string>
+        <string>iPhone Distribution: Mobilne aplikacije d.o.o. (L32X45HDEH)</string>
         <key>teamID</key>
         <string>L32X45HDEH</string>
     </dict>
