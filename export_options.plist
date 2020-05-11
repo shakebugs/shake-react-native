@@ -11,9 +11,5 @@
             <key>com.shakebugs.react.example</key>
             <string>Shake Example</string>
         </dict>
-        <key>signingCertificate</key>
-        <string>iPhone Distribution: Mobilne aplikacije d.o.o. (L32X45HDEH)</string>
-        <key>teamID</key>
-        <string>L32X45HDEH</string>
     </dict>
 </plist>
