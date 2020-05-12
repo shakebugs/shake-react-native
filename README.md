@@ -17,11 +17,11 @@ ext {
 
 `$ npm install @shakebugs/react-native-shake --save`
 
-If you are using react native above version 0.60.
+If you are using react native above version 0.60, you should call
 
 `$ react-native add-shake`
 
-If you are using React Native version lower then 0.60, you should also link library with command.
+If you are using React Native version lower then 0.60, you should call
 
 `$ react-native link @shakebugs/react-native-shake`
 
@@ -30,7 +30,7 @@ If you support iOS platform, you should install pods also.
 `cd ios && pod install && cd ..`
 
 ## Manual linking
-Skip this step if you do not need to link library manually.
+Skip this step if you already linked library using commands from the Getting Started section.
 
 ### Android
 This isn't necessary if react-native add-shake command is run,
@@ -68,8 +68,8 @@ Add Shake.xcodeproj to Libraries in Xcode.
 
 Go to `Build Phases`, and add libShake.a from the `Products` folder inside the Library you are importing to `Link Binary With Libraries`
 ## Initialization
+Skip this step if you already initialized library using commands from the Getting Started section.
 ### Android
-This is done automatic
 Add maven repository to your project level build.gradle file
 ```javascript
 allprojects {
@@ -113,15 +113,21 @@ public void onCreate() {
  Shake.start(this);
 }
 ```
+### iOS
+No initialization needed
+
+## Adjust keys
+### Android
 Adjust client id and client secret for your account in AndroidManifest.xml
 ```xml
 <meta-data
        android:name="com.shakebugs.APIClientID"
-       android:value="jULjX6ntQODCC6ao0uea0bLvAG9FTb8oByeJWYQx" />
+       android:value="your-api-client-id" />
 <meta-data
        android:name="com.shakebugs.APIClientSecret"
-       android:value="eIFuGOnX8CjeEvm0bkoZGe5BYv46cWlUQ95mceW2PEfYphWXW3oyNAJ" />
+       android:value="your-api-client-secret" />
 ```
+
 ### iOS
 Add client id and client secret for your account in Info.plist
 ```xml
@@ -189,8 +195,9 @@ NetworkTracker.disable();
 ```
 ### Touch tracking
 #### Android
+If you initialized SDK using commands from the Getting Started section, touch tracking will be enabled by default.
 
-Add following code into the MainActivity.java, touch tracking will be automatically enabled when this snippet is inserted into your project.
+Otherwise add following code into the MainActivity.java
 ```java
 package com.example;
 
@@ -223,3 +230,5 @@ public class MainActivity extends ReactActivity {
     }
 }
 ```
+#### iOS
+Touch tracking is enabled by default
