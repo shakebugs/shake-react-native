@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.0.1",
+  "version": "2.2.9",
   "private": true,
   "scripts": {
     "win:android:uat": "set ANDROID_DEPENDENCY=com.shakebugs.android:shake-uat&& react-native run-android",
