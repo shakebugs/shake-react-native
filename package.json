@@ -1,7 +1,7 @@
 {
   "name": "react-native-shake",
   "title": "React Native Shake SDK",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "description": "Shake SDK wrapper",
   "main": "index.js",
   "scripts": {
