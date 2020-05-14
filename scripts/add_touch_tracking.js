@@ -27,7 +27,7 @@ const renderMutlilineString = function(stringArray) {
     return result;
 }
 
-glob('../[a-zA-Z0-9_-]*/android/app/src/main/java/**/MainActivity.java', {}, function(error, match) {
+glob('android/app/src/main/java/**/MainActivity.java', {}, function(error, match) {
     const filePath = match.toString();
     let fileContents = fs.readFileSync(`${filePath}`, 'utf8');
     if(fileContents.includes('TouchTracker')) {

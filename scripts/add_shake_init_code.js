@@ -7,7 +7,7 @@ const flipper = new RegExp('initializeFlipper[a-zA-Z\_\(\)\-\.\,\;\ ]*\;');
 const soLoader = new RegExp('SoLoader\.init[a-zA-Z\*\_\(\)\-\.\,\;\/\\\ ]*\;');
 
 
-glob('../[a-zA-Z0-9_-]*/android/app/src/main/java/**/MainApplication.java', {}, function(error, match) {
+glob('android/app/src/main/java/**/MainApplication.java', {}, function(error, match) {
     const filePath = match.toString();
     let fileContents = fs.readFileSync(`${filePath}`, 'utf8');
     if(fileContents.indexOf(shakeImports[1]) == -1) {
