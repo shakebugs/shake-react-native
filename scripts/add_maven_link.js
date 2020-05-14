@@ -20,7 +20,7 @@ const readBlock = function(contents, searchBlock) {
         }
         return current;
 }
-glob('../[a-zA-Z0-9_-]*/android/build.gradle', {}, function(error, match) {
+glob('android/build.gradle', {}, function(error, match) {
 	const filePath = match.toString();
 	let fileContents = fs.readFileSync(filePath, 'utf8');
 	if(fileContents.indexOf(mavenURL) == -1) {

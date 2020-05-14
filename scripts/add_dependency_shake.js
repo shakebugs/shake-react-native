@@ -2,7 +2,7 @@ const fs = require('fs');
 const glob = require('glob');
 const dependency = 'implementation "$System.env.ANDROID_DEPENDENCY:9.0.+"';
 
-glob('../[a-zA-Z0-9_-]*/android/app/build.gradle', {}, function(error, match) {
+glob('android/app/build.gradle', {}, function(error, match) {
     const filePath = match.toString();
     let fileContents = fs.readFileSync(filePath, 'utf8');
     if(fileContents.indexOf(dependency) == -1) {

@@ -39,5 +39,14 @@
   },
   "dependencies": {
     "glob": "^7.1.6"
+  },
+  "rnpm": {
+    "commands": {
+      "postlink": "node node_modules/@shakebugs/react-native-shake/scripts/run_script.js",
+      "preunlink": ""
+    },
+    "android": {
+      "packageInstance": "new ShakePackage()"
+    }
   }
 }
