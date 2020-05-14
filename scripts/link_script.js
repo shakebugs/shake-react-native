@@ -12,12 +12,12 @@ if (fs.existsSync(pathPrd)) {
     execute(`node ${pathPrd}/add_touch_tracking.js`);
 } else if (fs.existsSync(pathUat)) {
     execute(`node ${pathUat}/add_gradle_dependency.js "com.shakebugs.android:shake-uat:9.0.+"`);
-    execute(`node ${pathPrd}/add_maven_repository.js`);
-    execute(`node ${pathPrd}/add_shake_init_code.js`);
-    execute(`node ${pathPrd}/add_touch_tracking.js`);
+    execute(`node ${pathUat}/add_maven_repository.js`);
+    execute(`node ${pathUat}/add_shake_init_code.js`);
+    execute(`node ${pathUat}/add_touch_tracking.js`);
 } else if (fs.existsSync(pathStg)) {
     execute(`node ${pathStg}/add_gradle_dependency.js "com.shakebugs.android:shake-staging:9.0.+"`);
-    execute(`node ${pathPrd}/add_maven_repository.js`);
-    execute(`node ${pathPrd}/add_shake_init_code.js`);
-    execute(`node ${pathPrd}/add_touch_tracking.js`);
+    execute(`node ${pathStg}/add_maven_repository.js`);
+    execute(`node ${pathStg}/add_shake_init_code.js`);
+    execute(`node ${pathStg}/add_touch_tracking.js`);
 }
