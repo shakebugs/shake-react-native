@@ -1,7 +1,7 @@
 const fs = require('fs');
 const glob = require('glob');
 const importsStr = ['import android.os.Bundle;', 'import com.reactlibrary.touch.TouchTracker;', 'import android.view.MotionEvent;'];
-const touchTrackerVar = '  TouchTracker touchTracker;\n';
+const touchTrackerVar = '\n  private TouchTracker touchTracker;\n\n';
 const onCreateStr = [
     '  @Override',
     '  protected void onCreate(Bundle savedInstanceState) {',
@@ -30,7 +30,7 @@ const renderMutlilineString = function(stringArray) {
 glob('android/app/src/main/java/**/MainActivity.java', {}, function(error, match) {
     const filePath = match.toString();
     let fileContents = fs.readFileSync(`${filePath}`, 'utf8');
-    if(fileContents.includes('TouchTracker')) {
+    if(!fileContents.includes('TouchTracker')) {
         try {
             let mainActivityIndex = fileContents.indexOf(mainActivity);
             let importsContents = renderMutlilineString(importsStr);
@@ -43,6 +43,5 @@ glob('android/app/src/main/java/**/MainActivity.java', {}, function(error, match
             console.error(error);
             process.exit(-1);
         }
-
     }
 });
