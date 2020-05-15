@@ -1,7 +1,7 @@
 {
   "name": "react-native-shake",
   "title": "React Native Shake SDK",
-  "version": "2.2.8",
+  "version": "2.3.0",
   "description": "Shake SDK wrapper",
   "main": "index.js",
   "scripts": {
@@ -39,5 +39,14 @@
   },
   "dependencies": {
     "glob": "^7.1.6"
+  },
+  "rnpm": {
+    "commands": {
+      "postlink": "node node_modules/@shakebugs/react-native-shake/scripts/link_script.js",
+      "preunlink": "echo 'Unlink script not implemented yet.'"
+    },
+    "android": {
+      "packageInstance": "new ShakePackage()"
+    }
   }
 }
