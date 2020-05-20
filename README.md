@@ -14,33 +14,29 @@ ext {
 ```
 
 ## Getting started
+React native >= 0.60
+```javascript
+$ npm install @shakebugs/react-native-shake --save
+$ react-native add-shake
+$ cd ios && pod install && cd ..
+```
 
-`$ npm install @shakebugs/react-native-shake --save`
-
-If you are using react native above version 0.60, you should call
-
-`$ react-native add-shake`
-
-If you are using React Native version lower then 0.60, you should call
-
-`$ react-native link @shakebugs/react-native-shake`
-
-If you support iOS platform, you should install pods also.
-
-`cd ios && pod install && cd ..`
+React native <= 0.59
+```javascript
+$ npm install @shakebugs/react-native-shake --save
+$ react-native link @shakebugs/react-native-shake
+$ cd ios && pod install && cd ..
+```
 
 ## Manual linking
-Skip this step if you already linked library using commands from the Getting Started section.
+Skip this step if library is linked using autolinking or using `react-native link` command.
 
 ### Android
-This isn't necessary if react-native add-shake command is run,
-or if you are using react-native link.
-Add to settings.gradle
+Open settings.gradle and add following lines
 ```javascript
 include ':@shakebugs_react-native-shake'
 project(':@shakebugs_react-native-shake').projectDir = new File(rootProject.projectDir, '../node_modules/@shakebugs/react-native-shake/android')
 ```
-
 Add dependency to app level build.gradle
 ```javascript
 dependencies {
@@ -50,8 +46,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 }
 ```
-
-Add package to MainApplication.java
+Update getPackages() method in MainApplication:
 ```javascript
 @Override protected List<ReactPackage> getPackages() {
     @SuppressWarnings("UnnecessaryLocalVariable")
@@ -67,8 +62,10 @@ Add package to MainApplication.java
 Add Shake.xcodeproj to Libraries in Xcode.
 
 Go to `Build Phases`, and add libShake.a from the `Products` folder inside the Library you are importing to `Link Binary With Libraries`
+
 ## Initialization
-Skip this step if you already initialized library using commands from the Getting Started section.
+Skip this step if library is initialized using `react-native add-shake` or `react-native link` commands.
+
 ### Android
 Add maven repository to your project level build.gradle file
 ```javascript
@@ -97,7 +94,6 @@ dependencies {
     implementation 'com.shakebugs.android:shake:9.0.+'
 }
 ```
-
 Update MainApplication.java file
 ```javascript
 import com.shakebugs.shake.Shake;
@@ -113,6 +109,51 @@ public void onCreate() {
  Shake.start(this);
 }
 ```
+If you do not have multiDexEnabled, update app level build.gradle
+```javascript
+  defaultConfig {
+        applicationId "com.shakebugs.react.example"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 6
+        versionName "2.3.2"
+        multiDexEnabled true
+    }
+```
+Add following code into the MainActivity.java
+```java
+package com.example;
+
+import android.os.Bundle;
+import android.view.MotionEvent;
+
+import com.facebook.react.ReactActivity;
+import com.shakebugs.react.TouchTracker;
+
+public class MainActivity extends ReactActivity {
+    private TouchTracker touchTracker;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        touchTracker = new TouchTracker(getApplicationContext());
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        touchTracker.handleTouchEvent(ev, this);
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected String getMainComponentName() {
+        return "example";
+    }
+}
+```
+
 ### iOS
 No initialization needed
 
@@ -150,14 +191,17 @@ Add client id and client secret for your account in Info.plist
 ```javascript
 import Shake, {ShakeInvocationEvent} from '@shakebugs/react-native-shake';
 ```
+
 ### Start shake
 ```javascript
 Shake.start();
 ```
+
 ### Stop shake
 ```javascript
 Shake.stop();
 ```
+
 ### Set invocation events
 ```javascript
 Shake.setInvocationEvents([
@@ -165,15 +209,18 @@ Shake.setInvocationEvents([
     ShakeInvocationEvent.SHAKE,
     ShakeInvocationEvent.SCREENSHOT])
 ```
+
 ### Blackbox
 ```javascript
 Shake.setBlackBoxEnabled(false);
 Shake.setBlackBoxEnabled(true);
 ```
+
 ### Quick facts
 ```javascript
 Shake.setQuickFacts('Sample quick facts');
 ```
+
 ### Attaching files
 Attach files with default names
 ```javascript
@@ -186,6 +233,7 @@ Shake.attachFilesWithName({
   "file2": filePath2
 });
 ```
+
 ### Network tracking
 ```javascript
 import {NetworkTracker} from '@shakebugs/react-native-shake';
@@ -193,42 +241,9 @@ import {NetworkTracker} from '@shakebugs/react-native-shake';
 NetworkTracker.enable();
 NetworkTracker.disable();
 ```
+
 ### Touch tracking
 #### Android
-If you initialized SDK using commands from the Getting Started section, touch tracking will be enabled by default.
-
-Otherwise add following code into the MainActivity.java
-```java
-package com.example;
-
-import android.os.Bundle;
-import android.view.MotionEvent;
-
-import com.facebook.react.ReactActivity;
-import com.shakebugs.react.TouchTracker;
-
-public class MainActivity extends ReactActivity {
-    private TouchTracker touchTracker;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        touchTracker = new TouchTracker(getApplicationContext());
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        touchTracker.handleTouchEvent(ev, this);
-
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    protected String getMainComponentName() {
-        return "example";
-    }
-}
-```
+If you initialized SDK using `react-native add-shake` or `react-native link` commands, touch tracking is enabled by default.
 #### iOS
 Touch tracking is enabled by default
