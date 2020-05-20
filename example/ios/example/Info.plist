@@ -53,5 +53,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false />
+	<key>Shake</key>
+    <dict>
+        <key>APIClientID</key>
+        <string>QGjkaGuR8QVUA7ZIIYX5AjpYkN6LfQRyFulwDX71</string>
+        <key>APIClientSecret</key>
+        <string>et1T78wj0AfiwGUj1Cz3CN4YqrSNQ7ydWVMUFj7vZr0BSgnQ24Nrl2S</string>
+    </dict>
 </dict>
 </plist>
