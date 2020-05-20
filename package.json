@@ -43,7 +43,7 @@
   "rnpm": {
     "commands": {
       "postlink": "node node_modules/@shakebugs/react-native-shake/scripts/link_script.js",
-      "preunlink": "echo 'Unlink script not implemented yet.'"
+      "preunlink": "node node_modules/@shakebugs/react-native-shake/scripts/unlink_script.js"
     },
     "android": {
       "packageInstance": "new ShakePackage()"
