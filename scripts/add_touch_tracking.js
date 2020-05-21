@@ -1,6 +1,6 @@
 const fs = require('fs');
 const glob = require('glob');
-const importsStr = ['import android.os.Bundle;', 'import com.reactlibrary.touch.TouchTracker;', 'import android.view.MotionEvent;'];
+const importsStr = ['import android.os.Bundle;', 'import com.shakebugs.react.TouchTracker;', 'import android.view.MotionEvent;'];
 const touchTrackerVar = '\n  private TouchTracker touchTracker;\n\n';
 const onCreateStr = [
     '  @Override',
