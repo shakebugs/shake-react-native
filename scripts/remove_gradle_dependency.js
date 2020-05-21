@@ -1,17 +1,16 @@
 const fs = require('fs');
 const glob = require('glob');
+const utils = require('./utils.js');
 
-const dependency = `implementation "${process.argv[2]}"`;
-const regex = RegExp(`${dependency}`, 'i');
+const gradleDependency = `implementation "${process.argv[2]}"`;
+
 glob('android/app/build.gradle', {}, function (error, match) {
     const filePath = match.toString();
-    let fileContents = fs.readFileSync(filePath, 'utf8');
-    if (fileContents.indexOf(dependency) != -1) {
-        try {
-            fs.writeFileSync(fileContents.replace(regex, ''));
-        } catch (error) {
-            console.error(error);
-            process.exit(1);
-        }
+
+    try {
+        utils.removeLine(filePath, gradleDependency);
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
     }
 });
