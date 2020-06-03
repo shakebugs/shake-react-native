@@ -235,11 +235,13 @@ PODS:
   - React-jsinspector (0.62.2)
   - react-native-checkbox (0.3.0):
     - React
+  - react-native-maps (0.27.1):
+    - React
   - react-native-safe-area-context (0.7.3):
     - React
-  - react-native-shake (2.2.7):
+  - react-native-shake (2.3.3):
     - React
-    - Shake (~> 9.0.0)
+    - Shake-UAT (~> 9.0.0)
   - react-native-slider (2.0.9):
     - React
   - react-native-webview (9.3.0):
@@ -315,7 +317,7 @@ PODS:
     - React
   - RNScreens (2.7.0):
     - React
-  - Shake (9.0.4)
+  - Shake-UAT (9.0.8.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -357,6 +359,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-checkbox (from `../node_modules/@react-native-community/checkbox`)"
+  - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-shake (from `../..`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
@@ -393,7 +396,7 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - OpenSSL-Universal
-    - Shake
+    - Shake-UAT
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -427,6 +430,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-checkbox:
     :path: "../node_modules/@react-native-community/checkbox"
+  react-native-maps:
+    :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-shake:
@@ -497,8 +502,9 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-checkbox: 2d04aeb0c7e2c2cbd9a9a902ca6a5cf642688d09
+  react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
-  react-native-shake: f6a377414fcf75170b4c833829c687e8a0a56b7b
+  react-native-shake: 3f018869032f0103ae9a44beaa01652a7a48a1d8
   react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   react-native-webview: bdde2a3c4cbdc0122bc2bfba13603db193f0cc5c
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
@@ -517,7 +523,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
-  Shake: 27bcd927ac07a6885a7ff1fd09dad027617c1aad
+  Shake-UAT: 4e6adf093565a419c531ffd719d3a795c62848f9
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
