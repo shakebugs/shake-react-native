@@ -1,15 +1,8 @@
-#import "ShakeFile.h"
+#import "RNShakeFile.h"
 
-@implementation ShakeFile
+@implementation RNShakeFile
 
 RCT_EXPORT_MODULE()
-
-//RCT_EXPORT_METHOD(fileIsEqual:(SHKShakeFile*)file callback:(RCTResponseSenderBlock) callback) 
-//{
-//	SHKShakeFile *shakeFile = [[SHKShakeFile alloc] init];
-//	BOOL isEqual = [shakeFile fileIsEqual:file]; 
-//	callback(@[[NSNull null], isEqual]);
-//}
              
 RCT_EXPORT_METHOD(initWithName:(nonnull NSString*)name andData:(nonnull NSData*)data callback:(RCTResponseSenderBlock) callback)
 {

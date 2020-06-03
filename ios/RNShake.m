@@ -1,9 +1,9 @@
-#import "Shake.h"
+#import "RNShake.h"
 
-@implementation Shake
+@implementation RNShake
 
 +(void) initialize {
-    if(self == [Shake class]) {
+    if(self == [RNShake class]) {
         SEL *selector = @selector(_setNetworkRequestReporterEnabled:);
         [SHKShake.sharedInstance performSelector:selector withObject:NO];
     }

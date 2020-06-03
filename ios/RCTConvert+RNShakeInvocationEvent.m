@@ -1,7 +1,7 @@
-#import "RCTConvert+ShakeInvocationEvent.h"
+#import "RCTConvert+RNShakeInvocationEvent.h"
 #import <Shake/ShakeEnums.h>
 
-@implementation RCTConvert (ShakeInvocationEvent)
+@implementation RCTConvert (RNShakeInvocationEvent)
 
 RCT_ENUM_CONVERTER(ShakeInvocationEvent,
 (@{@"ShakeInvocationEventShake": @(ShakeInvocationEventShake),

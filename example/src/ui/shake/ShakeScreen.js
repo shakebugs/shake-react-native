@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import Shake, {NetworkTracker, ShakeInvocationEvent} from "react-native-shake";
+import {Shake, NetworkTracker, ShakeInvocationEvent} from "react-native-shake";
 import RNFS from "react-native-fs";
 import menuButton from "../core/MenuButton";
 
