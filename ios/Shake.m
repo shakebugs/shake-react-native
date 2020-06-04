@@ -2,6 +2,13 @@
 
 @implementation Shake
 
++(void) initialize {
+    if(self == [Shake class]) {
+        SEL *selector = @selector(_setNetworkRequestReporterEnabled:);
+        [SHKShake.sharedInstance performSelector:selector withObject:NO];
+    }
+	
+}
 +(BOOL)requiresMainQueueSetup
 {
 	return YES;
