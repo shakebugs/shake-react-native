@@ -32,11 +32,13 @@ RCT_EXPORT_METHOD(manualTrigger)
 
 RCT_EXPORT_METHOD(start)
 {
+    [SHKShake stop];
     [SHKShake start];
 }
 
 RCT_EXPORT_METHOD(setInvocationEvents:(nonnull NSArray *)eventsArray)
 {
+    [SHKShake stop];
 	NSUInteger count = [eventsArray count];
 	ShakeInvocationEvent event = 0;
     for(int i = 0; i < count; i++)
