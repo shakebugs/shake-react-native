@@ -13,7 +13,7 @@ npm run android
 For iOS:
 ```
 cd example
-npm run android
+npm run ios
 ```
 
 ## Build
