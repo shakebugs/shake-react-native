@@ -2,6 +2,9 @@ package com.shakebugs.react.utils;
 
 import android.view.View;
 
+/**
+ * View utils
+ */
 public class Views {
     /**
      * Gets view entry name.
