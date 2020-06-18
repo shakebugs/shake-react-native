@@ -49,6 +49,10 @@ android {
         targetSdkVersion safeExtGet('targetSdkVersion', DEFAULT_TARGET_SDK_VERSION)
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "SHAKE_SDK_PLATFORM", "\"ReactNative\""
+        buildConfigField "String", "SHAKE_SDK_VERSION_NAME", "\"2.3.3\""
+        buildConfigField "String", "SHAKE_SDK_VERSION_CODE", "\"20303\""
     }
     lintOptions {
         abortOnError false
