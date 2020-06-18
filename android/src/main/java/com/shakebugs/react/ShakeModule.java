@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -66,9 +67,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().enableBlackBox = enableBlackBox;
+                Shake.getReportConfiguration().setEnableBlackBox(enableBlackBox);
             }
         });
+    }
+
+    @ReactMethod
+    public void isEnableBlackBox(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableBlackBox());
     }
 
     @ReactMethod
@@ -76,9 +82,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().enableActivityHistory = enableActivityHistory;
+                Shake.getReportConfiguration().setEnableActivityHistory(enableActivityHistory);
             }
         });
+    }
+
+    @ReactMethod
+    public void isEnableActivityHistory(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableActivityHistory());
     }
 
     @ReactMethod
@@ -86,9 +97,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().enableInspectScreen = enableInspectScreen;
+                Shake.getReportConfiguration().setEnableInspectScreen(enableInspectScreen);
             }
         });
+    }
+
+    @ReactMethod
+    public void isEnableInspectScreen(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableInspectScreen());
     }
 
     @ReactMethod
@@ -96,9 +112,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().showFloatingReportButton = showFloatingReportButton;
+                Shake.getReportConfiguration().setShowFloatingReportButton(showFloatingReportButton);
             }
         });
+    }
+
+    @ReactMethod
+    public void isShowFloatingReportButton(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isShowFloatingReportButton());
     }
 
     @ReactMethod
@@ -106,9 +127,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().invokeShakeOnShakeDeviceEvent = invokeOnShake;
+                Shake.getReportConfiguration().setInvokeShakeOnShakeDeviceEvent(invokeOnShake);
             }
         });
+    }
+
+    @ReactMethod
+    public void isInvokeShakeOnShaking(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent());
     }
 
     @ReactMethod
@@ -116,9 +142,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().invokeShakeOnScreenshot = invokeOnScreenshot;
+                Shake.getReportConfiguration().setInvokeShakeOnScreenshot(invokeOnScreenshot);
             }
         });
+    }
+
+    @ReactMethod
+    public void isInvokeShakeOnScreenshot(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnScreenshot());
     }
 
     @ReactMethod

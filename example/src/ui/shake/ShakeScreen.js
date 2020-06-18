@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
 import RNFS from "react-native-fs";
@@ -11,8 +11,19 @@ import Link from "../core/Link";
 const ShakeScreen = (props) => {
     let path = RNFS.DocumentDirectoryPath + '/file.txt';
 
+    const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState();
+    const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState();
+    const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] = useState();
+    const [blackBoxEnabled, setBlackBoxEnabled] = useState();
+    const [activityHistoryEnabled, setActivityHistoryEnabled] = useState();
+    const [inspectScreenEnabled, setInspectScreenEnabled] = useState();
+    const [shakeEnabled, setShakeEnabled] = useState();
+
+    const [networkTrackerEnabled, setNetworkTrackerEnabled] = useState();
+
     useEffect(() => {
         createFile();
+        initialize();
     }, []);
 
     const createFile = () => {
@@ -25,20 +36,17 @@ const ShakeScreen = (props) => {
             });
     }
 
-    /*const enableAll = () => {
-        Shake.setInvokeShakeOnShaking(true);
-        Shake.setShowFloatingReportButton(true);
-        Shake.setInvokeShakeOnScreenshot(true);
+    const initialize = async () => {
+        setBlackBoxEnabled(await Shake.isEnableBlackBox());
+        setActivityHistoryEnabled(await Shake.isEnableActivityHistory());
+        setInspectScreenEnabled(await Shake.isEnableInspectScreen());
+        setButtonInvokingEnabled(await Shake.isShowFloatingReportButton());
+        setShakeInvokingEnabled(await Shake.isInvokeShakeOnShaking());
+        setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
+        setShakeEnabled(true); // Not provided by native SDK
 
-        Shake.setEnabled(true);
-        Shake.setEnableBlackBox(true);
-        Shake.setEnableActivityHistory(true);
-        Shake.setEnableInspectScreen(true);
-
-        NetworkTracker.enable();
-
-        Shake.start();
-    }*/
+        setNetworkTrackerEnabled(NetworkTracker.isEnabled())
+    }
 
     const start = () => {
         Shake.start();
@@ -49,10 +57,12 @@ const ShakeScreen = (props) => {
     };
 
     const setReportData = () => {
-        Shake.setShakeReportData([
-            ShakeFile.create(path),
-            ShakeFile.create(path, "customName")
-        ], "Test quick facts");
+        Shake.setShakeReportData(
+            [
+                ShakeFile.create(path),
+                ShakeFile.create(path, "customName")
+            ],
+            "Test quick facts");
     };
 
     const silentReport = () => {
@@ -64,7 +74,10 @@ const ShakeScreen = (props) => {
 
         Shake.silentReport(
             "Silent reports are working!",
-            [path],
+            [
+                ShakeFile.create(path),
+                ShakeFile.create(path, "customName")
+            ],
             "Test quick facts",
             reportConfig);
     };
@@ -95,55 +108,83 @@ const ShakeScreen = (props) => {
                 <Button text="Silent report" onPress={silentReport}/>
 
                 <Title style={styles.title} text="Invoking"/>
-                <Option title="Shaking"
-                        onValueChanged={(enabled) => {
-                            Shake.setInvokeShakeOnShaking(enabled);
-                        }}/>
-                <Option title="Button"
-                        onValueChanged={(enabled) => {
-                            Shake.setShowFloatingReportButton(enabled);
-                        }}/>
-                <Option title="Screenhot"
-                        onValueChanged={(enabled) => {
-                            Shake.setInvokeShakeOnScreenshot(enabled);
-                        }}/>
+                <Option
+                    enabled={shakeInvokingEnabled}
+                    title="Shaking"
+                    onValueChanged={() => {
+                        Shake.setInvokeShakeOnShaking(!shakeInvokingEnabled);
+                        setShakeInvokingEnabled(!shakeInvokingEnabled);
+                    }}/>
+                <Option
+                    enabled={buttonInvokingEnabled}
+                    title="Button"
+                    onValueChanged={() => {
+                        Shake.setShowFloatingReportButton(!buttonInvokingEnabled);
+                        setButtonInvokingEnabled(!buttonInvokingEnabled);
+
+                    }}/>
+                <Option
+                    enabled={screenshotInvokingEnabled}
+                    title="Screenhot"
+                    onValueChanged={() => {
+                        Shake.setInvokeShakeOnScreenshot(!screenshotInvokingEnabled);
+                        setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
+                    }}/>
 
                 <Title style={styles.title} text="Options"/>
-                <Option title="Enabled"
-                        onValueChanged={(enabled) => {
-                            Shake.setEnabled(enabled);
-                        }}/>
-                <Option title="Blackbox"
-                        onValueChanged={(enabled) => {
-                            Shake.setEnableBlackBox(enabled);
-                        }}/>
-                <Option title="Network tracker"
-                        onValueChanged={(enabled) => {
-                            NetworkTracker.setEnabled(enabled);
-                        }}/>
-                <Option title="Activity history"
-                        onValueChanged={(enabled) => {
-                            Shake.setEnableActivityHistory(enabled);
-                        }}/>
-                <Option title="Inspect screen"
-                        onValueChanged={(enabled) => {
-                            Shake.setEnableInspectScreen(enabled);
-                        }}/>
+                <Option
+                    enabled={shakeEnabled}
+                    title="Enabled"
+                    onValueChanged={() => {
+                        Shake.setEnabled(!shakeEnabled);
+                        setShakeEnabled(!shakeEnabled);
+                    }}/>
+
+                <Option
+                    enabled={blackBoxEnabled}
+                    title="Blackbox"
+                    onValueChanged={() => {
+                        Shake.setEnableBlackBox(!blackBoxEnabled);
+                        setBlackBoxEnabled(!blackBoxEnabled);
+                    }}/>
+                <Option
+                    enabled={networkTrackerEnabled}
+                    title="Network tracker"
+                    onValueChanged={() => {
+                        NetworkTracker.setEnabled(!networkTrackerEnabled);
+                        setNetworkTrackerEnabled(!networkTrackerEnabled);
+                    }}/>
+                <Option
+                    enabled={activityHistoryEnabled}
+                    title="Activity history"
+                    onValueChanged={() => {
+                        Shake.setEnableActivityHistory(!activityHistoryEnabled);
+                        setActivityHistoryEnabled(!activityHistoryEnabled);
+
+                    }}/>
+                <Option
+                    enabled={inspectScreenEnabled}
+                    title="Inspect screen"
+                    onValueChanged={() => {
+                        Shake.setEnableInspectScreen(!inspectScreenEnabled);
+                        setInspectScreenEnabled(!inspectScreenEnabled);
+                    }}/>
+
                 <Title style={styles.title} text="Tools"/>
                 <Button text="Send network request" onPress={sendNetworkRequest}/>
 
                 <View style={styles.links}>
                     <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
-                    <Link text="Docs" link="https://www.staging5h4k3.com/docs"/>
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
                 </View>
 
-                <TouchableWithoutFeedback onLongPress={() => {
-                    props.navigation.navigate('TestScreen');
-                }}>
-                    <View style={styles.info}>
+                <View style={styles.info}>
+                    <TouchableWithoutFeedback onLongPress={() => {
+                        props.navigation.navigate('TestScreen');
+                    }}>
                         <Text style={styles.version}>{"v" + DeviceInfo.getVersion()}</Text>
-                    </View>
-                </TouchableWithoutFeedback>
+                    </TouchableWithoutFeedback>
+                </View>
 
             </View>
         </ScrollView>
@@ -174,7 +215,6 @@ const styles = StyleSheet.create({
     },
 
     version: {
-        flex: 1,
         textAlign: 'center',
     }
 });

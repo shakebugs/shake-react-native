@@ -11,7 +11,6 @@ const Link = (props) => {
 
 const styles = StyleSheet.create({
     link: {
-        fontWeight: "bold",
         color: "#643ecb",
         flex: 1,
         textAlign: 'center',

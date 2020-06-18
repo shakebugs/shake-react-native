@@ -5,6 +5,7 @@ import ShakeFile from "./src/models/ShakeFile";
 
 const {Shake} = NativeModules;
 
+NetworkTracker.setEnabled(true);
 NetworkTracker.setNetworkRequestHandler(networkRequest => {
     if (networkRequest.statusCode) {
         Shake.insertNetworkRequest(networkRequest)
