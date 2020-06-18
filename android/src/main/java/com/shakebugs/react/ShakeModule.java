@@ -2,6 +2,7 @@ package com.shakebugs.react;
 
 import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -11,7 +12,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.shakebugs.react.db.SqliteDatabase;
 import com.shakebugs.react.utils.Mapper;
 import com.shakebugs.shake.Shake;
-import com.shakebugs.shake.ShakeInvocationEvent;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
@@ -42,54 +42,98 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void stop() {
+    public void show() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.stop();
+                Shake.show();
             }
         });
     }
 
     @ReactMethod
-    public void setInvocationEvents(final ReadableArray stringList) {
+    public void setEnabled(final boolean enabled) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ShakeInvocationEvent[] invocationEvents = Mapper.mapToShakeInvocationEvents(stringList);
-                Shake.setInvocationEvents(invocationEvents);
+                Shake.setEnabled(enabled);
             }
         });
     }
 
     @ReactMethod
-    public void setBlackBoxEnabled(final boolean blackBoxEnabled) {
+    public void setEnableBlackBox(final boolean enableBlackBox) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.setBlackboxEnabled(blackBoxEnabled);
+                Shake.getReportConfiguration().enableBlackBox = enableBlackBox;
             }
         });
     }
 
     @ReactMethod
-    public void setQuickFacts(final String quickFacts) {
+    public void setEnableActivityHistory(final boolean enableActivityHistory) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.setQuickFacts(quickFacts);
+                Shake.getReportConfiguration().enableActivityHistory = enableActivityHistory;
             }
         });
     }
 
     @ReactMethod
-    public void attachFiles(final ReadableArray filesArray) {
+    public void setEnableInspectScreen(final boolean enableInspectScreen) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().enableInspectScreen = enableInspectScreen;
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setShowFloatingReportButton(final boolean showFloatingReportButton) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().showFloatingReportButton = showFloatingReportButton;
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setInvokeShakeOnShaking(final boolean invokeOnShake) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().invokeShakeOnShakeDeviceEvent = invokeOnShake;
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setInvokeShakeOnScreenshot(final boolean invokeOnScreenshot) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().invokeShakeOnScreenshot = invokeOnScreenshot;
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setShakeReportData(final ReadableArray filesArray, final String quickFacts) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesArray);
                 Shake.onPrepareData(new ShakeReportData() {
                     @Override
+                    public String quickFacts() {
+                        return quickFacts;
+                    }
+
+                    @Override
                     public List<ShakeFile> attachedFiles() {
                         return shakeFiles;
                     }
@@ -99,19 +143,9 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void attachFilesWithName(final ReadableMap filesMap) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesMap);
-                Shake.onPrepareData(new ShakeReportData() {
-                    @Override
-                    public List<ShakeFile> attachedFiles() {
-                        return shakeFiles;
-                    }
-                });
-            }
-        });
+    public void silentReport(String description, final ReadableArray filesArray,
+                             final String quickFacts, ReadableMap configurationMap) {
+        Log.i("Shake", "silentReport() is not supported in React native 10 SDK.");
     }
 
     @ReactMethod

@@ -4,11 +4,9 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
-import com.shakebugs.shake.ShakeInvocationEvent;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,30 +16,31 @@ import java.util.Map;
  * Maps React Native data to models
  */
 public class Mapper {
-    public static ShakeInvocationEvent[] mapToShakeInvocationEvents(ReadableArray stringInvocationEvents) {
-        ShakeInvocationEvent[] array = new ShakeInvocationEvent[stringInvocationEvents.size()];
-        for (int i = 0; i < stringInvocationEvents.size(); i++) {
-            array[i] = ShakeInvocationEvent.valueOf(stringInvocationEvents.getString(i));
-        }
-        return array;
-    }
+/*    public static ShakeReportConfiguration mapToConfiguration(ReadableMap configurationMap) {
+
+        boolean blackBoxData = configurationMap.getBoolean("blackBoxData");
+        boolean activityHistoryData = configurationMap.getBoolean("activityHistoryData");
+        boolean screenshot = configurationMap.getBoolean("screenshot");
+        boolean showReportSentMessage = configurationMap.getBoolean("showReportSentMessage");
+
+        ShakeReportConfiguration configuration = new ShakeReportConfiguration();
+        configuration.blackBoxData = blackBoxData;
+        configuration.activityHistoryData = activityHistoryData;
+        configuration.screenshot = screenshot;
+        configuration.showReportSentMessage = showReportSentMessage;
+
+        return configuration;
+    }*/
 
     public static List<ShakeFile> mapToShakeFiles(ReadableArray filePaths) {
         List<ShakeFile> shakeFiles = new ArrayList<>();
         for (int i = 0; i < filePaths.size(); i++) {
-            File file = new File(filePaths.getString(i));
-            String name = Files.getFileNameWithoutExtension(file);
-            shakeFiles.add(new ShakeFile(name, file));
-        }
-        return shakeFiles;
-    }
+            ReadableMap fileMap = filePaths.getMap(i);
 
-    public static List<ShakeFile> mapToShakeFiles(ReadableMap filePaths) {
-        Map<String, String> filesMap = toStringMap(filePaths);
+            String path = fileMap.getString("path");
+            String name = fileMap.getString("name");
 
-        List<ShakeFile> shakeFiles = new ArrayList<>();
-        for (Map.Entry<String, String> entry : filesMap.entrySet()) {
-            shakeFiles.add(new ShakeFile(entry.getKey(), entry.getValue()));
+            shakeFiles.add(new ShakeFile(name, path));
         }
         return shakeFiles;
     }
