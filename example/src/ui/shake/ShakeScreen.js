@@ -1,54 +1,72 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import Shake, {NetworkTracker, ShakeInvocationEvent} from "react-native-shake";
+import React, {useEffect} from 'react';
+import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
 import RNFS from "react-native-fs";
-import menuButton from "../core/MenuButton";
+import Button from "../core/Button";
+import Title from "../core/Title";
+import Option from "../core/Option";
+import DeviceInfo from 'react-native-device-info';
+import Link from "../core/Link";
 
-const ShakeScreen = () => {
-    const start = () => {
-        Shake.start();
-    };
+const ShakeScreen = (props) => {
+    let path = RNFS.DocumentDirectoryPath + '/file.txt';
 
-    const stop = () => {
-        Shake.stop();
-    };
+    useEffect(() => {
+        createFile();
+    }, []);
 
-    const setInvocationEvents = () => {
-        Shake.setInvocationEvents([ShakeInvocationEvent.BUTTON,
-            ShakeInvocationEvent.SHAKE,
-            ShakeInvocationEvent.SCREENSHOT])
-    };
-
-    const setBlackBoxDisabled = () => {
-        Shake.setBlackBoxEnabled(false);
-    };
-
-    const setBlackBoxEnabled = () => {
-        Shake.setBlackBoxEnabled(true);
-    };
-
-    const setQuickFacts = () => {
-        Shake.setQuickFacts('Sample quick facts');
-    };
-
-    const attachFiles = () => {
-        let path = RNFS.DocumentDirectoryPath + '/file.txt';
+    const createFile = () => {
         RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
             .then((success) => {
                 console.log('File written');
-                Shake.attachFiles([path]);
             })
             .catch((error) => {
                 console.log(error.message);
             });
-    };
+    }
 
-    const enableNetworkTracker = () => {
+    /*const enableAll = () => {
+        Shake.setInvokeShakeOnShaking(true);
+        Shake.setShowFloatingReportButton(true);
+        Shake.setInvokeShakeOnScreenshot(true);
+
+        Shake.setEnabled(true);
+        Shake.setEnableBlackBox(true);
+        Shake.setEnableActivityHistory(true);
+        Shake.setEnableInspectScreen(true);
+
         NetworkTracker.enable();
+
+        Shake.start();
+    }*/
+
+    const start = () => {
+        Shake.start();
     };
 
-    const disableNetworkTracker = () => {
-        NetworkTracker.disable();
+    const show = () => {
+        Shake.show();
+    };
+
+    const setReportData = () => {
+        Shake.setShakeReportData([
+            ShakeFile.create(path),
+            ShakeFile.create(path, "customName")
+        ], "Test quick facts");
+    };
+
+    const silentReport = () => {
+        const reportConfig = new ShakeReportConfiguration();
+        reportConfig.blackBoxData = true;
+        reportConfig.activityHistoryData = true;
+        reportConfig.screenshot = true;
+        reportConfig.showReportSentMessage = true;
+
+        Shake.silentReport(
+            "Silent reports are working!",
+            [path],
+            "Test quick facts",
+            reportConfig);
     };
 
     const sendNetworkRequest = () => {
@@ -68,20 +86,93 @@ const ShakeScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.buttons}>
-                {menuButton("Start", start)}
-                {menuButton("Stop", stop)}
-                {menuButton("Attach files", attachFiles)}
-                {menuButton("Set quick facts", setQuickFacts)}
-                {menuButton("Enable blackbox", setBlackBoxEnabled)}
-                {menuButton("Disable blackbox", setBlackBoxDisabled)}
-                {menuButton("Set invocation events", setInvocationEvents)}
-                {menuButton("Enable network tracker", enableNetworkTracker)}
-                {menuButton("Disable network tracker", disableNetworkTracker)}
-                {menuButton("Send network request", sendNetworkRequest)}
+        <ScrollView>
+            <View style={styles.container}>
+                <Title style={styles.title} text="Actions"/>
+                <Button text="Start" onPress={start}/>
+                <Button text="Show" onPress={show}/>
+                <Button text="Attach data" onPress={setReportData}/>
+                <Button text="Silent report" onPress={silentReport}/>
+
+                <Title style={styles.title} text="Invoking"/>
+                <Option title="Shaking"
+                        on={() => {
+                            Shake.setInvokeShakeOnShaking(true);
+                        }}
+                        off={() => {
+                            Shake.setInvokeShakeOnShaking(false);
+                        }}/>
+                <Option title="Button"
+                        on={() => {
+                            Shake.setShowFloatingReportButton(true);
+                        }}
+                        off={() => {
+                            Shake.setShowFloatingReportButton(false);
+                        }}/>
+                <Option title="Screenhot"
+                        on={() => {
+                            Shake.setInvokeShakeOnScreenshot(true);
+                        }}
+                        off={() => {
+                            Shake.setInvokeShakeOnScreenshot(false);
+                        }}/>
+
+                <Title style={styles.title} text="Options"/>
+                <Option title="Enabled"
+                        on={() => {
+                            Shake.setEnabled(true);
+                        }}
+                        off={() => {
+                            Shake.setEnabled(false);
+                        }}/>
+                <Option title="Blackbox"
+                        on={() => {
+                            Shake.setEnableBlackBox(true);
+                        }}
+                        off={() => {
+                            Shake.setEnableBlackBox(false);
+                        }}/>
+                <Option title="Network tracker"
+                        on={() => {
+                            NetworkTracker.enable();
+                        }}
+                        off={() => {
+                            NetworkTracker.disable();
+                        }}/>
+                <Option title="Activity history"
+                        on={() => {
+                            Shake.setEnableActivityHistory(true);
+                        }}
+                        off={() => {
+                            Shake.setEnableActivityHistory(false);
+                        }}/>
+                <Option title="Inspect screen"
+                        on={() => {
+                            Shake.setEnableInspectScreen(true);
+                        }}
+                        off={() => {
+                            Shake.setEnableInspectScreen(false);
+                        }}/>
+
+                <Title style={styles.title} text="Tools"/>
+                <Button text="Send network request" onPress={sendNetworkRequest}/>
+
+                <View style={styles.links}>
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
+                    <Link text="Docs" link="https://www.staging5h4k3.com/docs"/>
+                </View>
+
+                <TouchableWithoutFeedback onLongPress={() => {
+                    props.navigation.navigate('TestScreen');
+                }}>
+                    <View style={styles.info}>
+                        <Text style={styles.infoText}>{"v" + DeviceInfo.getVersion()}</Text>
+                        <Text style={styles.infoText}>{"React Native"}</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -90,7 +181,26 @@ export default ShakeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
-        backgroundColor: '#F5FCFF',
+        paddingHorizontal: 12,
+        paddingBottom: 16
     },
+
+    title: {
+        marginVertical: 16
+    },
+
+    links: {
+        marginBottom: 8,
+        marginTop: 16,
+    },
+
+    info: {
+        marginBottom: 16,
+        marginTop: 8,
+    },
+
+    infoText: {
+        flex: 1,
+        textAlign: 'center',
+    }
 });
