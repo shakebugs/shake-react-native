@@ -96,64 +96,39 @@ const ShakeScreen = (props) => {
 
                 <Title style={styles.title} text="Invoking"/>
                 <Option title="Shaking"
-                        on={() => {
-                            Shake.setInvokeShakeOnShaking(true);
-                        }}
-                        off={() => {
-                            Shake.setInvokeShakeOnShaking(false);
+                        onValueChanged={(enabled) => {
+                            Shake.setInvokeShakeOnShaking(enabled);
                         }}/>
                 <Option title="Button"
-                        on={() => {
-                            Shake.setShowFloatingReportButton(true);
-                        }}
-                        off={() => {
-                            Shake.setShowFloatingReportButton(false);
+                        onValueChanged={(enabled) => {
+                            Shake.setShowFloatingReportButton(enabled);
                         }}/>
                 <Option title="Screenhot"
-                        on={() => {
-                            Shake.setInvokeShakeOnScreenshot(true);
-                        }}
-                        off={() => {
-                            Shake.setInvokeShakeOnScreenshot(false);
+                        onValueChanged={(enabled) => {
+                            Shake.setInvokeShakeOnScreenshot(enabled);
                         }}/>
 
                 <Title style={styles.title} text="Options"/>
                 <Option title="Enabled"
-                        on={() => {
-                            Shake.setEnabled(true);
-                        }}
-                        off={() => {
-                            Shake.setEnabled(false);
+                        onValueChanged={(enabled) => {
+                            Shake.setEnabled(enabled);
                         }}/>
                 <Option title="Blackbox"
-                        on={() => {
-                            Shake.setEnableBlackBox(true);
-                        }}
-                        off={() => {
-                            Shake.setEnableBlackBox(false);
+                        onValueChanged={(enabled) => {
+                            Shake.setEnableBlackBox(enabled);
                         }}/>
                 <Option title="Network tracker"
-                        on={() => {
-                            NetworkTracker.enable();
-                        }}
-                        off={() => {
-                            NetworkTracker.disable();
+                        onValueChanged={(enabled) => {
+                            NetworkTracker.setEnabled(enabled);
                         }}/>
                 <Option title="Activity history"
-                        on={() => {
-                            Shake.setEnableActivityHistory(true);
-                        }}
-                        off={() => {
-                            Shake.setEnableActivityHistory(false);
+                        onValueChanged={(enabled) => {
+                            Shake.setEnableActivityHistory(enabled);
                         }}/>
                 <Option title="Inspect screen"
-                        on={() => {
-                            Shake.setEnableInspectScreen(true);
-                        }}
-                        off={() => {
-                            Shake.setEnableInspectScreen(false);
+                        onValueChanged={(enabled) => {
+                            Shake.setEnableInspectScreen(enabled);
                         }}/>
-
                 <Title style={styles.title} text="Tools"/>
                 <Button text="Send network request" onPress={sendNetworkRequest}/>
 
@@ -166,8 +141,7 @@ const ShakeScreen = (props) => {
                     props.navigation.navigate('TestScreen');
                 }}>
                     <View style={styles.info}>
-                        <Text style={styles.infoText}>{"v" + DeviceInfo.getVersion()}</Text>
-                        <Text style={styles.infoText}>{"React Native"}</Text>
+                        <Text style={styles.version}>{"v" + DeviceInfo.getVersion()}</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
@@ -199,7 +173,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
 
-    infoText: {
+    version: {
         flex: 1,
         textAlign: 'center',
     }

@@ -14,11 +14,7 @@ const Option = (props) => {
             value={enabled}
             onValueChange={(value) => {
                 setEnabled(value);
-                if (value) {
-                    props.on();
-                } else {
-                    props.off();
-                }
+                props.onValueChanged(value);
             }}/>
     </View>;
 };

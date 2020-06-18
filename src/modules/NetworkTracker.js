@@ -1,12 +1,13 @@
 import XHRInterceptor from "../utils/XhrInterceptor";
 
 class NetworkTracker {
-    static enable = () => {
-        XHRInterceptor.enableInterception();
-    };
+    static setEnabled = (enabled) => {
+        if (enabled) {
+            XHRInterceptor.enableInterception();
+        } else {
+            XHRInterceptor.disableInterception();
+        }
 
-    static disable = () => {
-        XHRInterceptor.disableInterception();
     };
 
     static setNetworkRequestHandler = (networkRequestHandler) => {
