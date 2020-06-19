@@ -116,8 +116,13 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void insertNetworkRequest(ReadableMap networkRequestMap) {
-        NetworkRequest networkRequest = Mapper.mapToNetworkRequest(networkRequestMap);
-        SqliteDatabase.insertNetworkRequest(application, networkRequest);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final NetworkRequest networkRequest = Mapper.mapToNetworkRequest(networkRequestMap);
+                Shake.insertNetworkRequest(networkRequest);
+            }
+        }););
     }
 
     private void runOnUiThread(Runnable runnable) {
