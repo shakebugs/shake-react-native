@@ -84,6 +84,9 @@ dependencies {
 def configureReactNativePom(def pom) {
     def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
 
+    android.defaultConfig.buildConfigField("String", "SHAKE_SDK_VERSION_NAME", "\"" + packageJson.version + "\"")
+    android.defaultConfig.buildConfigField("String", "SHAKE_SDK_VERSION_CODE", "\"" + packageJson.version.replaceAll('\\.', '0') + "\"")
+
     pom.project {
         name packageJson.title
         artifactId packageJson.name
