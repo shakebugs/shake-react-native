@@ -2,6 +2,8 @@ package com.shakebugs.react;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -24,6 +26,12 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.application = (Application) reactContext.getApplicationContext();
+        SharedPreferences preferences = this.application.getSharedPreferences("SHAKE_PREFS_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("SHAKE_SDK_PLATFORM",BuildConfig.SHAKE_SDK_PLATFORM);
+        editor.putString("SHAKE_SDK_VERSION_NAME",BuildConfig.SHAKE_SDK_VERSION_NAME);
+        editor.putString("SHAKE_SDK_VERSION_CODE",BuildConfig.SHAKE_SDK_VERSION_CODE);
+        editor.apply();
     }
 
     @Override
