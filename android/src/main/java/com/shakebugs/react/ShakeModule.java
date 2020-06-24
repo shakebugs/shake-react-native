@@ -74,10 +74,10 @@ public class ShakeModule extends ReactContextBaseJavaModule {
      * @param invocationEvents invocation events to set
      */
     private void checkScreenshotPermissions(ShakeInvocationEvent[] invocationEvents) {
-        for (ShakeInvocationEvent event : invocationEvents) {
+        for (ShakeInvocationEvent event: invocationEvents) {
             if (event.equals(ShakeInvocationEvent.SCREENSHOT)) {
-                Permissions.requestPermissions(getCurrentActivity(),
-                        new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE});
+                Permissions.requestPermission(getCurrentActivity(), READ_EXTERNAL_STORAGE);
+                Permissions.requestPermission(getCurrentActivity(), WRITE_EXTERNAL_STORAGE);
                 return;
             }
         }

@@ -3,9 +3,6 @@ package com.shakebugs.react.utils;
 import android.app.Activity;
 import android.os.Build;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
@@ -25,21 +22,13 @@ public class Permissions {
      * Requests the permission.
      *
      * @param activity
-     * @param permissions
+     * @param permission
      */
-    public static void requestPermissions(Activity activity, String[] permissions) {
+    public static void requestPermission(Activity activity, String permission) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            List<String> permissionsToRequest= new ArrayList<>();
-            for (String permission: permissions) {
-                if (!checkHasPermission(activity, permission)) {
-                    permissionsToRequest.add(permission);
-                }
+            if (!checkHasPermission(activity, permission)) {
+                activity.requestPermissions(new String[]{permission}, 1);
             }
-
-            String[] array = new String[permissionsToRequest.size()];
-            permissionsToRequest.toArray(array);
-
-            activity.requestPermissions(array, 1);
         }
     }
 }
