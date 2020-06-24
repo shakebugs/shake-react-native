@@ -6,8 +6,9 @@
     if(self == [Shake class]) {
         SEL *selector = @selector(_setNetworkRequestReporterEnabled:);
         [SHKShake.sharedInstance performSelector:selector withObject:NO];
+        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|2.3.9"];
     }
-	
+
 }
 +(BOOL)requiresMainQueueSetup
 {
@@ -32,11 +33,13 @@ RCT_EXPORT_METHOD(manualTrigger)
 
 RCT_EXPORT_METHOD(start)
 {
+    [SHKShake stop];
     [SHKShake start];
 }
 
 RCT_EXPORT_METHOD(setInvocationEvents:(nonnull NSArray *)eventsArray)
 {
+    [SHKShake stop];
 	NSUInteger count = [eventsArray count];
 	ShakeInvocationEvent event = 0;
     for(int i = 0; i < count; i++)
@@ -62,30 +65,39 @@ RCT_EXPORT_METHOD(setQuickFacts:(nonnull NSString *)quickFacts)
 RCT_EXPORT_METHOD(attachFiles:(nonnull NSArray *)files)
 {
 	NSUInteger count  = [files count];
-	NSMutableArray *shakeFiles;
-	[[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
+    NSMutableArray <SHKShakeFile *> *shakeFiles = [NSMutableArray array];
+    [[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
 	_Nonnull(SHKShakeReportData * _Nonnull reportData) {
 		for(int i = 0; i < count; i++)
 		{
-			SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:[files objectAtIndex:i] andData:[NSData new]];
+            NSArray *splitPath = [[files objectAtIndex:i] componentsSeparatedByString:@"/"];
+            NSUInteger splitPathCount = [splitPath count];
+            NSString *filename = [splitPath objectAtIndex:splitPathCount-1];
+			SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:filename
+                                                                    andData:[NSData dataWithContentsOfFile:[files objectAtIndex:i]]];
 			[shakeFiles addObject:attachedFile];
 		}
 		reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
 		return reportData;
 	}];
+    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] init];
+    [SHKShake sharedInstance].onPrepareData(reportData);
+
 }
 RCT_EXPORT_METHOD(attachFilesWithName:(nonnull NSDictionary *)filesDictionary)
 {
-    NSMutableArray *shakeFiles;
+    NSMutableArray <SHKShakeFile*> *shakeFiles = [NSMutableArray array];
     [[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
-	_Nonnull(SHKShakeReportData * _Nonnull reportData) {
+    _Nonnull(SHKShakeReportData * _Nonnull reportData) {
         for (NSMutableString *key in filesDictionary) {
-            SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:key andFileURL:[filesDictionary objectForKey:key]];
-			[shakeFiles addObject:attachedFile];
+            SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:key andData:[NSData dataWithContentsOfFile:[filesDictionary objectForKey:key]]];
+            [shakeFiles addObject:attachedFile];
         }
-        reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
-		return reportData;
+       reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
+       return reportData;
     }];
+    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] init];
+    [SHKShake sharedInstance].onPrepareData(reportData);
 }
 RCT_EXPORT_METHOD(setBlackBoxEnabled:(BOOL)isBlackBoxEnabled)
 {

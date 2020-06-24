@@ -8,6 +8,7 @@ import com.shakebugs.shake.ShakeInvocationEvent;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,9 @@ public class Mapper {
     public static List<ShakeFile> mapToShakeFiles(ReadableArray filePaths) {
         List<ShakeFile> shakeFiles = new ArrayList<>();
         for (int i = 0; i < filePaths.size(); i++) {
-            shakeFiles.add(new ShakeFile(filePaths.getString(i)));
+            File file = new File(filePaths.getString(i));
+            String name = Files.getFileNameWithoutExtension(file);
+            shakeFiles.add(new ShakeFile(name, file));
         }
         return shakeFiles;
     }
