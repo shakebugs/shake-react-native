@@ -6,9 +6,9 @@
     if(self == [Shake class]) {
         SEL *selector = @selector(_setNetworkRequestReporterEnabled:);
         [SHKShake.sharedInstance performSelector:selector withObject:NO];
-        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|2.3.7"];
+        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|2.3.9"];
     }
-	
+
 }
 +(BOOL)requiresMainQueueSetup
 {
