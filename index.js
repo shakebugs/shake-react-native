@@ -2,15 +2,15 @@ import {NativeModules} from 'react-native';
 import ShakeInvocationEvent from "./src/enums/ShakeInvocationEvent";
 import NetworkTracker from "./src/modules/NetworkTracker";
 
-const {Shake} = NativeModules;
+const {RNShake} = NativeModules;
 
 NetworkTracker.setNetworkRequestHandler(networkRequest => {
     if (networkRequest.statusCode) {
-        Shake.insertNetworkRequest(networkRequest)
+        RNShake.insertNetworkRequest(networkRequest)
     }
 });
 
-export default Shake;
 
+export {RNShake as Shake}
 export {ShakeInvocationEvent}
 export {NetworkTracker}

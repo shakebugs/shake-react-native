@@ -34,7 +34,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "Shake";
+        return "RNShake";
     }
 
     @ReactMethod

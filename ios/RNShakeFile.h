@@ -1,6 +1,6 @@
 #import <React/RCTBridgeModule.h>
 #import <Shake/ShakeFile.h>
 
-@interface ShakeFile : NSObject <RCTBridgeModule>
+@interface RNShakeFile : NSObject <RCTBridgeModule>
 
 @end
