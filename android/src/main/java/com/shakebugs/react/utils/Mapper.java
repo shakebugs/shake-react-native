@@ -4,6 +4,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
+import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  * Maps React Native data to models
  */
 public class Mapper {
-/*    public static ShakeReportConfiguration mapToConfiguration(ReadableMap configurationMap) {
+   public static ShakeReportConfiguration mapToConfiguration(ReadableMap configurationMap) {
 
         boolean blackBoxData = configurationMap.getBoolean("blackBoxData");
         boolean activityHistoryData = configurationMap.getBoolean("activityHistoryData");
@@ -30,7 +31,7 @@ public class Mapper {
         configuration.showReportSentMessage = showReportSentMessage;
 
         return configuration;
-    }*/
+    }
 
     public static List<ShakeFile> mapToShakeFiles(ReadableArray filePaths) {
         List<ShakeFile> shakeFiles = new ArrayList<>();

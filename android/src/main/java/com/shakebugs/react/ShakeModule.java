@@ -174,9 +174,25 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void silentReport(String description, final ReadableArray filesArray,
-                             final String quickFacts, ReadableMap configurationMap) {
-        Log.i("Shake", "silentReport() is not supported in React native 10 SDK.");
+    public void silentReport(final String description, final ReadableArray filesArray,
+                             final String quickFacts, final ReadableMap configurationMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.silentReport(description, new ShakeReportData() {
+                    @Override
+                    public String quickFacts() {
+                        return quickFacts;
+                    }
+
+                    @Override
+                    public List<ShakeFile> attachedFiles() {
+                        return Mapper.mapToShakeFiles(filesArray);
+                    }
+                }, Mapper.mapToConfiguration(configurationMap));
+
+            }
+        });
     }
 
     @ReactMethod
