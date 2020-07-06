@@ -3,9 +3,9 @@
 #import <Shake/ShakeEnums.h>
 #import <Shake/ShakeFile.h>
 #import <Shake/ShakeReportData.h>
-#import "RCTConvert+ShakeInvocationEvent.h"
+#import "RCTConvert+RNShakeInvocationEvent.h"
 
-@interface Shake : NSObject <RCTBridgeModule>
+@interface RNShake : NSObject <RCTBridgeModule>
 
 
 @end

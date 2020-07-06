@@ -239,7 +239,7 @@ PODS:
     - React
   - react-native-safe-area-context (0.7.3):
     - React
-  - react-native-shake (2.3.3):
+  - react-native-shake (2.3.7):
     - React
     - Shake-UAT (~> 9.0.0)
   - react-native-slider (2.0.9):
@@ -317,7 +317,7 @@ PODS:
     - React
   - RNScreens (2.7.0):
     - React
-  - Shake-UAT (9.0.8.1)
+  - Shake-UAT (9.0.10.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -504,7 +504,7 @@ SPEC CHECKSUMS:
   react-native-checkbox: 2d04aeb0c7e2c2cbd9a9a902ca6a5cf642688d09
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
-  react-native-shake: 3f018869032f0103ae9a44beaa01652a7a48a1d8
+  react-native-shake: cac64828f2b99f57d27e66c28d394e6ad339e086
   react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   react-native-webview: bdde2a3c4cbdc0122bc2bfba13603db193f0cc5c
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
@@ -523,10 +523,10 @@ SPEC CHECKSUMS:
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
-  Shake-UAT: 4e6adf093565a419c531ffd719d3a795c62848f9
+  Shake-UAT: 9921aca69b971657cc41a6e1cae2a304813be342
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: cf2184ebff4a5f6bdb069822ffedbc231b3d6585
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3

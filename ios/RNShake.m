@@ -1,13 +1,14 @@
-#import "Shake.h"
+#import "RNShake.h"
 
-@implementation Shake
+@implementation RNShake
 
 +(void) initialize {
-    if(self == [Shake class]) {
+    if(self == [RNShake class]) {
         SEL *selector = @selector(_setNetworkRequestReporterEnabled:);
         [SHKShake.sharedInstance performSelector:selector withObject:NO];
+        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|9.0.0"];
     }
-	
+
 }
 +(BOOL)requiresMainQueueSetup
 {
