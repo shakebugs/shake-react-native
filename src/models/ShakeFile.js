@@ -10,9 +10,7 @@ class ShakeFile {
         let shakeFile = new ShakeFile();
         shakeFile.path = filePath;
         shakeFile.name = fileName;
-
-        console.log(shakeFile);
-
+        
         return shakeFile;
     }
 
