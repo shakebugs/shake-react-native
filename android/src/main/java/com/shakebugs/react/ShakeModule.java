@@ -9,7 +9,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.shakebugs.react.db.SqliteDatabase;
 import com.shakebugs.react.utils.Mapper;
 import com.shakebugs.react.utils.Permissions;
 import com.shakebugs.shake.Shake;
@@ -19,7 +18,6 @@ import com.shakebugs.shake.report.ShakeReportData;
 
 import java.util.List;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
@@ -102,25 +100,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setEnableInspectScreen(enableInspectScreen);
-
-                checkScreenshotPermissions(invocationEvents);
             }
         });
-    }
-
-    /**
-     * This is introduced as fix because SDK 9.0.3 requests permissions just on activity start
-     *
-     * @param invocationEvents invocation events to set
-     */
-    private void checkScreenshotPermissions(ShakeInvocationEvent[] invocationEvents) {
-        for (ShakeInvocationEvent event: invocationEvents) {
-            if (event.equals(ShakeInvocationEvent.SCREENSHOT)) {
-                Permissions.requestPermission(getCurrentActivity(), READ_EXTERNAL_STORAGE);
-                Permissions.requestPermission(getCurrentActivity(), WRITE_EXTERNAL_STORAGE);
-                return;
-            }
-        }
     }
 
     @ReactMethod
@@ -164,6 +145,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setInvokeShakeOnScreenshot(invokeOnScreenshot);
+
+                /*
+                 * This is introduced as fix because SDK requests permissions just on activity start.
+                 * This issue is fixed on Shake Android SDK 13, this should be removed in 13 version.*
+                 */
+                if (invokeOnScreenshot) {
+                    Permissions.requestPermission(getCurrentActivity(), WRITE_EXTERNAL_STORAGE);
+                }
             }
         });
     }
@@ -217,9 +206,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void insertNetworkRequest(ReadableMap networkRequestMap) {
-        NetworkRequest networkRequest = Mapper.mapToNetworkRequest(networkRequestMap);
-        SqliteDatabase.insertNetworkRequest(application, networkRequest);
+    public void insertNetworkRequest(final ReadableMap data) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkRequest networkRequest = Mapper.mapToNetworkRequest(data);
+                Shake.insertNetworkRequest(networkRequest);
+            }
+        });
     }
 
     private void runOnUiThread(Runnable runnable) {
