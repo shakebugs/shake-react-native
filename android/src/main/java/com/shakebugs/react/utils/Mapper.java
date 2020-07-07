@@ -48,15 +48,15 @@ public class Mapper {
 
     public static NetworkRequest mapToNetworkRequest(ReadableMap object) {
         NetworkRequest networkRequest = new NetworkRequest();
-        networkRequest.url = object.getString("url");
-        networkRequest.method = object.getString("method");
-        networkRequest.requestBody = object.getString("requestBody");
-        networkRequest.requestHeaders = toStringMap(object.getMap("requestHeaders"));
-        networkRequest.responseBody = object.getString("responseBody");
-        networkRequest.responseHeaders = toStringMap(object.getMap("responseHeaders"));
-        networkRequest.statusCode = String.valueOf(object.getInt("statusCode"));
-        networkRequest.timestamp = object.getString("timestamp");
-        networkRequest.duration = (float) object.getDouble("duration");
+        networkRequest.setUrl(object.getString("url"));
+        networkRequest.setMethod(object.getString("method"));
+        networkRequest.setRequestBody(object.getString("requestBody"));
+        networkRequest.setRequestHeaders(toStringMap(object.getMap("requestHeaders")));
+        networkRequest.setResponseBody(object.getString("responseBody"));
+        networkRequest.setResponseHeaders(toStringMap(object.getMap("responseHeaders")));
+        networkRequest.setStatusCode(String.valueOf(object.getInt("statusCode")));
+        networkRequest.setTimestamp(object.getString("timestamp"));
+        networkRequest.setDuration((float) object.getDouble("duration"));
 
         return networkRequest;
     }
