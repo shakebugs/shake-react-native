@@ -15,7 +15,7 @@ const Button = (props) => {
 const styles = StyleSheet.create({
     button: {
         marginBottom: 6,
-        borderRadius: 20,
+        borderRadius: 28,
         paddingVertical: 12,
         shadowColor: "#000",
         shadowOffset: {
