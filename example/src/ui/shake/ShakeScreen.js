@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {Shake, NetworkTracker, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {NetworkTracker, Shake, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
 import RNFS from "react-native-fs";
 import Button from "../core/Button";
 import Title from "../core/Title";
 import Option from "../core/Option";
-import DeviceInfo from 'react-native-device-info';
 import Link from "../core/Link";
+import Version from "../core/Version";
 
 const ShakeScreen = (props) => {
     let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -106,7 +106,6 @@ const ShakeScreen = (props) => {
                 <Button text="Show" onPress={show}/>
                 <Button text="Attach data" onPress={setReportData}/>
                 <Button text="Silent report" onPress={silentReport}/>
-
                 <Title style={styles.title} text="Invoking"/>
                 <Option
                     enabled={shakeInvokingEnabled}
@@ -130,7 +129,6 @@ const ShakeScreen = (props) => {
                         Shake.setInvokeShakeOnScreenshot(!screenshotInvokingEnabled);
                         setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
                     }}/>
-
                 <Title style={styles.title} text="Options"/>
                 <Option
                     enabled={shakeEnabled}
@@ -169,23 +167,15 @@ const ShakeScreen = (props) => {
                         Shake.setEnableInspectScreen(!inspectScreenEnabled);
                         setInspectScreenEnabled(!inspectScreenEnabled);
                     }}/>
-
                 <Title style={styles.title} text="Tools"/>
                 <Button text="Send network request" onPress={sendNetworkRequest}/>
-
                 <View style={styles.links}>
                     <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
                     <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
                 </View>
-
-                <View style={styles.info}>
-                    <TouchableWithoutFeedback onLongPress={() => {
-                        props.navigation.navigate('TestScreen');
-                    }}>
-                        <Text style={styles.version}>{"v" + DeviceInfo.getVersion()}</Text>
-                    </TouchableWithoutFeedback>
-                </View>
-
+                <Version onLongPress={() => {
+                    props.navigation.navigate('TestScreen');
+                }}/>
             </View>
         </ScrollView>
     );
@@ -208,13 +198,4 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         marginTop: 16,
     },
-
-    info: {
-        marginBottom: 16,
-        marginTop: 8,
-    },
-
-    version: {
-        textAlign: 'center',
-    }
 });
