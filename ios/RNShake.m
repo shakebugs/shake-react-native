@@ -4,8 +4,6 @@
 
 +(void) initialize {
     if(self == [RNShake class]) {
-        SEL *selector = @selector(_setNetworkRequestReporterEnabled:);
-        [SHKShake.sharedInstance performSelector:selector withObject:NO];
         [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|9.0.0"];
     }
 
@@ -14,102 +12,108 @@
 {
 	return YES;
 }
-- (NSDictionary *)constantsToExport
-{
-    return @{@"ShakeInvocationEventShake": @(ShakeInvocationEventShake),
-        	 @"ShakeInvocationEventButton": @(ShakeInvocationEventButton),
-             @"ShakeInvocationEventScreenshot":@(ShakeInvocationEventScreenshot)};
-}
 -(dispatch_queue_t)methodQueue
 {
 	return dispatch_get_main_queue();
 }
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(manualTrigger)
-{
-	NSLog(@"This functionality is not supported in iOS SDK");
-}
-
 RCT_EXPORT_METHOD(start)
 {
-    [SHKShake stop];
     [SHKShake start];
 }
-
-RCT_EXPORT_METHOD(setInvocationEvents:(nonnull NSArray *)eventsArray)
+RCT_EXPORT_METHOD(show)
 {
-    [SHKShake stop];
-	NSUInteger count = [eventsArray count];
-	ShakeInvocationEvent event = 0;
-    for(int i = 0; i < count; i++)
-	{
-		if([[eventsArray objectAtIndex:i] isEqual:@"BUTTON"])
-			event |= ShakeInvocationEventButton;
-		else if([[eventsArray objectAtIndex:i] isEqual:@"SHAKE"])
-			event |= ShakeInvocationEventShake;
-		else if([[eventsArray objectAtIndex:i] isEqual:@"SCREENSHOT"])
-			event |= ShakeInvocationEventScreenshot;
-	}
-	[SHKShake startWithInvocationEvents:event];
+    [SHKShake show];
 }
-
-RCT_EXPORT_METHOD(setQuickFacts:(nonnull NSString *)quickFacts)
+RCT_EXPORT_METHOD(setEnabled:(BOOL)enabled)
 {
-	[[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
-	_Nonnull(SHKShakeReportData * _Nonnull reportData) {
-		reportData.quickFacts = quickFacts;
-		return reportData;
-	}];
+    SHKShake.isPaused = !enabled;
 }
-RCT_EXPORT_METHOD(attachFiles:(nonnull NSArray *)files)
+RCT_EXPORT_METHOD(setEnableActivityHistory:(BOOL)enableActivityHistory)
 {
+    SHKShake.configuration.isActivityHistoryEnabled = enableActivityHistory;
+}
+RCT_EXPORT_METHOD(setBlackBox:(BOOL)enableBlackBox)
+{
+    SHKShake.configuration.isBlackBoxEnabled = enableBlackBox;
+}
+RCT_EXPORT_METHOD(setEnableInspectScreen:(BOOL)enableInspectScreen)
+{
+    SHKShake.configuration.isInspectScreenEnabled = enableInspectScreen;
+}
+RCT_EXPORT_METHOD(setShowFloatingReportButton:(BOOL)showFloatingReportButton)
+{
+    SHKShake.configuration.isFloatingReportButtonShown = showFloatingReportButton;
+}
+RCT_EXPORT_METHOD(setInvokeShakeOnShaking:(BOOL)invokeOnShake)
+{
+    SHKShake.configuration.isInvokedByShakeDeviceEvent = invokeOnShake;
+}
+RCT_EXPORT_METHOD(setInvokeShakeOnScreenshot:(BOOL)invokeOnScreenshot)
+{
+    SHKShake.configuration.isInvokedByScreenshot = invokeOnScreenshot;
+}
+RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files:(nonnull NSString *)quickFacts)
+{
+    NSString *filename;
+    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] init];
 	NSUInteger count  = [files count];
     NSMutableArray <SHKShakeFile *> *shakeFiles = [NSMutableArray array];
-    [[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
-	_Nonnull(SHKShakeReportData * _Nonnull reportData) {
-		for(int i = 0; i < count; i++)
-		{
-            NSArray *splitPath = [[files objectAtIndex:i] componentsSeparatedByString:@"/"];
-            NSUInteger splitPathCount = [splitPath count];
-            NSString *filename = [splitPath objectAtIndex:splitPathCount-1];
-			SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:filename
-                                                                    andData:[NSData dataWithContentsOfFile:[files objectAtIndex:i]]];
-			[shakeFiles addObject:attachedFile];
-		}
-		reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
-		return reportData;
-	}];
+    reportData.quickFacts = quickFacts;
+    for(int i = 0; i < count; i++)
+    {
+        NSDictionary *filesDict = [files objectAtIndex:i];
+        NSArray *splitPath = [[filesDict objectForKey:@"path"] componentsSeparatedByString:@"/"];
+        NSUInteger splitPathCount = [splitPath count];
+        if([filesDict objectForKey:@"name"])
+            filename = [filesDict objectForKey:@"name"];
+        else
+            filename = [splitPath objectAtIndex:splitPathCount-1];
+        NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:[filesDict objectForKey:@"path"]];
+        SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:filename andFileURL:fileURL];
+        [shakeFiles addObject:attachedFile];
+    }
+    reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
+    [SHKShake showWithReportData:reportData];
+}
+RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray *)filesArray
+                  :(nonnull NSString *)quicFacts:(nonnull NSDictionary *)configurationMap)
+{
+    NSString *filename;
     SHKShakeReportData *reportData = [[SHKShakeReportData alloc] init];
-    [SHKShake sharedInstance].onPrepareData(reportData);
+    SHKShakeReportConfiguration *reportConfiguration = [[SHKShakeReportConfiguration alloc] init];
+    for(NSString *key in configurationMap)
+    {
+        if([key isEqualToString:@"blackBoxData"])
+            reportConfiguration.includesBlackBoxData = [configurationMap objectForKey:key];
+        else if([key isEqualToString:@"activityHistoryData"])
+            reportConfiguration.includesActivityHistoryData = [configurationMap objectForKey:key];
+        else if([key isEqualToString:@"screenshot"])
+            reportConfiguration.includesScreenshotImage = [configurationMap objectForKey:key];
+        else if([key isEqualToString:@"showReportSentMessage"])
+            reportConfiguration.showsToastMessageOnSend = [configurationMap objectForKey:key];
+    }
+    reportData.bugDescription = description;
+    reportData.quickFacts = quicFacts;
+    NSUInteger count  = [filesArray count];
+    NSMutableArray <SHKShakeFile *> *shakeFiles = [NSMutableArray array];
+    for(int i = 0; i < count; i++)
+      {
+          NSDictionary *filesDict = [filesArray objectAtIndex:i];
+          NSArray *splitPath = [[filesDict objectForKey:@"path"] componentsSeparatedByString:@"/"];
+          NSUInteger splitPathCount = [splitPath count];
+          if([filesDict objectForKey:@"name"])
+              filename = [filesDict objectForKey:@"name"];
+          else
+              filename = [splitPath objectAtIndex:splitPathCount-1];
+          NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:[filesDict objectForKey:@"path"]];
+          SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:filename andFileURL:fileURL];
+          [shakeFiles addObject:attachedFile];
+      }
+      reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
+    
+    [SHKShake silentReportWithReportData:reportData reportConfiguration:reportConfiguration];
+}
 
-}
-RCT_EXPORT_METHOD(attachFilesWithName:(nonnull NSDictionary *)filesDictionary)
-{
-    NSMutableArray <SHKShakeFile*> *shakeFiles = [NSMutableArray array];
-    [[SHKShake sharedInstance] setOnPrepareData:^SHKShakeReportData *
-    _Nonnull(SHKShakeReportData * _Nonnull reportData) {
-        for (NSMutableString *key in filesDictionary) {
-            SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:key andData:[NSData dataWithContentsOfFile:[filesDictionary objectForKey:key]]];
-            [shakeFiles addObject:attachedFile];
-        }
-       reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
-       return reportData;
-    }];
-    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] init];
-    [SHKShake sharedInstance].onPrepareData(reportData);
-}
-RCT_EXPORT_METHOD(setBlackBoxEnabled:(BOOL)isBlackBoxEnabled)
-{
-    [SHKShake setBlackBoxEnabled:isBlackBoxEnabled];
-}
-RCT_EXPORT_METHOD(bundle:(RCTResponseSenderBlock)callback)
-{
-	NSBundle *SHKBundle = [SHKShake bundle];
-    callback(@[[NSNull null], SHKBundle]);
-}
-RCT_EXPORT_METHOD(stop)
-{
-    [SHKShake stop];
-}
 @end

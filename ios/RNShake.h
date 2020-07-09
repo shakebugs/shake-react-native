@@ -1,9 +1,8 @@
 #import <React/RCTBridgeModule.h>
 #import <Shake/Shake.h>
-#import <Shake/ShakeEnums.h>
-#import <Shake/ShakeFile.h>
-#import <Shake/ShakeReportData.h>
-#import "RCTConvert+RNShakeInvocationEvent.h"
+#import <Shake/SHKShakeConfiguration.h>
+#import <Shake/SHKShakeFile.h>
+#import <Shake/SHKShakeReportData.h>
 
 @interface RNShake : NSObject <RCTBridgeModule>
 
