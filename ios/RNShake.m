@@ -4,7 +4,13 @@
 
 +(void) initialize {
     if(self == [RNShake class]) {
-        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|9.0.0"];
+        NSDictionary *platformAndSdkVersionDict = @{
+            @"platform": @"ReactNative",
+            @"sdkVersion": @"10.0.0"
+        };
+        NSNumber *disableDueToRN = @YES;
+        [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:disableDueToRN];
+        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:platformAndSdkVersionDict];
     }
 
 }
@@ -115,5 +121,23 @@ RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray 
     
     [SHKShake silentReportWithReportData:reportData reportConfiguration:reportConfiguration];
 }
-
+RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)request)
+{
+    NSDictionary *dict = [[NSDictionary alloc] init];
+    NSData *data = [request[@"requestBody"] dataUsingEncoding:NSUTF8StringEncoding];
+    dict = @{
+        @"url": request[@"url"],
+        @"method": request[@"method"],
+        @"responseBody": request[@"responseBody"],
+        @"statusCode": request[@"statusCode"],
+        @"start": request[@"start"],
+        @"contentType": request[@"contentType"],
+        @"requestBody": data,
+        @"requestHeaders": request[@"requestHeaders"],
+        @"duration": request[@"duration"],
+        @"responseHeaders": request[@"responseHeaders"],
+        @"timestamp": request[@"timestamp"]
+    };
+    [SHKShake performSelector:sel_getUid(@"_reportRequestCompleted:".UTF8String) withObject:dict];
+}
 @end
