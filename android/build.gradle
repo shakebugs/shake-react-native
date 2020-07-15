@@ -38,6 +38,12 @@ buildscript {
     }
 }
 
+rootProject.allprojects {
+    repositories {
+        maven { url 'https://dl.bintray.com/shake/shake' }
+    }
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
@@ -68,13 +74,12 @@ repositories {
     }
     google()
     jcenter()
-    maven { url 'https://dl.bintray.com/shake/shake' }
 }
 
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation "$System.env.ANDROID_DEPENDENCY:10.0.+"
+    api "$System.env.ANDROID_DEPENDENCY:10.0.+"
 }
 
 def configureReactNativePom(def pom) {

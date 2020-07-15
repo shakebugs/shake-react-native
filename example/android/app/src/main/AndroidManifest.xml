@@ -24,10 +24,10 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <meta-data
                 android:name="com.shakebugs.APIClientID"
-                android:value="Qa36aw8I58nlEuMB4EFvfLBsYSBNKVGQeYqYPgtx" />
+                android:value="QGjkaGuR8QVUA7ZIIYX5AjpYkN6LfQRyFulwDX71" />
         <meta-data
                 android:name="com.shakebugs.APIClientSecret"
-                android:value="9Qh5niqusIO8LiW4byp2oMZwLB8AtlEBmo0AVSHT1qYGAQCVDulnvzh" />
+                android:value="et1T78wj0AfiwGUj1Cz3CN4YqrSNQ7ydWVMUFj7vZr0BSgnQ24Nrl2S" />
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyAdw2aCW8-Dg7fOOWRNfT43iH1Xjj4_uqg" />
