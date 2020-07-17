@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {NetworkTracker, Shake, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
+import {ScrollView, StyleSheet, View, Text} from 'react-native';
+import {NetworkTracker, addPrivateView, Shake, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
 import RNFS from "react-native-fs";
 import Button from "../core/Button";
 import Title from "../core/Title";
@@ -37,6 +37,8 @@ const ShakeScreen = (props) => {
     }
 
     const initialize = async () => {
+        Shake.start();
+
         setBlackBoxEnabled(await Shake.isEnableBlackBox());
         setActivityHistoryEnabled(await Shake.isEnableActivityHistory());
         setInspectScreenEnabled(await Shake.isEnableInspectScreen());
@@ -49,7 +51,7 @@ const ShakeScreen = (props) => {
     }
 
     const start = () => {
-        Shake.start();
+        addPrivateView(this.textView);
     };
 
     const show = () => {
@@ -101,6 +103,7 @@ const ShakeScreen = (props) => {
     return (
         <ScrollView>
             <View style={styles.container}>
+                <Text ref={c => this.textView = c}>Test private view</Text>
                 <Title style={styles.title} text="Actions"/>
                 <Button text="Start" onPress={start}/>
                 <Button text="Show" onPress={show}/>

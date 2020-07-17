@@ -1,4 +1,4 @@
-import {NativeModules} from 'react-native';
+import {NativeModules, findNodeHandle} from 'react-native';
 import ShakeReportConfiguration from "./src/models/ShakeReportConfiguration";
 import NetworkTracker from "./src/modules/NetworkTracker";
 import ShakeFile from "./src/models/ShakeFile";
@@ -12,8 +12,13 @@ NetworkTracker.setNetworkRequestHandler(networkRequest => {
     }
 });
 
+const addPrivateView = (viewRef) => {
+    const nativeTag = findNodeHandle(viewRef);
+    RNShake.addPrivateView(nativeTag);
+};
 
 export {RNShake as Shake}
 export {ShakeReportConfiguration}
 export {ShakeFile}
 export {NetworkTracker}
+export {addPrivateView}
