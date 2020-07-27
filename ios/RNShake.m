@@ -34,7 +34,7 @@ RCT_EXPORT_METHOD(setEnableActivityHistory:(BOOL)enableActivityHistory)
 {
     SHKShake.configuration.isActivityHistoryEnabled = enableActivityHistory;
 }
-RCT_EXPORT_METHOD(setBlackBox:(BOOL)enableBlackBox)
+RCT_EXPORT_METHOD(setEnableBlackBox:(BOOL)enableBlackBox)
 {
     SHKShake.configuration.isBlackBoxEnabled = enableBlackBox;
 }
