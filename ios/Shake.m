@@ -110,4 +110,8 @@ RCT_EXPORT_METHOD(stop)
 {
     [SHKShake stop];
 }
+RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary *) request)
+{
+    
+}
 @end
