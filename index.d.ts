@@ -5,6 +5,6 @@ declare module '@shakebugs/react-native-shake' {
     export function setBlackBoxEnabled(enabled: boolean): void;
     export function setQuickFacts(quickFacts: string): void;
     export function attachFiles(filesArray: Array<string>): void;
-    export function attachFilesWithFilename(filesDictionary: object): void;
+    export function attachFilesWithName(filesDictionary: object): void;
     export function insertNetworkRequest(request: object): void;
 }
