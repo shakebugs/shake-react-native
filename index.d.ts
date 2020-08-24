@@ -1,15 +1,10 @@
-export namespace Shake {
-    function start(): void;
-    function show(): void;
-    function setEnabled(enabled: boolean): void;
-    function setEnableActivityHistory(enableActivityHistory: boolean): void;
-    function setEnableBlackBox(enableBlackBox: boolean): void;
-    function setEnableInspectScreen(enableInspectScreen: boolean): void;
-    function setShowFloatingReportButton(showFloatingReportButton: boolean): void;
-    function setInvokeShakeOnShaking(invokeOnShake: boolean): void;
-    function setInvokeShakeOnScreenshot(invokeOnScreenshot: boolean): void;
-    function setShakeReportData(files: Array<string>, quickFacts: string): void;
-    function silentReport(description: string, filesArray: Array<string>,
-                  quicFacts:string, configurationMap: object): void;
-    function insertNetworkRequest(request: object): void;
+declare module '@shakebugs/react-native-shake' {
+    export function start(): void;
+    export function stop(): void;
+    export function setInvocationEvents(eventsArray: Array<string>): void;
+    export function setBlackBoxEnabled(enabled: boolean): void;
+    export function setQuickFacts(quickFacts: string): void;
+    export function attachFiles(filesArray: Array<string>): void;
+    export function attachFilesWithFilename(filesDictionary: object): void;
+    export function insertNetworkRequest(request: object): void;
 }
