@@ -6,7 +6,7 @@
     if(self == [Shake class]) {
         SEL *selector = @selector(_setNetworkRequestReporterEnabled:);
         [SHKShake.sharedInstance performSelector:selector withObject:NO];
-        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|9.0.0"];
+        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:@"ReactNative|9.0.1"];
     }
 
 }
@@ -33,13 +33,11 @@ RCT_EXPORT_METHOD(manualTrigger)
 
 RCT_EXPORT_METHOD(start)
 {
-    [SHKShake stop];
     [SHKShake start];
 }
 
 RCT_EXPORT_METHOD(setInvocationEvents:(nonnull NSArray *)eventsArray)
 {
-    [SHKShake stop];
 	NSUInteger count = [eventsArray count];
 	ShakeInvocationEvent event = 0;
     for(int i = 0; i < count; i++)
@@ -111,5 +109,9 @@ RCT_EXPORT_METHOD(bundle:(RCTResponseSenderBlock)callback)
 RCT_EXPORT_METHOD(stop)
 {
     [SHKShake stop];
+}
+RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary *) request)
+{
+
 }
 @end
