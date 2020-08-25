@@ -7,4 +7,13 @@ declare module '@shakebugs/react-native-shake' {
     export function attachFiles(filesArray: Array<string>): void;
     export function attachFilesWithName(filesDictionary: object): void;
     export function insertNetworkRequest(request: object): void;
+    export namespace NetworkTracker {
+        function enable(): void
+        function disable(): void
+    }
+    export enum ShakeInvocationEvent {
+        BUTTON = 'BUTTON',
+        SHAKE = 'SHAKE',
+        SCREENSHOT = 'SCREENSHOT',
+    }
 }
