@@ -3,13 +3,19 @@ declare module '@shakebugs/react-native-shake' {
     export function show(): void;
     export function setEnabled(enabled: boolean): void;
     export function setEnableActivityHistory(enableActivityHistory: boolean): void;
+    export function isEnableActivityHistory(): Promise<boolean>;
     export function setEnableBlackBox(enableBlackBox: boolean): void;
+    export function isEnableBlackBox(): Promise<boolean>;
     export function setEnableInspectScreen(enableInspectScreen: boolean): void;
+    export function isEnableInspectScreen(): Promise<boolean>;
     export function setShowFloatingReportButton(showFloatingReportButton: boolean): void;
+    export function isShowFloatingReportButton(): Promise<boolean>;
     export function setInvokeShakeOnShaking(invokeOnShake: boolean): void;
+    export function isInvokeShakeOnShaking(): Promise<boolean>;
     export function setInvokeShakeOnScreenshot(invokeOnScreenshot: boolean): void;
+    export function isInvokeShakeOnScreenshot(): Promise<boolean>;
     export function setShakeReportData(files: Array<string>, quickFacts: string): void;
     export function silentReport(description: string, filesArray: Array<string>,
-                                 quicFacts:string, configurationMap: object): void;
+                                 quickFacts:string, configurationMap: object): void;
     export function insertNetworkRequest(request: object): void;
 }
