@@ -21,9 +21,9 @@ declare module '@shakebugs/react-native-shake' {
 
     export function isShowFloatingReportButton(): Promise<boolean>;
 
-    export function setInvokeShakeOnShaking(invokeOnShake: boolean): void;
+    export function setInvokeShakeOnShakeDeviceEvent(invokeOnShake: boolean): void;
 
-    export function isInvokeShakeOnShaking(): Promise<boolean>;
+    export function isInvokeShakeOnShakeDeviceEvent(): Promise<boolean>;
 
     export function setInvokeShakeOnScreenshot(invokeOnScreenshot: boolean): void;
 

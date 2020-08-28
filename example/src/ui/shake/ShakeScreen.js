@@ -41,7 +41,7 @@ const ShakeScreen = (props) => {
         setActivityHistoryEnabled(await Shake.isEnableActivityHistory());
         setInspectScreenEnabled(await Shake.isEnableInspectScreen());
         setButtonInvokingEnabled(await Shake.isShowFloatingReportButton());
-        setShakeInvokingEnabled(await Shake.isInvokeShakeOnShaking());
+        setShakeInvokingEnabled(await Shake.isInvokeShakeOnShakeDeviceEvent());
         setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
         setShakeEnabled(true); // Not provided by native SDK
 
@@ -111,7 +111,7 @@ const ShakeScreen = (props) => {
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
                     onValueChanged={() => {
-                        Shake.setInvokeShakeOnShaking(!shakeInvokingEnabled);
+                        Shake.setInvokeShakeOnShakeDeviceEvent(!shakeInvokingEnabled);
                         setShakeInvokingEnabled(!shakeInvokingEnabled);
                     }}/>
                 <Option

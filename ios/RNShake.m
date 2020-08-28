@@ -72,14 +72,14 @@ RCT_EXPORT_METHOD(isShowFloatingReportButton:(RCTResponseSenderBlock)callback)
     NSNumber *isShowFloatingReportButton = [NSNumber numberWithBool:SHKShake.configuration.isFloatingReportButtonShown];
     callback(@[[NSNull null], isShowFloatingReportButton]);
 }
-RCT_EXPORT_METHOD(setInvokeShakeOnShaking:(BOOL)invokeOnShake)
+RCT_EXPORT_METHOD(setInvokeShakeOnShakeDeviceEvent:(BOOL)invokeOnShake)
 {
     SHKShake.configuration.isInvokedByShakeDeviceEvent = invokeOnShake;
 }
-RCT_EXPORT_METHOD(isInvokeShakeOnShaking:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(isInvokeShakeOnShakeDeviceEvent:(RCTResponseSenderBlock)callback)
 {
-    NSNumber *isInvokeShakeOnShaking = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByShakeDeviceEvent];
-    callback(@[[NSNull null], isInvokeShakeOnShaking]);
+    NSNumber *isInvokeShakeOnShakeDeviceEvent = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByShakeDeviceEvent];
+    callback(@[[NSNull null], isInvokeShakeOnShakeDeviceEvent]);
 }
 RCT_EXPORT_METHOD(setInvokeShakeOnScreenshot:(BOOL)invokeOnScreenshot)
 {
@@ -148,7 +148,7 @@ RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray 
           [shakeFiles addObject:attachedFile];
       }
       reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
-    
+
     [SHKShake silentReportWithReportData:reportData reportConfiguration:reportConfiguration];
 }
 RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)request)

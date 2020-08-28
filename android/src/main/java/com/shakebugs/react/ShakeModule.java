@@ -125,7 +125,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setInvokeShakeOnShaking(final boolean invokeOnShake) {
+    public void setInvokeShakeOnShakeDeviceEvent(final boolean invokeOnShake) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -135,7 +135,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isInvokeShakeOnShaking(Promise promise) {
+    public void isInvokeShakeOnShakeDeviceEvent(Promise promise) {
         promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent());
     }
 
