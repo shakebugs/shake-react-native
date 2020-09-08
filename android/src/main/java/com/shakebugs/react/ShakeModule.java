@@ -39,7 +39,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.start(application);
-                Shake.setFirstCreatedActivity(getCurrentActivity());
             }
         });
     }
