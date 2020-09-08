@@ -40,55 +40,61 @@ RCT_EXPORT_METHOD(setEnableActivityHistory:(BOOL)enableActivityHistory)
 {
     SHKShake.configuration.isActivityHistoryEnabled = enableActivityHistory;
 }
-RCT_EXPORT_METHOD(isEnableActivityHistory:(RCTResponseSenderBlock)callback)
+RCT_REMAP_METHOD(isEnableActivityHistory, isEnableActivityHistorywithResolver:(RCTPromiseResolveBlock)resolve 
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isActivityHistoryEnabled = [NSNumber numberWithBool:SHKShake.configuration.isActivityHistoryEnabled];
-    callback(@[[NSNull null], isActivityHistoryEnabled]);
+    resolve(isActivityHistoryEnabled);
 }
 RCT_EXPORT_METHOD(setEnableBlackBox:(BOOL)enableBlackBox)
 {
     SHKShake.configuration.isBlackBoxEnabled = enableBlackBox;
 }
-RCT_EXPORT_METHOD(isEnableBlackBox:(RCTResponseSenderBlock)callback)
+RCT_REMAP_METHOD(isEnableBlackBox, isEnableBlackBoxwithResolver:(RCTPromiseResolveBlock)resolve 
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isEnableBlackBox = [NSNumber numberWithBool:SHKShake.configuration.isBlackBoxEnabled];
-    callback(@[[NSNull null], isEnableBlackBox]);
+    resolve(isEnableBlackBox);
 }
 RCT_EXPORT_METHOD(setEnableInspectScreen:(BOOL)enableInspectScreen)
 {
     SHKShake.configuration.isInspectScreenEnabled = enableInspectScreen;
 }
-RCT_EXPORT_METHOD(isEnableInspectScreen:(RCTResponseSenderBlock)callback)
+RCT_REMAP_METHOD(isEnableInspectScreen, isEnableInspectScreenwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isEnableInspectScreen = [NSNumber numberWithBool:SHKShake.configuration.isInspectScreenEnabled];
-    callback(@[[NSNull null], isEnableInspectScreen]);
+    resolve(isEnableInspectScreen);
 }
 RCT_EXPORT_METHOD(setShowFloatingReportButton:(BOOL)showFloatingReportButton)
 {
     SHKShake.configuration.isFloatingReportButtonShown = showFloatingReportButton;
 }
-RCT_EXPORT_METHOD(isShowFloatingReportButton:(RCTResponseSenderBlock)callback)
+RCT_REMAP_METHOD(isShowFloatingReportButton, isShowFloatingReportButtonwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isShowFloatingReportButton = [NSNumber numberWithBool:SHKShake.configuration.isFloatingReportButtonShown];
-    callback(@[[NSNull null], isShowFloatingReportButton]);
+    resolve(isShowFloatingReportButton);
 }
 RCT_EXPORT_METHOD(setInvokeShakeOnShakeDeviceEvent:(BOOL)invokeOnShake)
 {
     SHKShake.configuration.isInvokedByShakeDeviceEvent = invokeOnShake;
 }
-RCT_EXPORT_METHOD(isInvokeShakeOnShakeDeviceEvent:(RCTResponseSenderBlock)callback)
+RCT_REMAP_METHOD(isInvokeShakeOnShaking, isInvokeShakeOnShakingwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
-    NSNumber *isInvokeShakeOnShakeDeviceEvent = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByShakeDeviceEvent];
-    callback(@[[NSNull null], isInvokeShakeOnShakeDeviceEvent]);
+    NSNumber *isInvokeShakeOnShaking = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByShakeDeviceEvent];
+    resolve(isInvokeShakeOnShaking);
 }
 RCT_EXPORT_METHOD(setInvokeShakeOnScreenshot:(BOOL)invokeOnScreenshot)
 {
     SHKShake.configuration.isInvokedByScreenshot = invokeOnScreenshot;
 }
-RCT_EXPORT_METHOD(isInvokeShakeOnScreenshot:(RCTResponseSenderBlock)callback)
+RCT_REMAP_METHOD(isInvokeShakeOnScreenshot, withResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isInvokeOnScreenshot = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByScreenshot];
-    callback(@[[NSNull null], isInvokeOnScreenshot]);
+    resolve(isInvokeOnScreenshot);
 }
 RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files:(nonnull NSString *)quickFacts)
 {
