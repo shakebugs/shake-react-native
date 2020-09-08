@@ -1,20 +1,16 @@
-const fs = require('fs');
 const glob = require('glob');
 const utils = require('./utils.js');
 
-const touchTrackerImport = 'import com.reactlibrary.touch.TouchTracker;';
-const touchTrackerDeclaration = 'private TouchTracker touchTracker;';
-const touchTrackerInitialization = 'touchTracker = new TouchTracker(getApplicationContext());';
-const touchTrackerHandler = 'touchTracker.handleTouchEvent(ev, this);';
+const shakeImport = 'import com.shakebugs.shake.Shake;';
+const eventImport = 'import android.view.MotionEvent;';
+const touchHandle = 'Shake.handleTouchEvent(ev, this);';
 
 glob('android/app/src/main/java/**/MainActivity.java', {}, function (error, match) {
     const filePath = match.toString();
-
     try {
-        utils.removeLine(filePath, touchTrackerImport);
-        utils.removeLine(filePath, touchTrackerDeclaration);
-        utils.removeLine(filePath, touchTrackerInitialization);
-        utils.removeLine(filePath, touchTrackerHandler);
+        utils.removeLine(filePath, shakeImport);
+        utils.removeLine(filePath, eventImport);
+        utils.removeLine(filePath, touchHandle);
     } catch (error) {
         console.error(error);
         process.exit(-1);

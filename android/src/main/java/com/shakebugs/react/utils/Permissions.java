@@ -10,19 +10,18 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  */
 public class Permissions {
     /**
-     * @param permission
+     * @param permission Permission string
      * @return true if permission is granted, false otherwise
      */
     public static boolean checkHasPermission(Activity activity, String permission) {
-        int result = activity.checkCallingOrSelfPermission(permission);
-        return result == PERMISSION_GRANTED;
+        return activity.checkCallingOrSelfPermission(permission) == PERMISSION_GRANTED;
     }
 
     /**
      * Requests the permission.
      *
-     * @param activity
-     * @param permission
+     * @param activity   Activity
+     * @param permission Permission string
      */
     public static void requestPermission(Activity activity, String permission) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {

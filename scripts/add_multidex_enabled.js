@@ -4,7 +4,7 @@ const glob = require('glob');
 glob("android/app/build.gradle", {}, function (error, match) {
     const filePath = match.toString();
 
-    const fileContent = fs.readFileSync(`${filePath}`, "utf8");
+    const fileContent = fs.readFileSync(filePath, "utf8");
     if (!fileContent.includes("multiDexEnabled")) {
         try {
             const defaultConfigSection = "defaultConfig {";

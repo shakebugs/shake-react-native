@@ -2,26 +2,22 @@ package com.shakebugs.react;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.shakebugs.react.db.SqliteDatabase;
 import com.shakebugs.react.utils.Mapper;
 import com.shakebugs.react.utils.Permissions;
 import com.shakebugs.shake.Shake;
-import com.shakebugs.shake.ShakeInvocationEvent;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
 import java.util.List;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
@@ -34,7 +30,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "Shake";
+        return "RNShake";
     }
 
     @ReactMethod
@@ -48,86 +44,135 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void stop() {
+    public void show() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.stop();
+                Shake.show();
             }
         });
     }
 
     @ReactMethod
-    public void setInvocationEvents(final ReadableArray stringList) {
+    public void setEnabled(final boolean enabled) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ShakeInvocationEvent[] invocationEvents = Mapper.mapToShakeInvocationEvents(stringList);
-                Shake.setInvocationEvents(invocationEvents);
-
-                checkScreenshotPermissions(invocationEvents);
-            }
-        });
-    }
-
-    /**
-     * This is introduced as fix because SDK 9.0.3 requests permissions just on activity start
-     *
-     * @param invocationEvents invocation events to set
-     */
-    private void checkScreenshotPermissions(ShakeInvocationEvent[] invocationEvents) {
-        for (ShakeInvocationEvent event: invocationEvents) {
-            if (event.equals(ShakeInvocationEvent.SCREENSHOT)) {
-                Permissions.requestPermission(getCurrentActivity(), READ_EXTERNAL_STORAGE);
-                Permissions.requestPermission(getCurrentActivity(), WRITE_EXTERNAL_STORAGE);
-                return;
-            }
-        }
-    }
-
-    @ReactMethod
-    public void setBlackBoxEnabled(final boolean blackBoxEnabled) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.setBlackboxEnabled(blackBoxEnabled);
+                Shake.setEnabled(enabled);
             }
         });
     }
 
     @ReactMethod
-    public void setQuickFacts(final String quickFacts) {
+    public void setEnableBlackBox(final boolean enableBlackBox) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.setQuickFacts(quickFacts);
+                Shake.getReportConfiguration().setEnableBlackBox(enableBlackBox);
             }
         });
     }
 
     @ReactMethod
-    public void attachFiles(final ReadableArray filesArray) {
+    public void isEnableBlackBox(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableBlackBox());
+    }
+
+    @ReactMethod
+    public void setEnableActivityHistory(final boolean enableActivityHistory) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setEnableActivityHistory(enableActivityHistory);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isEnableActivityHistory(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableActivityHistory());
+    }
+
+    @ReactMethod
+    public void setEnableInspectScreen(final boolean enableInspectScreen) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setEnableInspectScreen(enableInspectScreen);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isEnableInspectScreen(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableInspectScreen());
+    }
+
+    @ReactMethod
+    public void setShowFloatingReportButton(final boolean showFloatingReportButton) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setShowFloatingReportButton(showFloatingReportButton);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isShowFloatingReportButton(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isShowFloatingReportButton());
+    }
+
+    @ReactMethod
+    public void setInvokeShakeOnShakeDeviceEvent(final boolean invokeOnShake) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setInvokeShakeOnShakeDeviceEvent(invokeOnShake);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isInvokeShakeOnShakeDeviceEvent(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent());
+    }
+
+    @ReactMethod
+    public void setInvokeShakeOnScreenshot(final boolean invokeOnScreenshot) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setInvokeShakeOnScreenshot(invokeOnScreenshot);
+
+                /*
+                 * This is introduced as fix because SDK requests permissions just on activity start.
+                 * This issue is fixed on Shake Android SDK 13, this should be removed in 13 version.*
+                 */
+                if (invokeOnScreenshot) {
+                    Permissions.requestPermission(getCurrentActivity(), WRITE_EXTERNAL_STORAGE);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isInvokeShakeOnScreenshot(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnScreenshot());
+    }
+
+    @ReactMethod
+    public void setShakeReportData(final ReadableArray filesArray, final String quickFacts) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesArray);
                 Shake.onPrepareData(new ShakeReportData() {
                     @Override
-                    public List<ShakeFile> attachedFiles() {
-                        return shakeFiles;
+                    public String quickFacts() {
+                        return quickFacts;
                     }
-                });
-            }
-        });
-    }
 
-    @ReactMethod
-    public void attachFilesWithName(final ReadableMap filesMap) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesMap);
-                Shake.onPrepareData(new ShakeReportData() {
                     @Override
                     public List<ShakeFile> attachedFiles() {
                         return shakeFiles;
@@ -138,9 +183,36 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void insertNetworkRequest(ReadableMap networkRequestMap) {
-        NetworkRequest networkRequest = Mapper.mapToNetworkRequest(networkRequestMap);
-        SqliteDatabase.insertNetworkRequest(application, networkRequest);
+    public void silentReport(final String description, final ReadableArray filesArray,
+                             final String quickFacts, final ReadableMap configurationMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.silentReport(description, new ShakeReportData() {
+                    @Override
+                    public String quickFacts() {
+                        return quickFacts;
+                    }
+
+                    @Override
+                    public List<ShakeFile> attachedFiles() {
+                        return Mapper.mapToShakeFiles(filesArray);
+                    }
+                }, Mapper.mapToConfiguration(configurationMap));
+
+            }
+        });
+    }
+
+    @ReactMethod
+    public void insertNetworkRequest(final ReadableMap data) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkRequest networkRequest = Mapper.mapToNetworkRequest(data);
+                Shake.insertNetworkRequest(networkRequest);
+            }
+        });
     }
 
     private void runOnUiThread(Runnable runnable) {

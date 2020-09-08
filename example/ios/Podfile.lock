@@ -239,9 +239,9 @@ PODS:
     - React
   - react-native-safe-area-context (0.7.3):
     - React
-  - react-native-shake (2.3.7):
+  - react-native-shake (10.0.0):
     - React
-    - Shake-UAT (~> 9.0.0)
+    - Shake-UAT (~> 10.0.0)
   - react-native-slider (2.0.9):
     - React
   - react-native-webview (9.3.0):
@@ -309,6 +309,8 @@ PODS:
     - React
   - RNCPicker (1.3.0):
     - React
+  - RNDeviceInfo (5.6.1):
+    - React
   - RNFS (2.16.6):
     - React
   - RNGestureHandler (1.6.1):
@@ -317,7 +319,7 @@ PODS:
     - React
   - RNScreens (2.7.0):
     - React
-  - Shake-UAT (9.0.10.3)
+  - Shake-UAT (10.0.0.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -377,6 +379,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-community/picker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -464,6 +467,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
     :path: "../node_modules/@react-native-community/picker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -504,7 +509,7 @@ SPEC CHECKSUMS:
   react-native-checkbox: 2d04aeb0c7e2c2cbd9a9a902ca6a5cf642688d09
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
-  react-native-shake: cac64828f2b99f57d27e66c28d394e6ad339e086
+  react-native-shake: a835343eb6e48d1dedd589b323376804b2dc1e1f
   react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   react-native-webview: bdde2a3c4cbdc0122bc2bfba13603db193f0cc5c
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
@@ -519,11 +524,12 @@ SPEC CHECKSUMS:
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNCPicker: 7d06ee91dff65b0bcd400ca00039051d5ddcb938
+  RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
-  Shake-UAT: 9921aca69b971657cc41a6e1cae2a304813be342
+  Shake-UAT: 5d11208c2e1c2d786c36138881049bc9b7d0fc4f
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

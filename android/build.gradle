@@ -38,6 +38,12 @@ buildscript {
     }
 }
 
+rootProject.allprojects {
+    repositories {
+        maven { url 'https://dl.bintray.com/shake/shake' }
+    }
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
@@ -68,20 +74,19 @@ repositories {
     }
     google()
     jcenter()
-    maven { url 'https://dl.bintray.com/shake/shake' }
 }
 
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation "$System.env.ANDROID_DEPENDENCY:9.0.+"
+    api "$System.env.ANDROID_DEPENDENCY:10.0.+"
 }
 
 def configureReactNativePom(def pom) {
     def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
 
     def versionName = packageJson.version
-        
+
     def result = versionName.split("\\.")
     def versionCode = (result[0].toInteger() * 10000 + result[1].toInteger() * 100 + result[2].toInteger())
 
