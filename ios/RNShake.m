@@ -80,11 +80,11 @@ RCT_EXPORT_METHOD(setInvokeShakeOnShakeDeviceEvent:(BOOL)invokeOnShake)
 {
     SHKShake.configuration.isInvokedByShakeDeviceEvent = invokeOnShake;
 }
-RCT_REMAP_METHOD(isInvokeShakeOnShaking, isInvokeShakeOnShakingwithResolver:(RCTPromiseResolveBlock)resolve
+RCT_REMAP_METHOD(isInvokeShakeOnShakeDeviceEvent, isInvokeShakeOnShakeDeviceEventwithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
-    NSNumber *isInvokeShakeOnShaking = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByShakeDeviceEvent];
-    resolve(isInvokeShakeOnShaking);
+    NSNumber *isInvokeShakeOnShakeDeviceEvent = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByShakeDeviceEvent];
+    resolve(isInvokeShakeOnShakeDeviceEvent);
 }
 RCT_EXPORT_METHOD(setInvokeShakeOnScreenshot:(BOOL)invokeOnScreenshot)
 {
