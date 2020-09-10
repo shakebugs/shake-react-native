@@ -6,7 +6,7 @@
     if(self == [RNShake class]) {
         NSDictionary *platformAndSdkVersionDict = @{
             @"platform": @"ReactNative",
-            @"sdkVersion": @"10.0.0"
+            @"sdkVersion": @"10.0.2"
         };
         NSNumber *disableDueToRN = @YES;
         [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:disableDueToRN];
