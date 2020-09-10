@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {NetworkTracker, Shake, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
+import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
 import RNFS from "react-native-fs";
 import Button from "../core/Button";
 import Title from "../core/Title";
