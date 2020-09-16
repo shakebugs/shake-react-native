@@ -3,14 +3,17 @@ class ShakeFile {
     path;
 
     static create(filePath, fileName = "") {
+        const fileDetails = this._parseFilePath(filePath);
         if (!fileName) {
-            fileName = this._parseFilePath(filePath).name;
+            fileName = fileDetails.name + fileDetails.ext;
+        } else {
+            fileName = fileName + fileDetails.ext;
         }
 
         let shakeFile = new ShakeFile();
         shakeFile.path = filePath;
         shakeFile.name = fileName;
-        
+
         return shakeFile;
     }
 
