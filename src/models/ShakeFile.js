@@ -4,6 +4,7 @@ class ShakeFile {
 
     static create(filePath, fileName = "") {
         const fileDetails = this._parseFilePath(filePath);
+        console.log(fileDetails);
         if (!fileName) {
             fileName = fileDetails.name + fileDetails.ext;
         } else {

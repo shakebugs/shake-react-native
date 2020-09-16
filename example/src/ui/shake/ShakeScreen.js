@@ -70,7 +70,7 @@ const ShakeScreen = (props) => {
         reportConfig.blackBoxData = true;
         reportConfig.activityHistoryData = true;
         reportConfig.screenshot = true;
-        reportConfig.showReportSentMessage = true;
+        reportConfig.showReportSentMessage = false;
 
         Shake.silentReport(
             "Silent reports are working!",
