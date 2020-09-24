@@ -49,7 +49,15 @@ const XHRInterceptor = {
 
         XMLHttpRequest.prototype.send = function (data) {
             const cloneNetwork = JSON.parse(JSON.stringify(network));
-            cloneNetwork.requestBody = data ? data : '';
+            if (!data) {
+                cloneNetwork.requestBody = '';
+            } else {
+                if (/\ufffd/.test(data) === true) {
+                    cloneNetwork.requestBody = 'Binary data';
+                } else {
+                    cloneNetwork.requestBody = data;
+                }
+            }
 
             if (this.addEventListener) {
                 this.addEventListener(
@@ -65,11 +73,12 @@ const XHRInterceptor = {
                             }
 
                             if (this.getAllResponseHeaders()) {
+                                console.log(this.getAllResponseHeaders());
                                 const responseHeaders = this.getAllResponseHeaders().split('\r\n');
                                 const responseHeadersDictionary = {};
                                 responseHeaders.forEach(element => {
-                                    const key = element.split(':')[0];
-                                    const value = element.split(':')[1];
+                                    const key = element.split(/:(.+)/)[0];
+                                    const value = element.split(/:(.+)/)[1];
                                     responseHeadersDictionary[key] = value;
                                 });
                                 cloneNetwork.responseHeaders = responseHeadersDictionary;
@@ -84,15 +93,15 @@ const XHRInterceptor = {
                             }
 
                             if (this.response) {
-                                if (this.responseType === 'blob') {
-                                    let responseText = await (new Response(this.response)).text();
-                                    if (!responseText || /\ufffd/.test(responseText) === true) {
+                                let responseText = await (new Response(this.response)).text();
+                                if (!responseText) {
+                                    cloneNetwork.responseBody = "";
+                                } else {
+                                    if (/\ufffd/.test(responseText) === true) {
                                         cloneNetwork.responseBody = "Binary data";
                                     } else {
                                         cloneNetwork.responseBody = responseText;
                                     }
-                                } else if (this.responseType === 'text') {
-                                    cloneNetwork.responseBody = this.response;
                                 }
                             }
 
