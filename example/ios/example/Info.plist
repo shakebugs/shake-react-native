@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>10.0.2</string>
+	<string>10.0.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>19</string>
+	<string>20</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true />
 	<key>NSAppTransportSecurity</key>
@@ -60,5 +60,10 @@
 		<key>APIClientSecret</key>
 		<string>et1T78wj0AfiwGUj1Cz3CN4YqrSNQ7ydWVMUFj7vZr0BSgnQ24Nrl2S</string>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>HKGrotesk-Regular.otf</string>
+		<string>HKGrotesk-SemiBold.otf</string>
+	</array>
 </dict>
 </plist>

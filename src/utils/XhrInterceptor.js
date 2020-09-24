@@ -86,7 +86,11 @@ const XHRInterceptor = {
                             if (this.response) {
                                 if (this.responseType === 'blob') {
                                     let responseText = await (new Response(this.response)).text();
-                                    cloneNetwork.responseBody = responseText;
+                                    if (!responseText || /\ufffd/.test(responseText) === true) {
+                                        cloneNetwork.responseBody = "Binary data";
+                                    } else {
+                                        cloneNetwork.responseBody = responseText;
+                                    }
                                 } else if (this.responseType === 'text') {
                                     cloneNetwork.responseBody = this.response;
                                 }
@@ -126,7 +130,6 @@ const XHRInterceptor = {
         };
         isInterceptorEnabled = true;
     },
-
     disableInterception() {
         isInterceptorEnabled = false;
         XMLHttpRequest.prototype.send = originalXHRSend;
