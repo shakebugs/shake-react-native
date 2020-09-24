@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "10.0.2",
+  "version": "10.0.3",
   "private": true,
   "config": {
     "android": {

@@ -38,10 +38,12 @@ public class Mapper {
         for (int i = 0; i < filePaths.size(); i++) {
             ReadableMap fileMap = filePaths.getMap(i);
 
-            String path = fileMap.getString("path");
-            String name = fileMap.getString("name");
+            String filePath = fileMap.getString("path");
+            String fileName = fileMap.getString("name");
 
-            shakeFiles.add(new ShakeFile(name, path));
+            String name = Files.removeExtension(fileName);
+
+            shakeFiles.add(new ShakeFile(name, filePath));
         }
         return shakeFiles;
     }

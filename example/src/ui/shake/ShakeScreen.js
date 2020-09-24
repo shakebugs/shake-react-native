@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration} from "react-native-shake";
-import RNFS from "react-native-fs";
-import Button from "../core/Button";
-import Title from "../core/Title";
-import Option from "../core/Option";
-import Link from "../core/Link";
-import Version from "../core/Version";
+import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
+import RNFS from 'react-native-fs';
+import Button from '../core/Button';
+import Title from '../core/Title';
+import Option from '../core/Option';
+import Link from '../core/Link';
+import Version from '../core/Version';
 
 const ShakeScreen = (props) => {
     let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -34,7 +34,7 @@ const ShakeScreen = (props) => {
             .catch((error) => {
                 console.log(error.message);
             });
-    }
+    };
 
     const initialize = async () => {
         setBlackBoxEnabled(await Shake.isEnableBlackBox());
@@ -45,8 +45,8 @@ const ShakeScreen = (props) => {
         setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
         setShakeEnabled(true); // Not provided by native SDK
 
-        setNetworkTrackerEnabled(NetworkTracker.isEnabled())
-    }
+        setNetworkTrackerEnabled(NetworkTracker.isEnabled());
+    };
 
     const start = () => {
         Shake.start();
@@ -57,12 +57,7 @@ const ShakeScreen = (props) => {
     };
 
     const setReportData = () => {
-        Shake.setShakeReportData(
-            [
-                ShakeFile.create(path),
-                ShakeFile.create(path, "customName")
-            ],
-            "Test quick facts");
+        Shake.setShakeReportData([ShakeFile.create(path), ShakeFile.create(path, 'customName')], 'Test quick facts');
     };
 
     const silentReport = () => {
@@ -70,19 +65,17 @@ const ShakeScreen = (props) => {
         reportConfig.blackBoxData = true;
         reportConfig.activityHistoryData = true;
         reportConfig.screenshot = true;
-        reportConfig.showReportSentMessage = true;
+        reportConfig.showReportSentMessage = false;
 
         Shake.silentReport(
-            "Silent reports are working!",
-            [
-                ShakeFile.create(path),
-                ShakeFile.create(path, "customName")
-            ],
-            "Test quick facts",
-            reportConfig);
+            'Silent reports are working!',
+            [ShakeFile.create(path), ShakeFile.create(path, 'customName')],
+            'Test quick facts',
+            reportConfig,
+        );
     };
 
-    const sendNetworkRequest = () => {
+    const sendSimpleNetworkRequest = () => {
         fetch('https://postman-echo.com/post', {
             method: 'POST',
             headers: {
@@ -93,7 +86,19 @@ const ShakeScreen = (props) => {
                 firstParam: 'firstParam',
                 secondParam: 'secondParam',
             }),
-        }).then(res => {
+        }).then((res) => {
+            alert('Request sent.');
+        });
+    };
+
+    const getImageNetworkRequest = () => {
+        fetch('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        }).then((res) => {
             alert('Request sent.');
         });
     };
@@ -101,42 +106,45 @@ const ShakeScreen = (props) => {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Title style={styles.title} text="Actions"/>
-                <Button text="Start" onPress={start}/>
-                <Button text="Show" onPress={show}/>
-                <Button text="Attach data" onPress={setReportData}/>
-                <Button text="Silent report" onPress={silentReport}/>
-                <Title style={styles.title} text="Invoking"/>
+                <Title style={styles.title} text="Actions" />
+                <Button text="Start" onPress={start} />
+                <Button text="Show" onPress={show} />
+                <Button text="Attach data" onPress={setReportData} />
+                <Button text="Silent report" onPress={silentReport} />
+                <Title style={styles.title} text="Invoking" />
                 <Option
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
                     onValueChanged={() => {
                         Shake.setInvokeShakeOnShakeDeviceEvent(!shakeInvokingEnabled);
                         setShakeInvokingEnabled(!shakeInvokingEnabled);
-                    }}/>
+                    }}
+                />
                 <Option
                     enabled={buttonInvokingEnabled}
                     title="Button"
                     onValueChanged={() => {
                         Shake.setShowFloatingReportButton(!buttonInvokingEnabled);
                         setButtonInvokingEnabled(!buttonInvokingEnabled);
-
-                    }}/>
+                    }}
+                />
                 <Option
                     enabled={screenshotInvokingEnabled}
                     title="Screenhot"
                     onValueChanged={() => {
                         Shake.setInvokeShakeOnScreenshot(!screenshotInvokingEnabled);
                         setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
-                    }}/>
-                <Title style={styles.title} text="Options"/>
+                    }}
+                />
+                <Title style={styles.title} text="Options" />
                 <Option
                     enabled={shakeEnabled}
                     title="Enabled"
                     onValueChanged={() => {
                         Shake.setEnabled(!shakeEnabled);
                         setShakeEnabled(!shakeEnabled);
-                    }}/>
+                    }}
+                />
 
                 <Option
                     enabled={blackBoxEnabled}
@@ -144,38 +152,44 @@ const ShakeScreen = (props) => {
                     onValueChanged={() => {
                         Shake.setEnableBlackBox(!blackBoxEnabled);
                         setBlackBoxEnabled(!blackBoxEnabled);
-                    }}/>
+                    }}
+                />
                 <Option
                     enabled={networkTrackerEnabled}
                     title="Network tracker"
                     onValueChanged={() => {
                         NetworkTracker.setEnabled(!networkTrackerEnabled);
                         setNetworkTrackerEnabled(!networkTrackerEnabled);
-                    }}/>
+                    }}
+                />
                 <Option
                     enabled={activityHistoryEnabled}
                     title="Activity history"
                     onValueChanged={() => {
                         Shake.setEnableActivityHistory(!activityHistoryEnabled);
                         setActivityHistoryEnabled(!activityHistoryEnabled);
-
-                    }}/>
+                    }}
+                />
                 <Option
                     enabled={inspectScreenEnabled}
                     title="Inspect screen"
                     onValueChanged={() => {
                         Shake.setEnableInspectScreen(!inspectScreenEnabled);
                         setInspectScreenEnabled(!inspectScreenEnabled);
-                    }}/>
-                <Title style={styles.title} text="Tools"/>
-                <Button text="Send network request" onPress={sendNetworkRequest}/>
+                    }}
+                />
+                <Title style={styles.title} text="Tools" />
+                <Button text="Send simple network request" onPress={sendSimpleNetworkRequest} />
+                <Button text="Get image network request" onPress={getImageNetworkRequest} />
                 <View style={styles.links}>
-                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
-                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/" />
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs" />
                 </View>
-                <Version onLongPress={() => {
-                    props.navigation.navigate('TestScreen');
-                }}/>
+                <Version
+                    onLongPress={() => {
+                        props.navigation.navigate('TestScreen');
+                    }}
+                />
             </View>
         </ScrollView>
     );
@@ -187,11 +201,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 12,
-        paddingBottom: 16
+        paddingBottom: 16,
     },
 
     title: {
-        marginVertical: 16
+        marginVertical: 16,
     },
 
     links: {
