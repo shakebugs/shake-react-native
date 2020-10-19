@@ -158,8 +158,6 @@ RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)request)
         @"method": request[@"method"],
         @"responseBody": request[@"responseBody"],
         @"statusCode": request[@"statusCode"],
-        @"start": request[@"start"],
-        @"contentType": request[@"contentType"],
         @"requestBody": data,
         @"requestHeaders": request[@"requestHeaders"],
         @"duration": request[@"duration"],

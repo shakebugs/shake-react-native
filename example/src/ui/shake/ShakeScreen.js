@@ -7,6 +7,7 @@ import Title from '../core/Title';
 import Option from '../core/Option';
 import Link from '../core/Link';
 import Version from '../core/Version';
+import axios from 'axios';
 
 const ShakeScreen = (props) => {
     let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -48,10 +49,6 @@ const ShakeScreen = (props) => {
         setNetworkTrackerEnabled(NetworkTracker.isEnabled());
     };
 
-    const start = () => {
-        Shake.start();
-    };
-
     const show = () => {
         Shake.show();
     };
@@ -75,8 +72,39 @@ const ShakeScreen = (props) => {
         );
     };
 
-    const sendSimpleNetworkRequest = () => {
-        fetch('https://postman-echo.com/post', {
+    const sendGetNetworkRequest = () => {
+        axios
+            .get('https://dummy.restapiexample.com/api/v1/employees')
+            .then(function (response) {
+                alert('Request sent.');
+            })
+            .catch(function (error) {
+                alert('Request error.');
+            });
+        /*        fetch('https://dummy.restapiexample.com/api/v1/employees', {
+            method: 'GET',
+        })
+            .then((res) => {
+                alert('Request sent.');
+            })
+            .catch((error) => {
+                alert('Request error.');
+            });*/
+    };
+
+    const sendPostNetworkRequest = () => {
+        axios
+            .post('https://postman-echo.com/post', {
+                firstParam: 'firstParam',
+                secondParam: 'secondParam',
+            })
+            .then(function (response) {
+                alert('Request sent.');
+            })
+            .catch(function (error) {
+                alert('Request error.');
+            });
+        /*        fetch('https://postman-echo.com/post', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -86,32 +114,117 @@ const ShakeScreen = (props) => {
                 firstParam: 'firstParam',
                 secondParam: 'secondParam',
             }),
-        }).then((res) => {
-            alert('Request sent.');
-        });
+        })
+            .then((res) => {
+                alert('Request sent.');
+            })
+            .catch((error) => {
+                alert('Request error.');
+            });*/
     };
 
-    const getImageNetworkRequest = () => {
-        fetch('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
+    const sendErrorNetworkRequest = () => {
+        axios
+            .get('https://run.mocky.io/v3/267ed439-8ea6-4495-bda7-90969e039a9e')
+            .then(function (response) {
+                alert('Request sent.');
+            })
+            .catch(function (error) {
+                alert('Request error.');
+            });
+        /*        fetch('https://run.mocky.io/v3/267ed439-8ea6-4495-bda7-90969e039a9e', {
             method: 'GET',
+        })
+            .then((res) => {
+                alert('Request sent.');
+            })
+            .catch((error) => {
+                alert('Request error.');
+            });*/
+    };
+
+    const sendTimeoutNetworkRequest = () => {
+        axios
+            .post(
+                'https://postman-echo.com/post',
+                {
+                    firstParam: 'firstParam',
+                    secondParam: 'secondParam',
+                },
+                {
+                    timeout: 1,
+                },
+            )
+            .then(function (response) {
+                alert('Request sent.');
+            })
+            .catch(function (error) {
+                alert('Request error.');
+            });
+    };
+
+    const sendPostFileNetworkRequest = () => {
+        const formData = new FormData();
+        formData.append('file', {uri: path, name: 'file.txt', type: 'text/plain'});
+
+        const config = {
             headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
+                'content-type': 'multipart/form-data',
             },
-        }).then((res) => {
-            alert('Request sent.');
-        });
+        };
+        axios
+            .post('https://httpbin.org/response-headers', formData, config)
+            .then(function (response) {
+                alert('Request sent.');
+            })
+            .catch(function (error) {
+                alert('Request error.');
+            });
+        /*        fetch('https://httpbin.org/response-headers', {
+            body: formData,
+            headers: {
+                'content-type': 'multipart/form-data',
+            },
+            method: 'POST',
+        })
+            .then((res) => {
+                alert('Request sent.');
+            })
+            .catch((error) => {
+                alert('Request error.');
+            });*/
+    };
+
+    const sendGetImageNetworkRequest = () => {
+        axios
+            .get('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
+                responseType: 'blob',
+            })
+            .then(function (response) {
+                alert('Request sent.');
+            })
+            .catch(function (error) {
+                alert('Request error.');
+            });
+        /*        fetch('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
+            method: 'GET',
+        })
+            .then((res) => {
+                alert('Request sent.');
+            })
+            .catch((error) => {
+                alert('Request error.');
+            });*/
     };
 
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Title style={styles.title} text="Actions" />
-                <Button text="Start" onPress={start} />
-                <Button text="Show" onPress={show} />
-                <Button text="Attach data" onPress={setReportData} />
-                <Button text="Silent report" onPress={silentReport} />
-                <Title style={styles.title} text="Invoking" />
+                <Title style={styles.title} text="Actions"/>
+                <Button text="Show" onPress={show}/>
+                <Button text="Attach data" onPress={setReportData}/>
+                <Button text="Silent report" onPress={silentReport}/>
+                <Title style={styles.title} text="Invoking"/>
                 <Option
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
@@ -130,13 +243,13 @@ const ShakeScreen = (props) => {
                 />
                 <Option
                     enabled={screenshotInvokingEnabled}
-                    title="Screenhot"
+                    title="Screenshot"
                     onValueChanged={() => {
                         Shake.setInvokeShakeOnScreenshot(!screenshotInvokingEnabled);
                         setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Options" />
+                <Title style={styles.title} text="Options"/>
                 <Option
                     enabled={shakeEnabled}
                     title="Enabled"
@@ -178,12 +291,16 @@ const ShakeScreen = (props) => {
                         setInspectScreenEnabled(!inspectScreenEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Tools" />
-                <Button text="Send simple network request" onPress={sendSimpleNetworkRequest} />
-                <Button text="Get image network request" onPress={getImageNetworkRequest} />
+                <Title style={styles.title} text="Network"/>
+                <Button text="Send GET request" onPress={sendGetNetworkRequest}/>
+                <Button text="Send POST request" onPress={sendPostNetworkRequest}/>
+                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest}/>
+                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest}/>
+                <Button text="Send 404 request" onPress={sendErrorNetworkRequest}/>
+                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest}/>
                 <View style={styles.links}>
-                    <Link text="Dashboard" link="https://app.staging5h4k3.com/" />
-                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs" />
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
                 </View>
                 <Version
                     onLongPress={() => {
