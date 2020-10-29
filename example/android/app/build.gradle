@@ -132,8 +132,8 @@ android {
         applicationId "com.shakebugs.react.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20
-        versionName "10.0.3"
+        versionCode 21
+        versionName "10.0.4"
         multiDexEnabled true
     }
     splits {
