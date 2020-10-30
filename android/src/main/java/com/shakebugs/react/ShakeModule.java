@@ -199,7 +199,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                         return Mapper.mapToShakeFiles(filesArray);
                     }
                 }, Mapper.mapToConfiguration(configurationMap));
-
             }
         });
     }

@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "10.0.3",
+  "version": "10.0.4",
   "private": true,
   "config": {
     "android": {
@@ -46,6 +46,7 @@
     "@react-native-community/slider": "^2.0.9",
     "@react-navigation/native": "^5.1.7",
     "@react-navigation/stack": "^5.2.14",
+    "axios": "^0.20.0",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-btr": "^1.1.5",

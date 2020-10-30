@@ -1,28 +1,36 @@
-import XHRInterceptor from "../utils/XhrInterceptor";
+import Interceptor from "../utils/Interceptor";
+import Shake from '../../index'
 
 class NetworkTracker {
-    static enabled = false;
+    static _isEnabled = false;
 
     static isEnabled = () => {
-        return this.enabled;
-    };
+        return this._isEnabled;
+    }
 
     static setEnabled = (enabled) => {
-        this.enabled = enabled;
+        this._isEnabled = enabled;
         this._handleInterceptor();
     };
 
     static _handleInterceptor = () => {
-        if (this.enabled) {
-            XHRInterceptor.enableInterception();
+        if (this._isEnabled) {
+            Interceptor.enableInterception();
         } else {
-            XHRInterceptor.disableInterception();
+            Interceptor.disableInterception();
         }
     }
 
-    static setNetworkRequestHandler = (networkRequestHandler) => {
-        XHRInterceptor.setOnDoneCallback(networkRequestHandler);
+    static initialize = () => {
+        Interceptor.setOnDoneCallback(networkRequest => {
+            if (networkRequest.statusCode) {
+                Shake.insertNetworkRequest(networkRequest)
+            }
+        });
     };
 }
+
+NetworkTracker.initialize();
+NetworkTracker.setEnabled(true);
 
 export default NetworkTracker;

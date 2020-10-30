@@ -6,7 +6,7 @@
     if(self == [RNShake class]) {
         NSDictionary *platformAndSdkVersionDict = @{
             @"platform": @"ReactNative",
-            @"sdkVersion": @"10.0.3"
+            @"sdkVersion": @"10.0.4"
         };
         NSNumber *disableDueToRN = @YES;
         [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:disableDueToRN];
@@ -158,8 +158,6 @@ RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)request)
         @"method": request[@"method"],
         @"responseBody": request[@"responseBody"],
         @"statusCode": request[@"statusCode"],
-        @"start": request[@"start"],
-        @"contentType": request[@"contentType"],
         @"requestBody": data,
         @"requestHeaders": request[@"requestHeaders"],
         @"duration": request[@"duration"],
