@@ -1,7 +1,6 @@
 package com.shakebugs.react;
 
 import android.app.Activity;
-import android.app.Application;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -9,23 +8,24 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.shakebugs.react.utils.Constants;
+import com.shakebugs.react.utils.Logger;
 import com.shakebugs.react.utils.Mapper;
-import com.shakebugs.react.utils.Permissions;
+import com.shakebugs.react.utils.Reflection;
+import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.Shake;
+import com.shakebugs.shake.ShakeInfo;
+import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
 public class ShakeModule extends ReactContextBaseJavaModule {
-    private final Application application;
-
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.application = (Application) reactContext.getApplicationContext();
     }
 
     @Override
@@ -34,11 +34,41 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void start() {
+    public void start(final String clientId, final String clientSecret) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.start(application);
+                try {
+                    Activity activity = getCurrentActivity();
+                    if (activity == null) {
+                        Logger.e("Activity not initialized.");
+                        return;
+                    }
+
+                    Method setShakeInfo = Reflection.getMethod(Class.forName("com.shakebugs.shake.Shake"),
+                            "setShakeInfo", ShakeInfo.class);
+                    Method startFromActivity = Reflection.getMethod(Class.forName("com.shakebugs.shake.Shake"),
+                            "startFromActivity", Activity.class, String.class, String.class);
+
+                    if (setShakeInfo == null) {
+                        Logger.e("setShakeInfo() method not found.");
+                        return;
+                    }
+                    if (startFromActivity == null) {
+                        Logger.e("startFromActivity() method not found.");
+                        return;
+                    }
+
+                    ShakeInfo shakeInfo = new ShakeInfo();
+                    shakeInfo.setPlatform(Constants.PLATFORM);
+                    shakeInfo.setVersionCode(Constants.VERSION_CODE);
+                    shakeInfo.setVersionName(Constants.VERSION_NAME);
+
+                    setShakeInfo.invoke(null, shakeInfo);
+                    startFromActivity.invoke(null, activity, clientId, clientSecret);
+                } catch (Exception e) {
+                    Logger.e("Failed to start Shake", e);
+                }
             }
         });
     }
@@ -144,14 +174,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setInvokeShakeOnScreenshot(invokeOnScreenshot);
-
-                /*
-                 * This is introduced as fix because SDK requests permissions just on activity start.
-                 * This issue is fixed on Shake Android SDK 13, this should be removed in 13 version.*
-                 */
-                if (invokeOnScreenshot) {
-                    Permissions.requestPermission(getCurrentActivity(), WRITE_EXTERNAL_STORAGE);
-                }
             }
         });
     }
@@ -162,17 +184,125 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setShakeReportData(final ReadableArray filesArray, final String quickFacts) {
+    public void setInvokeShakeOnRightEdgePan(final boolean invokeOnRightEdgePan) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setInvokeShakeOnRightEdgePan(invokeOnRightEdgePan);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isInvokeShakeOnRightEdgePan(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnRightEdgePan());
+    }
+
+    @ReactMethod
+    public void getEmailField(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().getEmailField());
+    }
+
+    @ReactMethod
+    public void setEmailField(final String emailField) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setEmailField(emailField);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isEnableEmailField(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableEmailField());
+    }
+
+    @ReactMethod
+    public void setEnableEmailField(final boolean enableEmailField) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setEnableEmailField(enableEmailField);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isEnableMultipleFeedbackTypes(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableMultipleFeedbackTypes());
+    }
+
+    @ReactMethod
+    public void setEnableMultipleFeedbackTypes(final boolean enableFeedbackTypes) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setEnableMultipleFeedbackTypes(enableFeedbackTypes);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getShowIntroMessage(Promise promise) {
+        promise.resolve(Shake.getShowIntroMessage());
+    }
+
+    @ReactMethod
+    public void setShowIntroMessage(final boolean showIntroMessage) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setShowIntroMessage(showIntroMessage);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isAutoVideoRecording(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isAutoVideoRecording());
+    }
+
+    @ReactMethod
+    public void setAutoVideoRecording(final boolean videoRecordingEnabled) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setAutoVideoRecording(videoRecordingEnabled);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void log(final ReadableMap logLevelMap, final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LogLevel logLevel = Mapper.mapToLogLevel(logLevelMap);
+                if (logLevel != null) {
+                    Shake.log(logLevel, message);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setMetadata(final String key, final String value) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setMetadata(key, value);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setShakeReportData(final ReadableArray filesArray) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesArray);
                 Shake.onPrepareData(new ShakeReportData() {
-                    @Override
-                    public String quickFacts() {
-                        return quickFacts;
-                    }
-
                     @Override
                     public List<ShakeFile> attachedFiles() {
                         return shakeFiles;
@@ -183,22 +313,19 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void silentReport(final String description, final ReadableArray filesArray,
-                             final String quickFacts, final ReadableMap configurationMap) {
+    public void silentReport(final String description, final ReadableArray filesArray, final ReadableMap configurationMap) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.silentReport(description, new ShakeReportData() {
-                    @Override
-                    public String quickFacts() {
-                        return quickFacts;
-                    }
-
+                ShakeReportConfiguration configuration = Mapper.mapToConfiguration(configurationMap);
+                ShakeReportData shakeReportData = new ShakeReportData() {
                     @Override
                     public List<ShakeFile> attachedFiles() {
                         return Mapper.mapToShakeFiles(filesArray);
                     }
-                }, Mapper.mapToConfiguration(configurationMap));
+                };
+
+                Shake.silentReport(description, shakeReportData, configuration);
             }
         });
     }

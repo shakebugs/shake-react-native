@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
+import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration, LogLevel} from 'react-native-shake';
 import RNFS from 'react-native-fs';
 import Button from '../core/Button';
 import Title from '../core/Title';
@@ -15,12 +15,15 @@ const ShakeScreen = (props) => {
     const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState();
     const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState();
     const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] = useState();
+    const [rightEdgeInvokingEnabled, setRightEdgeInvokingEnabled] = useState();
     const [blackBoxEnabled, setBlackBoxEnabled] = useState();
     const [activityHistoryEnabled, setActivityHistoryEnabled] = useState();
     const [inspectScreenEnabled, setInspectScreenEnabled] = useState();
     const [shakeEnabled, setShakeEnabled] = useState();
-
     const [networkTrackerEnabled, setNetworkTrackerEnabled] = useState();
+    const [emailFieldEnabled, setEmailFieldEnabled] = useState();
+    const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState();
+    const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState();
 
     useEffect(() => {
         createFile();
@@ -44,6 +47,10 @@ const ShakeScreen = (props) => {
         setButtonInvokingEnabled(await Shake.isShowFloatingReportButton());
         setShakeInvokingEnabled(await Shake.isInvokeShakeOnShakeDeviceEvent());
         setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
+        setRightEdgeInvokingEnabled(await Shake.isInvokeShakeOnRightEdgePan());
+        setEmailFieldEnabled(await Shake.isEnableEmailField());
+        setFeedbackTypesEnabled(await Shake.isEnableMultipleFeedbackTypes());
+        setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
         setShakeEnabled(true); // Not provided by native SDK
 
         setNetworkTrackerEnabled(NetworkTracker.isEnabled());
@@ -54,7 +61,7 @@ const ShakeScreen = (props) => {
     };
 
     const setReportData = () => {
-        Shake.setShakeReportData([ShakeFile.create(path), ShakeFile.create(path, 'customName')], 'Test quick facts');
+        Shake.setShakeReportData([ShakeFile.create(path), ShakeFile.create(path, 'customName')]);
     };
 
     const silentReport = () => {
@@ -67,9 +74,16 @@ const ShakeScreen = (props) => {
         Shake.silentReport(
             'Silent reports are working!',
             [ShakeFile.create(path), ShakeFile.create(path, 'customName')],
-            'Test quick facts',
             reportConfig,
         );
+    };
+
+    const customLog = () => {
+        Shake.log(LogLevel.INFO, 'This is a Shake custom log.');
+    };
+
+    const addMetadata = () => {
+        Shake.setMetadata('Shake', 'This is a Shake metadata.');
     };
 
     const sendGetNetworkRequest = () => {
@@ -165,25 +179,27 @@ const ShakeScreen = (props) => {
 
     const sendPostFileNetworkRequest = () => {
         const formData = new FormData();
-        formData.append('file', {uri: path, name: 'file.txt', type: 'text/plain'});
+        //formData.append('file', {uri: path, name: 'file.txt', type: 'text/plain'});
+        formData.append('userId', 'xzy');
 
         const config = {
             headers: {
-                'content-type': 'multipart/form-data',
+                accept: 'application/json',
             },
         };
-        axios
-            .post('https://httpbin.org/response-headers', formData, config)
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://httpbin.org/response-headers', {
+        // axios
+        //     .post('https://httpbin.org/response-headers', formData, config)
+        //     .then(function (response) {
+        //         alert('Request sent.');
+        //     })
+        //     .catch(function (error) {
+        //         alert('Request error.');
+        //     });
+        fetch('https://httpbin.org/response-headers', {
             body: formData,
             headers: {
-                'content-type': 'multipart/form-data',
+                'Content-Type': 'multipart/form-data',
+                Accept: 'application/json',
             },
             method: 'POST',
         })
@@ -191,8 +207,9 @@ const ShakeScreen = (props) => {
                 alert('Request sent.');
             })
             .catch((error) => {
+                console.log(error);
                 alert('Request error.');
-            });*/
+            });
     };
 
     const sendGetImageNetworkRequest = () => {
@@ -220,11 +237,13 @@ const ShakeScreen = (props) => {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Title style={styles.title} text="Actions"/>
-                <Button text="Show" onPress={show}/>
-                <Button text="Attach data" onPress={setReportData}/>
-                <Button text="Silent report" onPress={silentReport}/>
-                <Title style={styles.title} text="Invoking"/>
+                <Title style={styles.title} text="Actions" />
+                <Button text="Show" onPress={show} />
+                <Button text="Attach data" onPress={setReportData} />
+                <Button text="Silent report" onPress={silentReport} />
+                <Button text="Custom log" onPress={customLog} />
+                <Button text="Add metadata" onPress={addMetadata} />
+                <Title style={styles.title} text="Invoking" />
                 <Option
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
@@ -249,7 +268,15 @@ const ShakeScreen = (props) => {
                         setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Options"/>
+                <Option
+                    enabled={rightEdgeInvokingEnabled}
+                    title="Right Edge Pan"
+                    onValueChanged={() => {
+                        Shake.setInvokeShakeOnRightEdgePan(!rightEdgeInvokingEnabled);
+                        setRightEdgeInvokingEnabled(!rightEdgeInvokingEnabled);
+                    }}
+                />
+                <Title style={styles.title} text="Options" />
                 <Option
                     enabled={shakeEnabled}
                     title="Enabled"
@@ -291,16 +318,40 @@ const ShakeScreen = (props) => {
                         setInspectScreenEnabled(!inspectScreenEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Network"/>
-                <Button text="Send GET request" onPress={sendGetNetworkRequest}/>
-                <Button text="Send POST request" onPress={sendPostNetworkRequest}/>
-                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest}/>
-                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest}/>
-                <Button text="Send 404 request" onPress={sendErrorNetworkRequest}/>
-                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest}/>
+                <Option
+                    enabled={emailFieldEnabled}
+                    title="Email field"
+                    onValueChanged={() => {
+                        Shake.setEnableEmailField(!emailFieldEnabled);
+                        setEmailFieldEnabled(!emailFieldEnabled);
+                    }}
+                />
+                <Option
+                    enabled={feedbackTypesEnabled}
+                    title="Feedback types"
+                    onValueChanged={() => {
+                        Shake.setEnableMultipleFeedbackTypes(!feedbackTypesEnabled);
+                        setFeedbackTypesEnabled(!feedbackTypesEnabled);
+                    }}
+                />
+                <Option
+                    enabled={autoVideoRecordingEnabled}
+                    title="Screen recording"
+                    onValueChanged={() => {
+                        Shake.setAutoVideoRecording(!autoVideoRecordingEnabled);
+                        setAutoVideoRecordingEnabled(!autoVideoRecordingEnabled);
+                    }}
+                />
+                <Title style={styles.title} text="Network" />
+                <Button text="Send GET request" onPress={sendGetNetworkRequest} />
+                <Button text="Send POST request" onPress={sendPostNetworkRequest} />
+                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest} />
+                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest} />
+                <Button text="Send 404 request" onPress={sendErrorNetworkRequest} />
+                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest} />
                 <View style={styles.links}>
-                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
-                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/" />
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs" />
                 </View>
                 <Version
                     onLongPress={() => {

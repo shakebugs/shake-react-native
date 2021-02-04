@@ -1,35 +1,29 @@
 {
   "name": "example",
-  "version": "10.0.4",
+  "version": "14.1.0",
   "private": true,
   "config": {
     "android": {
-      "uat": "com.shakebugs.android:shake-uat",
       "stg": "com.shakebugs.android:shake-staging",
       "prd": "com.shakebugs.android:shake"
     },
     "ios": {
-      "uat": "Shake-UAT",
       "stg": "Shake-Staging",
       "prd": "Shake"
     }
   },
   "scripts": {
-    "android": "npm run android:uat",
-    "android:uat": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_uat \"react-native run-android\"",
+    "android": "npm run android:stg",
     "android:stg": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_stg \"react-native run-android\"",
     "android:prd": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_prd \"react-native run-android\"",
-    "build:android": "npm run build:android:uat",
-    "build:android:uat": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_uat \"npm run bundle:android && cd android && ./gradlew assembleRelease\"",
+    "build:android": "npm run build:android:stg",
     "build:android:stg": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_stg \"npm run bundle:android && cd android && ./gradlew assembleRelease\"",
     "build:android:prd": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_prd \"npm run bundle:android && cd android && ./gradlew assembleRelease\"",
     "clean:android": "cross-env-shell \"cd android && ./gradlew clean && cd ..\"",
-    "ios": "npm run ios:uat",
-    "ios:uat": "export IOS_DEPENDENCY=$npm_package_config_ios_uat && npm run clean:ios && react-native run-ios",
+    "ios": "npm run ios:stg",
     "ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run clean:ios && react-native run-ios",
     "ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd && npm run clean:ios && react-native run-ios",
-    "build:ios": "npm run build:ios:uat",
-    "build:ios:uat": "export IOS_DEPENDENCY=$npm_package_config_ios_uat && npm run clean:ios && npm run bundle:ios && cd ios && xcodebuild archive -workspace example.xcworkspace -scheme 'example' -configuration Release 'COMPILER_INDEX_STORE_ENABLE=NO' -archivePath example.xcarchive && xcodebuild -exportArchive -archivePath example.xcarchive -exportPath ./ -exportOptionsPlist ../export_options.plist",
+    "build:ios": "npm run build:ios:stg",
     "build:ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run clean:ios && npm run bundle:ios && cd ios && xcodebuild archive -workspace example.xcworkspace -scheme 'example' -configuration Release 'COMPILER_INDEX_STORE_ENABLE=NO' -archivePath example.xcarchive && xcodebuild -exportArchive -archivePath example.xcarchive -exportPath ./ -exportOptionsPlist ../export_options.plist",
     "build:ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd && npm run clean:ios && npm run bundle:ios && cd ios && xcodebuild archive -workspace example.xcworkspace -scheme 'example' -configuration Release 'COMPILER_INDEX_STORE_ENABLE=NO' -archivePath example.xcarchive && xcodebuild -exportArchive -archivePath example.xcarchive -exportPath ./ -exportOptionsPlist ../export_options.plist",
     "clean:ios": "rm -rf ios/Pods ios/Podfile.lock; cd ios && pod install && cd ..",
@@ -48,7 +42,7 @@
     "@react-navigation/stack": "^5.2.14",
     "axios": "^0.20.0",
     "react": "16.11.0",
-    "react-native": "0.62.2",
+    "react-native": "0.63.2",
     "react-native-btr": "^1.1.5",
     "react-native-device-info": "^5.6.1",
     "react-native-fs": ">=2.16.6",
