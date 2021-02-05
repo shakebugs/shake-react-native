@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 #import <Shake/Shake.h>
 #import <Shake/SHKShakeConfiguration.h>
@@ -5,6 +6,5 @@
 #import <Shake/SHKShakeReportData.h>
 
 @interface RNShake : NSObject <RCTBridgeModule>
-
 
 @end

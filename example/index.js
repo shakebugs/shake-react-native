@@ -16,6 +16,7 @@ Shake.setInvokeShakeOnScreenshot(true);
 Shake.setInvokeShakeOnShakeDeviceEvent(true);
 Shake.setShowFloatingReportButton(true);
 Shake.setInvokeShakeOnRightEdgePan(true);
+Shake.setConsoleLogsEnabled(true);
 Shake.setAutoVideoRecording(true);
 Shake.setEmailField('test@shakebugs.com');
 Shake.setShowIntroMessage(true);

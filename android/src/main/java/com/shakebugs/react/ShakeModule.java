@@ -274,6 +274,21 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void isConsoleLogsEnabled(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isConsoleLogsEnabled());
+    }
+
+    @ReactMethod
+    public void setConsoleLogsEnabled(final boolean consoleLogsEnabled) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setConsoleLogsEnabled(consoleLogsEnabled);
+            }
+        });
+    }
+
+    @ReactMethod
     public void log(final ReadableMap logLevelMap, final String message) {
         runOnUiThread(new Runnable() {
             @Override

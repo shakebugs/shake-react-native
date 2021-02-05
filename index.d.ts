@@ -59,6 +59,10 @@ declare module '@shakebugs/react-native-shake' {
 
     export function setAutoVideoRecording(autoRecordingEnabled: boolean): void;
 
+    export function isConsoleLogsEnabled(): Promise<boolean>;
+
+    export function setConsoleLogsEnabled(autoRecordingEnabled: boolean): void;
+
     export function log(logLevel: LogLevel, message: string): void;
 
     export function setMetadata(key: string, value: string): void;

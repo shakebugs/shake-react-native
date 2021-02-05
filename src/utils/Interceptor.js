@@ -47,12 +47,14 @@ const Interceptor = {
             originalXHRSetRequestHeader.apply(this, arguments);
         };
 
-        XMLHttpRequest.prototype.send = function (requestBody) {
-            if (!requestBody)
+        XMLHttpRequest.prototype.send = function (data) {
+            let requestBody;
+
+            if (!data)
                 requestBody = "";
-            if (typeof requestBody !== 'string')
-                requestBody = JSON.stringify(requestBody);
-            if (Utils.isBinary(requestBody)) {
+            if (typeof data !== 'string')
+                requestBody = JSON.stringify(data);
+            if (Utils.isBinary(data)) {
                 requestBody = "Binary data";
             }
 

@@ -24,6 +24,7 @@ const ShakeScreen = (props) => {
     const [emailFieldEnabled, setEmailFieldEnabled] = useState();
     const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState();
     const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState();
+    const [consoleLogsEnabled, setConsoleLogsEnabled] = useState();
 
     useEffect(() => {
         createFile();
@@ -51,6 +52,7 @@ const ShakeScreen = (props) => {
         setEmailFieldEnabled(await Shake.isEnableEmailField());
         setFeedbackTypesEnabled(await Shake.isEnableMultipleFeedbackTypes());
         setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
+        setConsoleLogsEnabled(await Shake.isConsoleLogsEnabled());
         setShakeEnabled(true); // Not provided by native SDK
 
         setNetworkTrackerEnabled(NetworkTracker.isEnabled());
@@ -237,13 +239,13 @@ const ShakeScreen = (props) => {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Title style={styles.title} text="Actions" />
-                <Button text="Show" onPress={show} />
-                <Button text="Attach data" onPress={setReportData} />
-                <Button text="Silent report" onPress={silentReport} />
-                <Button text="Custom log" onPress={customLog} />
-                <Button text="Add metadata" onPress={addMetadata} />
-                <Title style={styles.title} text="Invoking" />
+                <Title style={styles.title} text="Actions"/>
+                <Button text="Show" onPress={show}/>
+                <Button text="Attach data" onPress={setReportData}/>
+                <Button text="Silent report" onPress={silentReport}/>
+                <Button text="Custom log" onPress={customLog}/>
+                <Button text="Add metadata" onPress={addMetadata}/>
+                <Title style={styles.title} text="Invoking"/>
                 <Option
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
@@ -276,7 +278,7 @@ const ShakeScreen = (props) => {
                         setRightEdgeInvokingEnabled(!rightEdgeInvokingEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Options" />
+                <Title style={styles.title} text="Options"/>
                 <Option
                     enabled={shakeEnabled}
                     title="Enabled"
@@ -342,16 +344,24 @@ const ShakeScreen = (props) => {
                         setAutoVideoRecordingEnabled(!autoVideoRecordingEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Network" />
-                <Button text="Send GET request" onPress={sendGetNetworkRequest} />
-                <Button text="Send POST request" onPress={sendPostNetworkRequest} />
-                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest} />
-                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest} />
-                <Button text="Send 404 request" onPress={sendErrorNetworkRequest} />
-                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest} />
+                <Option
+                    enabled={consoleLogsEnabled}
+                    title="Console logs"
+                    onValueChanged={() => {
+                        Shake.setConsoleLogsEnabled(!consoleLogsEnabled);
+                        setConsoleLogsEnabled(!consoleLogsEnabled);
+                    }}
+                />
+                <Title style={styles.title} text="Network"/>
+                <Button text="Send GET request" onPress={sendGetNetworkRequest}/>
+                <Button text="Send POST request" onPress={sendPostNetworkRequest}/>
+                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest}/>
+                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest}/>
+                <Button text="Send 404 request" onPress={sendErrorNetworkRequest}/>
+                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest}/>
                 <View style={styles.links}>
-                    <Link text="Dashboard" link="https://app.staging5h4k3.com/" />
-                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs" />
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
                 </View>
                 <Version
                     onLongPress={() => {

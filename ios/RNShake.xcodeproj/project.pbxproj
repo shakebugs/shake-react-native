@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B3E7B58A1CC2AC0600A0062D /* RNShake.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNShake.m */; };
+		EA465F1C25CDA06A00FBDE22 /* Mapper.m in Sources */ = {isa = PBXBuildFile; fileRef = EA465F1B25CDA06A00FBDE22 /* Mapper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +27,8 @@
 		134814201AA4EA6300B7C361 /* libRNShake.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNShake.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RNShake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNShake.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNShake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNShake.m; sourceTree = "<group>"; };
+		EA465F1B25CDA06A00FBDE22 /* Mapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Mapper.m; sourceTree = "<group>"; };
+		EA465F1F25CDA81100FBDE22 /* Mapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mapper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +53,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				EA465F1F25CDA81100FBDE22 /* Mapper.h */,
+				EA465F1B25CDA06A00FBDE22 /* Mapper.m */,
 				B3E7B5881CC2AC0600A0062D /* RNShake.h */,
 				B3E7B5891CC2AC0600A0062D /* RNShake.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
@@ -113,6 +118,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA465F1C25CDA06A00FBDE22 /* Mapper.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RNShake.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
