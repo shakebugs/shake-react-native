@@ -80,6 +80,11 @@ declare module '@shakebugs/react-native-shake' {
     }
 
     export class LogLevel {
+        static VERBOSE: LogLevel;
+        static DEBUG: LogLevel;
+        static INFO: LogLevel;
+        static WARN: LogLevel;
+        static ERROR: LogLevel;
         value: string;
     }
 
