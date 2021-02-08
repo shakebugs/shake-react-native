@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration, LogLevel} from 'react-native-shake';
+import Shake, {LogLevel, NetworkTracker, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
 import RNFS from 'react-native-fs';
 import Button from '../core/Button';
 import Title from '../core/Title';
 import Option from '../core/Option';
 import Link from '../core/Link';
 import Version from '../core/Version';
-import axios from 'axios';
+//import FetchNetworkTester from "../network/FetchNetworkTester";
+import AxiosNetworkTester from '../network/AxiosNetworkTester';
 
 const ShakeScreen = (props) => {
     let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -25,6 +26,8 @@ const ShakeScreen = (props) => {
     const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState();
     const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState();
     const [consoleLogsEnabled, setConsoleLogsEnabled] = useState();
+    //const networkTester = new FetchNetworkTester();
+    const networkTester = new AxiosNetworkTester();
 
     useEffect(() => {
         createFile();
@@ -89,163 +92,39 @@ const ShakeScreen = (props) => {
     };
 
     const sendGetNetworkRequest = () => {
-        axios
-            .get('https://dummy.restapiexample.com/api/v1/employees')
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://dummy.restapiexample.com/api/v1/employees', {
-            method: 'GET',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.sendGetRequest();
     };
 
     const sendPostNetworkRequest = () => {
-        axios
-            .post('https://postman-echo.com/post', {
-                firstParam: 'firstParam',
-                secondParam: 'secondParam',
-            })
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://postman-echo.com/post', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: 'firstParam',
-                secondParam: 'secondParam',
-            }),
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.sendPostRequest();
     };
 
     const sendErrorNetworkRequest = () => {
-        axios
-            .get('https://run.mocky.io/v3/267ed439-8ea6-4495-bda7-90969e039a9e')
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://run.mocky.io/v3/267ed439-8ea6-4495-bda7-90969e039a9e', {
-            method: 'GET',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.sendErrorRequest();
     };
 
     const sendTimeoutNetworkRequest = () => {
-        axios
-            .post(
-                'https://postman-echo.com/post',
-                {
-                    firstParam: 'firstParam',
-                    secondParam: 'secondParam',
-                },
-                {
-                    timeout: 1,
-                },
-            )
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
+        networkTester.sendTimeoutRequest();
     };
 
     const sendPostFileNetworkRequest = () => {
-        const formData = new FormData();
-        //formData.append('file', {uri: path, name: 'file.txt', type: 'text/plain'});
-        formData.append('userId', 'xzy');
-
-        const config = {
-            headers: {
-                accept: 'application/json',
-            },
-        };
-        // axios
-        //     .post('https://httpbin.org/response-headers', formData, config)
-        //     .then(function (response) {
-        //         alert('Request sent.');
-        //     })
-        //     .catch(function (error) {
-        //         alert('Request error.');
-        //     });
-        fetch('https://httpbin.org/response-headers', {
-            body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                Accept: 'application/json',
-            },
-            method: 'POST',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                console.log(error);
-                alert('Request error.');
-            });
+        networkTester.postFileRequest();
     };
 
     const sendGetImageNetworkRequest = () => {
-        axios
-            .get('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
-                responseType: 'blob',
-            })
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
-            method: 'GET',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.getImageRequest();
     };
 
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Title style={styles.title} text="Actions"/>
-                <Button text="Show" onPress={show}/>
-                <Button text="Attach data" onPress={setReportData}/>
-                <Button text="Silent report" onPress={silentReport}/>
-                <Button text="Custom log" onPress={customLog}/>
-                <Button text="Add metadata" onPress={addMetadata}/>
-                <Title style={styles.title} text="Invoking"/>
+                <Title style={styles.title} text="Actions" />
+                <Button text="Show" onPress={show} />
+                <Button text="Attach data" onPress={setReportData} />
+                <Button text="Silent report" onPress={silentReport} />
+                <Button text="Custom log" onPress={customLog} />
+                <Button text="Add metadata" onPress={addMetadata} />
+                <Title style={styles.title} text="Invoking" />
                 <Option
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
@@ -278,7 +157,7 @@ const ShakeScreen = (props) => {
                         setRightEdgeInvokingEnabled(!rightEdgeInvokingEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Options"/>
+                <Title style={styles.title} text="Options" />
                 <Option
                     enabled={shakeEnabled}
                     title="Enabled"
@@ -287,7 +166,6 @@ const ShakeScreen = (props) => {
                         setShakeEnabled(!shakeEnabled);
                     }}
                 />
-
                 <Option
                     enabled={blackBoxEnabled}
                     title="Blackbox"
@@ -352,16 +230,16 @@ const ShakeScreen = (props) => {
                         setConsoleLogsEnabled(!consoleLogsEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Network"/>
-                <Button text="Send GET request" onPress={sendGetNetworkRequest}/>
-                <Button text="Send POST request" onPress={sendPostNetworkRequest}/>
-                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest}/>
-                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest}/>
-                <Button text="Send 404 request" onPress={sendErrorNetworkRequest}/>
-                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest}/>
+                <Title style={styles.title} text="Network" />
+                <Button text="Send GET request" onPress={sendGetNetworkRequest} />
+                <Button text="Send POST request" onPress={sendPostNetworkRequest} />
+                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest} />
+                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest} />
+                <Button text="Send 404 request" onPress={sendErrorNetworkRequest} />
+                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest} />
                 <View style={styles.links}>
-                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
-                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/" />
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs" />
                 </View>
                 <Version
                     onLongPress={() => {
