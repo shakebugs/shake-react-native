@@ -67,6 +67,16 @@ declare module '@shakebugs/react-native-shake' {
 
     export function setMetadata(key: string, value: string): void;
 
+    export function addPrivateView(viewRef: object): void;
+
+    export function removePrivateView(viewRef: object): void;
+
+    export function clearPrivateViews(): void;
+
+    export function isSensitiveDataRedactionEnabled(): Promise<boolean>;
+
+    export function setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled: boolean): void;
+
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
         activityHistoryData: boolean;

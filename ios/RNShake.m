@@ -1,4 +1,9 @@
 #import "RNShake.h"
+#import <React/RCTUIManager.h>
+#import <Shake/Shake.h>
+#import <Shake/SHKShakeConfiguration.h>
+#import <Shake/SHKShakeFile.h>
+#import <Shake/SHKShakeReportData.h>
 
 @implementation RNShake
 
@@ -12,7 +17,6 @@
         [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:disableDueToRN];
         [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:platformAndSdkVersionDict];
     }
-
 }
 
 +(BOOL)requiresMainQueueSetup
@@ -284,4 +288,31 @@ RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)request)
     };
     [SHKShake performSelector:sel_getUid(@"_reportRequestCompleted:".UTF8String) withObject:dict];
 }
+
+RCT_EXPORT_METHOD(addPrivateView:(nonnull NSNumber*)tag)
+{
+    UIView* view = [self.bridge.uiManager viewForReactTag:tag];
+    [SHKShake addPrivateView:view];
+}
+
+RCT_EXPORT_METHOD(removePrivateView:(nonnull NSNumber*)tag) {
+    UIView* view = [self.bridge.uiManager viewForReactTag:tag];
+    [SHKShake removePrivateView:view];
+}
+
+RCT_EXPORT_METHOD(clearPrivateViews) {
+    [SHKShake clearPrivateViews];
+}
+
+RCT_EXPORT_METHOD(setSensitiveDataRedactionEnabled:(BOOL)isSensitiveDataRedactionEnabled)
+{
+    SHKShake.configuration.isSensitiveDataRedactionEnabled = isSensitiveDataRedactionEnabled;
+}
+
+RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *isSensitiveDataRedactionEnabled = [NSNumber numberWithBool:SHKShake.configuration.isSensitiveDataRedactionEnabled];
+    resolve(isSensitiveDataRedactionEnabled);
+}
+
 @end

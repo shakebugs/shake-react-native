@@ -1,6 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import Shake, {LogLevel, NetworkTracker, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
+import Shake, {
+    addPrivateView,
+    LogLevel,
+    NetworkTracker,
+    removePrivateView,
+    ShakeFile,
+    ShakeReportConfiguration,
+} from 'react-native-shake';
 import RNFS from 'react-native-fs';
 import Button from '../core/Button';
 import Title from '../core/Title';
@@ -26,6 +33,10 @@ const ShakeScreen = (props) => {
     const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState();
     const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState();
     const [consoleLogsEnabled, setConsoleLogsEnabled] = useState();
+    const [sensitiveDataRedactionEnabled, setSensitiveDataRedactionEnabled] = useState();
+
+    const privateButton = useRef();
+
     //const networkTester = new FetchNetworkTester();
     const networkTester = new AxiosNetworkTester();
 
@@ -56,6 +67,7 @@ const ShakeScreen = (props) => {
         setFeedbackTypesEnabled(await Shake.isEnableMultipleFeedbackTypes());
         setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
         setConsoleLogsEnabled(await Shake.isConsoleLogsEnabled());
+        setSensitiveDataRedactionEnabled(await Shake.isSensitiveDataRedactionEnabled());
         setShakeEnabled(true); // Not provided by native SDK
 
         setNetworkTrackerEnabled(NetworkTracker.isEnabled());
@@ -81,6 +93,14 @@ const ShakeScreen = (props) => {
             [ShakeFile.create(path), ShakeFile.create(path, 'customName')],
             reportConfig,
         );
+    };
+
+    const addPrivateViewFun = () => {
+        addPrivateView(privateButton);
+    };
+
+    const removePrivateViewFun = () => {
+        removePrivateView(privateButton);
     };
 
     const customLog = () => {
@@ -124,6 +144,8 @@ const ShakeScreen = (props) => {
                 <Button text="Silent report" onPress={silentReport} />
                 <Button text="Custom log" onPress={customLog} />
                 <Button text="Add metadata" onPress={addMetadata} />
+                <Button text="Add private view" onPress={addPrivateViewFun} />
+                <Button childRef={privateButton} text="Remove private view" onPress={removePrivateViewFun} />
                 <Title style={styles.title} text="Invoking" />
                 <Option
                     enabled={shakeInvokingEnabled}
@@ -228,6 +250,14 @@ const ShakeScreen = (props) => {
                     onValueChanged={() => {
                         Shake.setConsoleLogsEnabled(!consoleLogsEnabled);
                         setConsoleLogsEnabled(!consoleLogsEnabled);
+                    }}
+                />
+                <Option
+                    enabled={sensitiveDataRedactionEnabled}
+                    title="Sensitive data redaction"
+                    onValueChanged={() => {
+                        Shake.setSensitiveDataRedactionEnabled(!sensitiveDataRedactionEnabled);
+                        setSensitiveDataRedactionEnabled(!sensitiveDataRedactionEnabled);
                     }}
                 />
                 <Title style={styles.title} text="Network" />

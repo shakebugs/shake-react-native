@@ -3,13 +3,17 @@ import React from 'react';
 
 const Button = (props) => {
     const color = props.color ? props.color : '#ffffff';
-    return <TouchableOpacity
-        style={[styles.button, {backgroundColor: color}]}
-        onPress={() => {
-            props.onPress();
-        }}>
-        <Text style={styles.text}>{props.text}</Text>
-    </TouchableOpacity>;
+    return (
+        <TouchableOpacity
+            style={[styles.button, {backgroundColor: color}]}
+            onPress={() => {
+                props.onPress();
+            }}>
+            <Text ref={props.childRef} style={styles.text}>
+                {props.text}
+            </Text>
+        </TouchableOpacity>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -17,7 +21,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         borderRadius: 28,
         paddingVertical: 12,
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 1,
@@ -30,9 +34,8 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center',
         fontSize: 18,
-        fontFamily: 'HKGrotesk-Regular'
-    }
+        fontFamily: 'HKGrotesk-Regular',
+    },
 });
-
 
 export default Button;

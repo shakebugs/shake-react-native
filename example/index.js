@@ -20,5 +20,6 @@ Shake.setConsoleLogsEnabled(true);
 Shake.setAutoVideoRecording(true);
 Shake.setEmailField('test@shakebugs.com');
 Shake.setShowIntroMessage(true);
+Shake.setSensitiveDataRedactionEnabled(true);
 
 Shake.start(CLIENT_ID_, CLIENT_SECRET);

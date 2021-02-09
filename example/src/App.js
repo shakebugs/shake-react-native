@@ -31,17 +31,17 @@ export default class App extends Component<{}> {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
-                    <Stack.Screen options={options} name="ShakeScreen" component={ShakeScreen}/>
-                    <Stack.Screen options={options} name="TestScreen" component={TestScreen}/>
-                    <Stack.Screen options={options} name="TouchScreen" component={TouchScreen}/>
-                    <Stack.Screen options={options} name="ScrollScreen" component={ScrollScreen}/>
-                    <Stack.Screen options={options} name="RefreshScreen" component={RefreshScreen}/>
-                    <Stack.Screen options={{title: 'List'}} name="ListScreen" component={ListScreen}/>
-                    <Stack.Screen options={options} name="ModalScreen" component={ModalScreen}/>
-                    <Stack.Screen options={options} name="DrawerScreen" component={DrawerScreen}/>
-                    <Stack.Screen options={options} name="TabScreen" component={TabScreen}/>
-                    <Stack.Screen options={options} name="WebViewScreen" component={WebViewScreen}/>
-                    <Stack.Screen options={options} name="MapScreen" component={MapScreen}/>
+                    <Stack.Screen options={options} name="ShakeScreen" component={ShakeScreen} />
+                    <Stack.Screen options={options} name="TestScreen" component={TestScreen} />
+                    <Stack.Screen options={options} name="TouchScreen" component={TouchScreen} />
+                    <Stack.Screen options={options} name="ScrollScreen" component={ScrollScreen} />
+                    <Stack.Screen options={options} name="RefreshScreen" component={RefreshScreen} />
+                    <Stack.Screen options={{title: 'List'}} name="ListScreen" component={ListScreen} />
+                    <Stack.Screen options={options} name="ModalScreen" component={ModalScreen} />
+                    <Stack.Screen options={options} name="DrawerScreen" component={DrawerScreen} />
+                    <Stack.Screen options={options} name="TabScreen" component={TabScreen} />
+                    <Stack.Screen options={options} name="WebViewScreen" component={WebViewScreen} />
+                    <Stack.Screen options={options} name="MapScreen" component={MapScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         );

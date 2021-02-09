@@ -1,6 +1,7 @@
 package com.shakebugs.react;
 
 import android.app.Activity;
+import android.view.View;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -8,6 +9,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.uimanager.NativeViewHierarchyManager;
+import com.facebook.react.uimanager.UIBlock;
+import com.facebook.react.uimanager.UIManagerModule;
 import com.shakebugs.react.utils.Constants;
 import com.shakebugs.react.utils.Logger;
 import com.shakebugs.react.utils.Mapper;
@@ -352,6 +356,65 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             public void run() {
                 NetworkRequest networkRequest = Mapper.mapToNetworkRequest(data);
                 Shake.insertNetworkRequest(networkRequest);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addPrivateView(final double id) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+                uiManagerModule.prependUIBlock(new UIBlock() {
+                    @Override
+                    public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                        View view = nativeViewHierarchyManager.resolveView((int) id);
+                        Shake.addPrivateView(view);
+                    }
+                });
+            }
+        });
+    }
+
+    @ReactMethod
+    public void removePrivateView(final double id) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+                uiManagerModule.prependUIBlock(new UIBlock() {
+                    @Override
+                    public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                        View view = nativeViewHierarchyManager.resolveView((int) id);
+                        Shake.removePrivateView(view);
+                    }
+                });
+            }
+        });
+    }
+
+    @ReactMethod
+    public void clearPrivateViews() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.clearPrivateViews();
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isSensitiveDataRedactionEnabled(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isSensitiveDataRedactionEnabled());
+    }
+
+    @ReactMethod
+    public void setSensitiveDataRedactionEnabled(final boolean sensitiveDataRedactionEnabled) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled);
             }
         });
     }
