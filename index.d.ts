@@ -1,4 +1,4 @@
-declare module '@shakebugs/react-native-shake' {
+declare module "@shakebugs/react-native-shake" {
     export function start(clientId: string, clientSecret: string): void;
 
     export function show(): void;
@@ -35,7 +35,11 @@ declare module '@shakebugs/react-native-shake' {
 
     export function setShakeReportData(files: Array<ShakeFile>): void;
 
-    export function silentReport(description: string, files: Array<ShakeFile>, configuration: ShakeReportConfiguration): void;
+    export function silentReport(
+        description: string,
+        files: Array<ShakeFile>,
+        configuration: ShakeReportConfiguration
+    ): void;
 
     export function insertNetworkRequest(request: object): void;
 
@@ -77,6 +81,10 @@ declare module '@shakebugs/react-native-shake' {
 
     export function setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled: boolean): void;
 
+    export function trackNotifications(): void;
+
+    export function handleNotification(title: string, description: string): void;
+
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
         activityHistoryData: boolean;
@@ -99,12 +107,12 @@ declare module '@shakebugs/react-native-shake' {
     }
 
     export namespace ShakeFile {
-        function create(filePath: string, fileName?: string): ShakeFile
+        function create(filePath: string, fileName?: string): ShakeFile;
     }
 
     export namespace NetworkTracker {
-        function isEnabled(): boolean
+        function isEnabled(): boolean;
 
-        function setEnabled(enabled: boolean): void
+        function setEnabled(enabled: boolean): void;
     }
 }

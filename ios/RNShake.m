@@ -202,7 +202,7 @@ RCT_EXPORT_METHOD(setMetadata:(NSString*)key:(NSString*)value)
 
 RCT_EXPORT_METHOD(log:(NSDictionary*)logLevelDic:(NSString*)message)
 {
-    LogLevel logLevel;
+    LogLevel logLevel = LogLevelInfo;
     
     NSString* value = [logLevelDic objectForKey:@"value"];
     if ([value isEqualToString:@"VERBOSE"])
@@ -289,13 +289,25 @@ RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)request)
     [SHKShake performSelector:sel_getUid(@"_reportRequestCompleted:".UTF8String) withObject:dict];
 }
 
+RCT_REMAP_METHOD(handleNotification, title:(nonnull NSString*)title description:(nonnull NSString*)description)
+{
+    [SHKShake handleNotificationWithNotificationTitle: title notificationDescription:description];
+}
+
+RCT_EXPORT_METHOD(trackNotifications)
+{
+    // Notifications tracking works out of the box on iOS
+    // This method is just a placeholder to avoid crashes
+}
+
 RCT_EXPORT_METHOD(addPrivateView:(nonnull NSNumber*)tag)
 {
     UIView* view = [self.bridge.uiManager viewForReactTag:tag];
     [SHKShake addPrivateView:view];
 }
 
-RCT_EXPORT_METHOD(removePrivateView:(nonnull NSNumber*)tag) {
+RCT_EXPORT_METHOD(removePrivateView:(nonnull NSNumber*)tag)
+{
     UIView* view = [self.bridge.uiManager viewForReactTag:tag];
     [SHKShake removePrivateView:view];
 }

@@ -1,6 +1,7 @@
 package com.shakebugs.react;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 
 import com.facebook.react.bridge.Promise;
@@ -76,6 +77,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             }
         });
     }
+
 
     @ReactMethod
     public void show() {
@@ -358,6 +360,24 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 Shake.insertNetworkRequest(networkRequest);
             }
         });
+    }
+
+    @ReactMethod
+    public void handleNotification(final String title, final String description) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.handleNotification(title, description);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void trackNotifications() {
+        Activity activity = getCurrentActivity();
+        if (activity != null) {
+            activity.startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+        }
     }
 
     @ReactMethod

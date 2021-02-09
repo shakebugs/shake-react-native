@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import Shake, {
     addPrivateView,
@@ -103,12 +103,24 @@ const ShakeScreen = (props) => {
         removePrivateView(privateButton);
     };
 
+    const clearPrivateViews = () => {
+        Shake.clearPrivateViews();
+    };
+
     const customLog = () => {
         Shake.log(LogLevel.INFO, 'This is a Shake custom log.');
     };
 
     const addMetadata = () => {
         Shake.setMetadata('Shake', 'This is a Shake metadata.');
+    };
+
+    const trackNotifications = () => {
+        Shake.trackNotifications();
+    };
+
+    const handleNotification = () => {
+        Shake.handleNotification('Notification title', 'Notification description');
     };
 
     const sendGetNetworkRequest = () => {
@@ -144,8 +156,6 @@ const ShakeScreen = (props) => {
                 <Button text="Silent report" onPress={silentReport} />
                 <Button text="Custom log" onPress={customLog} />
                 <Button text="Add metadata" onPress={addMetadata} />
-                <Button text="Add private view" onPress={addPrivateViewFun} />
-                <Button childRef={privateButton} text="Remove private view" onPress={removePrivateViewFun} />
                 <Title style={styles.title} text="Invoking" />
                 <Option
                     enabled={shakeInvokingEnabled}
@@ -252,6 +262,13 @@ const ShakeScreen = (props) => {
                         setConsoleLogsEnabled(!consoleLogsEnabled);
                     }}
                 />
+                <Title style={styles.title} text="Notifications" />
+                <Button text="Start notification tracker" onPress={trackNotifications} />
+                <Button text="Handle notification" onPress={handleNotification} />
+                <Title style={styles.title} text="Privacy" />
+                <Button text="Add private view" onPress={addPrivateViewFun} />
+                <Button childRef={privateButton} text="Remove private view" onPress={removePrivateViewFun} />
+                <Button text="Clear private views" onPress={clearPrivateViews} />
                 <Option
                     enabled={sensitiveDataRedactionEnabled}
                     title="Sensitive data redaction"
