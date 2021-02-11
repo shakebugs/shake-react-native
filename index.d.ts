@@ -85,6 +85,12 @@ declare module "@shakebugs/react-native-shake" {
 
     export function handleNotification(title: string, description: string): void;
 
+    export function addPrivateView(viewRef: object): void;
+
+    export function removePrivateView(viewRef: object): void;
+
+    export function clearPrivateViews(): void;
+
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
         activityHistoryData: boolean;
