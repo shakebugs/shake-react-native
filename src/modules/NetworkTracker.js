@@ -1,30 +1,31 @@
 import Interceptor from "../utils/Interceptor";
-import Shake from '../../index'
+import Shake from "../../index";
 
 class NetworkTracker {
-    static _isEnabled = false;
+    static _enabled = false;
+    static _filter = null;
 
     static isEnabled = () => {
-        return this._isEnabled;
-    }
-
-    static setEnabled = (enabled) => {
-        this._isEnabled = enabled;
-        this._handleInterceptor();
+        return this._enabled;
     };
 
-    static _handleInterceptor = () => {
-        if (this._isEnabled) {
-            Interceptor.enableInterception();
-        } else {
-            Interceptor.disableInterception();
-        }
-    }
+    static setEnabled = (enabled) => {
+        this._enabled = enabled;
+    };
+
+    static getFilter = () => {
+        return this._filter;
+    };
+
+    static setFilter = (filter) => {
+        this._filter = filter;
+    };
 
     static initialize = () => {
-        Interceptor.setOnDoneCallback(networkRequest => {
-            if (networkRequest.statusCode) {
-                Shake.insertNetworkRequest(networkRequest)
+        Interceptor.enableInterception();
+        Interceptor.setOnDoneCallback((networkRequest) => {
+            if (this._enabled && networkRequest.statusCode) {
+                Shake.insertNetworkRequest(networkRequest);
             }
         });
     };

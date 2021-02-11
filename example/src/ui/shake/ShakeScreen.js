@@ -16,6 +16,7 @@ import Link from '../core/Link';
 import Version from '../core/Version';
 //import FetchNetworkTester from "../network/FetchNetworkTester";
 import AxiosNetworkTester from '../network/AxiosNetworkTester';
+import Private from '../core/Private';
 
 const ShakeScreen = (props) => {
     let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -35,7 +36,7 @@ const ShakeScreen = (props) => {
     const [consoleLogsEnabled, setConsoleLogsEnabled] = useState();
     const [sensitiveDataRedactionEnabled, setSensitiveDataRedactionEnabled] = useState();
 
-    const privateButton = useRef();
+    let privateView = useRef(null);
 
     //const networkTester = new FetchNetworkTester();
     const networkTester = new AxiosNetworkTester();
@@ -96,11 +97,11 @@ const ShakeScreen = (props) => {
     };
 
     const addPrivateViewFun = () => {
-        addPrivateView(privateButton);
+        addPrivateView(privateView);
     };
 
     const removePrivateViewFun = () => {
-        removePrivateView(privateButton);
+        removePrivateView(privateView);
     };
 
     const clearPrivateViews = () => {
@@ -113,6 +114,12 @@ const ShakeScreen = (props) => {
 
     const addMetadata = () => {
         Shake.setMetadata('Shake', 'This is a Shake metadata.');
+    };
+
+    const networkRequestFilter = () => {
+        NetworkTracker.setFilter((networkRequest) => {
+            networkRequest.url = 'pero';
+        });
     };
 
     const trackNotifications = () => {
@@ -262,19 +269,24 @@ const ShakeScreen = (props) => {
                         setConsoleLogsEnabled(!consoleLogsEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Notifications" />
-                <Button text="Start notification tracker" onPress={trackNotifications} />
-                <Button text="Handle notification" onPress={handleNotification} />
-                <Title style={styles.title} text="Privacy" />
-                <Button text="Add private view" onPress={addPrivateViewFun} />
-                <Button childRef={privateButton} text="Remove private view" onPress={removePrivateViewFun} />
-                <Button text="Clear private views" onPress={clearPrivateViews} />
                 <Option
                     enabled={sensitiveDataRedactionEnabled}
                     title="Sensitive data redaction"
                     onValueChanged={() => {
                         Shake.setSensitiveDataRedactionEnabled(!sensitiveDataRedactionEnabled);
                         setSensitiveDataRedactionEnabled(!sensitiveDataRedactionEnabled);
+                    }}
+                />
+                <Title style={styles.title} text="Notifications" />
+                <Button text="Start notification tracker" onPress={trackNotifications} />
+                <Button text="Handle notification" onPress={handleNotification} />
+                <Title style={styles.title} text="Private view" />
+                <Button text="Add private view" onPress={addPrivateViewFun} />
+                <Button text="Remove private view" onPress={removePrivateViewFun} />
+                <Button text="Clear private views" onPress={clearPrivateViews} />
+                <Private
+                    customRef={(ref) => {
+                        privateView = ref;
                     }}
                 />
                 <Title style={styles.title} text="Network" />

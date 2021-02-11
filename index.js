@@ -13,7 +13,7 @@ const addPrivateView = (viewRef) => {
 
 const removePrivateView = (viewRef) => {
     const nativeTag = findNodeHandle(viewRef);
-    RNShake.addPrivateView(nativeTag);
+    RNShake.removePrivateView(nativeTag);
 };
 
 export { ShakeReportConfiguration };

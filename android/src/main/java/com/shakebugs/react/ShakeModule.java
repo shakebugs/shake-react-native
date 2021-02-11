@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
@@ -14,6 +15,7 @@ import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.shakebugs.react.utils.Constants;
+import com.shakebugs.react.utils.Events;
 import com.shakebugs.react.utils.Logger;
 import com.shakebugs.react.utils.Mapper;
 import com.shakebugs.react.utils.Reflection;
@@ -22,6 +24,10 @@ import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.internal.data.NetworkRequest;
+import com.shakebugs.shake.privacy.NetworkRequestEditor;
+import com.shakebugs.shake.privacy.NetworkRequestsFilter;
+import com.shakebugs.shake.privacy.NotificationEventEditor;
+import com.shakebugs.shake.privacy.NotificationEventsFilter;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
@@ -29,8 +35,11 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
+    private ReactContext context;
+
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.context = reactContext;
     }
 
     @Override
@@ -385,14 +394,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
-                uiManagerModule.prependUIBlock(new UIBlock() {
-                    @Override
-                    public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                        View view = nativeViewHierarchyManager.resolveView((int) id);
-                        Shake.addPrivateView(view);
-                    }
-                });
+                try {
+                    UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+                    uiManagerModule.prependUIBlock(new UIBlock() {
+                        @Override
+                        public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                            View view = nativeViewHierarchyManager.resolveView((int) id);
+                            Shake.addPrivateView(view);
+                        }
+                    });
+                } catch (Exception e) {
+                    Logger.d("Failed to add private view.", e);
+                }
             }
         });
     }
@@ -402,14 +415,42 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
-                uiManagerModule.prependUIBlock(new UIBlock() {
-                    @Override
-                    public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                        View view = nativeViewHierarchyManager.resolveView((int) id);
-                        Shake.removePrivateView(view);
-                    }
-                });
+                try {
+                    UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+                    uiManagerModule.prependUIBlock(new UIBlock() {
+                        @Override
+                        public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                            View view = nativeViewHierarchyManager.resolveView((int) id);
+                            Shake.removePrivateView(view);
+                        }
+                    });
+                } catch (Exception e) {
+                    Logger.d("Failed to remove private view.", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setNetworkRequestsFilter() {
+        Shake.setNetworkRequestsFilter(new NetworkRequestsFilter() {
+            @Override
+            public NetworkRequestEditor filter(NetworkRequestEditor networkRequestEditor) {
+                Events.sendNetworkRequestEvent(context, null);
+
+                return networkRequestEditor;
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setNotificationEventsFilter() {
+        Shake.setNotificationEventsFilter(new NotificationEventsFilter() {
+            @Override
+            public NotificationEventEditor filter(NotificationEventEditor notificationEventEditor) {
+                Events.sendNotificationEventEvent(context, null);
+
+                return notificationEventEditor;
             }
         });
     }
