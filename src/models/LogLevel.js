@@ -1,3 +1,6 @@
+/**
+ * Represents Shake log level.
+ */
 class LogLevel {
     static get VERBOSE() { return VERBOSE; }
     static get DEBUG() { return DEBUG; }
