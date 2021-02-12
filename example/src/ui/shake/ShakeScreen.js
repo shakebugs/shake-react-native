@@ -206,11 +206,11 @@ const ShakeScreen = (props) => {
                     }}
                 />
                 <Option
-                    enabled={networkRequestsEnabled}
-                    title="Network requests"
+                    enabled={inspectScreenEnabled}
+                    title="Inspect screen"
                     onValueChanged={() => {
-                        Shake.setNetworkRequestsEnabled(!networkRequestsEnabled);
-                        setNetworkRequestsEnabled(!networkRequestsEnabled);
+                        Shake.setEnableInspectScreen(!inspectScreenEnabled);
+                        setInspectScreenEnabled(!inspectScreenEnabled);
                     }}
                 />
                 <Option
@@ -222,11 +222,19 @@ const ShakeScreen = (props) => {
                     }}
                 />
                 <Option
-                    enabled={inspectScreenEnabled}
-                    title="Inspect screen"
+                    enabled={networkRequestsEnabled}
+                    title="Network requests"
                     onValueChanged={() => {
-                        Shake.setEnableInspectScreen(!inspectScreenEnabled);
-                        setInspectScreenEnabled(!inspectScreenEnabled);
+                        Shake.setNetworkRequestsEnabled(!networkRequestsEnabled);
+                        setNetworkRequestsEnabled(!networkRequestsEnabled);
+                    }}
+                />
+                <Option
+                    enabled={consoleLogsEnabled}
+                    title="Console logs"
+                    onValueChanged={() => {
+                        Shake.setConsoleLogsEnabled(!consoleLogsEnabled);
+                        setConsoleLogsEnabled(!consoleLogsEnabled);
                     }}
                 />
                 <Option
@@ -251,14 +259,6 @@ const ShakeScreen = (props) => {
                     onValueChanged={() => {
                         Shake.setAutoVideoRecording(!autoVideoRecordingEnabled);
                         setAutoVideoRecordingEnabled(!autoVideoRecordingEnabled);
-                    }}
-                />
-                <Option
-                    enabled={consoleLogsEnabled}
-                    title="Console logs"
-                    onValueChanged={() => {
-                        Shake.setConsoleLogsEnabled(!consoleLogsEnabled);
-                        setConsoleLogsEnabled(!consoleLogsEnabled);
                     }}
                 />
                 <Option
