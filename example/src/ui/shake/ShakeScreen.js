@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import Shake, {LogLevel, NetworkTracker, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
+import Shake, {LogLevel, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
 import RNFS from 'react-native-fs';
 import Button from '../core/Button';
 import Title from '../core/Title';
@@ -22,11 +22,11 @@ const ShakeScreen = (props) => {
     const [activityHistoryEnabled, setActivityHistoryEnabled] = useState();
     const [inspectScreenEnabled, setInspectScreenEnabled] = useState();
     const [shakeEnabled, setShakeEnabled] = useState();
-    const [networkTrackerEnabled, setNetworkTrackerEnabled] = useState();
     const [emailFieldEnabled, setEmailFieldEnabled] = useState();
     const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState();
     const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState();
     const [consoleLogsEnabled, setConsoleLogsEnabled] = useState();
+    const [networkRequestsEnabled, setNetworkRequestsEnabled] = useState();
     const [sensitiveDataRedactionEnabled, setSensitiveDataRedactionEnabled] = useState();
 
     let privateView = useRef(null);
@@ -61,10 +61,9 @@ const ShakeScreen = (props) => {
         setFeedbackTypesEnabled(await Shake.isEnableMultipleFeedbackTypes());
         setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
         setConsoleLogsEnabled(await Shake.isConsoleLogsEnabled());
+        setNetworkRequestsEnabled(await Shake.isNetworkRequestsEnabled());
         setSensitiveDataRedactionEnabled(await Shake.isSensitiveDataRedactionEnabled());
         setShakeEnabled(true); // Not provided by native SDK
-
-        setNetworkTrackerEnabled(NetworkTracker.isEnabled());
     };
 
     const show = () => {
@@ -110,9 +109,9 @@ const ShakeScreen = (props) => {
     };
 
     const networkRequestFilter = () => {
-        NetworkTracker.setFilter((networkRequest) => {
-            networkRequest.url = 'pero';
-        });
+        // Shake.setFilter((networkRequest) => {
+        //     networkRequest.url = 'pero';
+        // });
     };
 
     const trackNotifications = () => {
@@ -150,13 +149,13 @@ const ShakeScreen = (props) => {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Title style={styles.title} text="Actions"/>
-                <Button text="Show" onPress={show}/>
-                <Button text="Attach data" onPress={setReportData}/>
-                <Button text="Silent report" onPress={silentReport}/>
-                <Button text="Custom log" onPress={customLog}/>
-                <Button text="Add metadata" onPress={addMetadata}/>
-                <Title style={styles.title} text="Invoking"/>
+                <Title style={styles.title} text="Actions" />
+                <Button text="Show" onPress={show} />
+                <Button text="Attach data" onPress={setReportData} />
+                <Button text="Silent report" onPress={silentReport} />
+                <Button text="Custom log" onPress={customLog} />
+                <Button text="Add metadata" onPress={addMetadata} />
+                <Title style={styles.title} text="Invoking" />
                 <Option
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
@@ -189,7 +188,7 @@ const ShakeScreen = (props) => {
                         setRightEdgeInvokingEnabled(!rightEdgeInvokingEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Options"/>
+                <Title style={styles.title} text="Options" />
                 <Option
                     enabled={shakeEnabled}
                     title="Enabled"
@@ -207,11 +206,11 @@ const ShakeScreen = (props) => {
                     }}
                 />
                 <Option
-                    enabled={networkTrackerEnabled}
-                    title="Network tracker"
+                    enabled={networkRequestsEnabled}
+                    title="Network requests"
                     onValueChanged={() => {
-                        NetworkTracker.setEnabled(!networkTrackerEnabled);
-                        setNetworkTrackerEnabled(!networkTrackerEnabled);
+                        Shake.setNetworkRequestsEnabled(!networkRequestsEnabled);
+                        setNetworkRequestsEnabled(!networkRequestsEnabled);
                     }}
                 />
                 <Option
@@ -270,28 +269,28 @@ const ShakeScreen = (props) => {
                         setSensitiveDataRedactionEnabled(!sensitiveDataRedactionEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Notifications"/>
-                <Button text="Start notification tracker" onPress={trackNotifications}/>
-                <Button text="Handle notification" onPress={handleNotification}/>
-                <Title style={styles.title} text="Private view"/>
-                <Button text="Add private view" onPress={addPrivateViewFun}/>
-                <Button text="Remove private view" onPress={removePrivateViewFun}/>
-                <Button text="Clear private views" onPress={clearPrivateViews}/>
+                <Title style={styles.title} text="Notifications" />
+                <Button text="Start notification tracker" onPress={trackNotifications} />
+                <Button text="Handle notification" onPress={handleNotification} />
+                <Title style={styles.title} text="Private view" />
+                <Button text="Add private view" onPress={addPrivateViewFun} />
+                <Button text="Remove private view" onPress={removePrivateViewFun} />
+                <Button text="Clear private views" onPress={clearPrivateViews} />
                 <Private
                     customRef={(ref) => {
                         privateView = ref;
                     }}
                 />
-                <Title style={styles.title} text="Network"/>
-                <Button text="Send GET request" onPress={sendGetNetworkRequest}/>
-                <Button text="Send POST request" onPress={sendPostNetworkRequest}/>
-                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest}/>
-                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest}/>
-                <Button text="Send 404 request" onPress={sendErrorNetworkRequest}/>
-                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest}/>
+                <Title style={styles.title} text="Network" />
+                <Button text="Send GET request" onPress={sendGetNetworkRequest} />
+                <Button text="Send POST request" onPress={sendPostNetworkRequest} />
+                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest} />
+                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest} />
+                <Button text="Send 404 request" onPress={sendErrorNetworkRequest} />
+                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest} />
                 <View style={styles.links}>
-                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
-                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/" />
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs" />
                 </View>
                 <Version
                     onLongPress={() => {

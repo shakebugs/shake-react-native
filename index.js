@@ -16,6 +16,9 @@ export { NetworkTracker };
 class Shake {
     static shake = NativeModules.RNShake;
 
+    // Helpers
+    static networkTracker = new NetworkTracker(this.shake);
+
     /**
      * Starts Shake SDK.
      * @param clientId client id
@@ -23,6 +26,7 @@ class Shake {
      */
     static start(clientId, clientSecret) {
         this.shake.start(clientId, clientSecret);
+        this.networkTracker.setEnabled(true);
     }
 
     /**
@@ -264,6 +268,22 @@ class Shake {
      */
     static setConsoleLogsEnabled(enabled) {
         this.shake.setConsoleLogsEnabled(enabled);
+    }
+
+    /**
+     * Checks if network requests are attached to the report.
+     * @returns {Promise<*|boolean>} true if attached, otherwise false
+     */
+    static async isNetworkRequestsEnabled() {
+        return this.networkTracker.isEnabled();
+    }
+
+    /**
+     * Sets if network requests are attached to the report.
+     * @param enabled true if attached, otherwise false
+     */
+    static setNetworkRequestsEnabled(enabled) {
+        this.networkTracker.setEnabled(enabled);
     }
 
     /**

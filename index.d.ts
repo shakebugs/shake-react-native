@@ -3,49 +3,39 @@ declare module "@shakebugs/react-native-shake" {
 
     export function show(): void;
 
-    export function setEnabled(enabled: boolean): void;
+    export function setEnabled(shakeEnabled: boolean): void;
 
-    export function setEnableActivityHistory(enableActivityHistory: boolean): void;
+    export function setEnableActivityHistory(activityHistoryEnabled: boolean): void;
 
     export function isEnableActivityHistory(): Promise<boolean>;
 
-    export function setEnableBlackBox(enableBlackBox: boolean): void;
+    export function setEnableBlackBox(blackBoxEnabled: boolean): void;
 
     export function isEnableBlackBox(): Promise<boolean>;
 
-    export function setEnableInspectScreen(enableInspectScreen: boolean): void;
+    export function setEnableInspectScreen(inspectScreenEnabled: boolean): void;
 
     export function isEnableInspectScreen(): Promise<boolean>;
 
-    export function setShowFloatingReportButton(showFloatingReportButton: boolean): void;
+    export function setShowFloatingReportButton(floatingButtonEnabled: boolean): void;
 
     export function isShowFloatingReportButton(): Promise<boolean>;
 
-    export function setInvokeShakeOnShakeDeviceEvent(invokeOnShake: boolean): void;
+    export function setInvokeShakeOnShakeDeviceEvent(shakeInvokeEnabled: boolean): void;
 
     export function isInvokeShakeOnShakeDeviceEvent(): Promise<boolean>;
 
-    export function setInvokeShakeOnScreenshot(invokeOnScreenshot: boolean): void;
+    export function setInvokeShakeOnScreenshot(screenshotInvokeEnabled: boolean): void;
 
     export function isInvokeShakeOnScreenshot(): Promise<boolean>;
 
-    export function setInvokeShakeOnRightEdgePan(invokeOnRightEdgePan: boolean): void;
+    export function setInvokeShakeOnRightEdgePan(rightEdgePanInvokeEnabled: boolean): void;
 
     export function isInvokeShakeOnRightEdgePan(): Promise<boolean>;
 
-    export function setShakeReportData(files: Array<ShakeFile>): void;
-
-    export function silentReport(
-        description: string,
-        files: Array<ShakeFile>,
-        configuration: ShakeReportConfiguration
-    ): void;
-
-    export function insertNetworkRequest(request: object): void;
-
     export function isEnableEmailField(): Promise<boolean>;
 
-    export function setEnableEmailField(enableEmailField: boolean): void;
+    export function setEnableEmailField(emailFieldEnabled: boolean): void;
 
     export function getEmailField(): Promise<string>;
 
@@ -53,7 +43,7 @@ declare module "@shakebugs/react-native-shake" {
 
     export function isEnableMultipleFeedbackTypes(): Promise<boolean>;
 
-    export function setEnableMultipleFeedbackTypes(enableEmailField: boolean): void;
+    export function setEnableMultipleFeedbackTypes(feedbackTypesEnabled: boolean): void;
 
     export function getShowIntroMessage(): Promise<boolean>;
 
@@ -61,11 +51,27 @@ declare module "@shakebugs/react-native-shake" {
 
     export function isAutoVideoRecording(): Promise<boolean>;
 
-    export function setAutoVideoRecording(autoRecordingEnabled: boolean): void;
+    export function setAutoVideoRecording(videoRecordingEnabled: boolean): void;
 
     export function isConsoleLogsEnabled(): Promise<boolean>;
 
-    export function setConsoleLogsEnabled(autoRecordingEnabled: boolean): void;
+    export function setConsoleLogsEnabled(consoleLogsEnabled: boolean): void;
+
+    export function isNetworkRequestsEnabled(): Promise<boolean>;
+
+    export function setNetworkRequestsEnabled(networkRequestsEnabled: boolean): void;
+
+    export function setShakeReportData(files: Array<ShakeFile>): void;
+
+    export function isSensitiveDataRedactionEnabled(): Promise<boolean>;
+
+    export function setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled: boolean): void;
+
+    export function silentReport(
+        description: string,
+        files: Array<ShakeFile>,
+        configuration: ShakeReportConfiguration
+    ): void;
 
     export function log(logLevel: LogLevel, message: string): void;
 
@@ -77,19 +83,9 @@ declare module "@shakebugs/react-native-shake" {
 
     export function clearPrivateViews(): void;
 
-    export function isSensitiveDataRedactionEnabled(): Promise<boolean>;
-
-    export function setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled: boolean): void;
-
     export function trackNotifications(): void;
 
     export function handleNotification(title: string, description: string): void;
-
-    export function addPrivateView(viewRef: object): void;
-
-    export function removePrivateView(viewRef: object): void;
-
-    export function clearPrivateViews(): void;
 
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
@@ -103,6 +99,10 @@ declare module "@shakebugs/react-native-shake" {
         path: string;
     }
 
+    export namespace ShakeFile {
+        function create(filePath: string, fileName?: string): ShakeFile;
+    }
+
     export class LogLevel {
         static VERBOSE: LogLevel;
         static DEBUG: LogLevel;
@@ -110,15 +110,5 @@ declare module "@shakebugs/react-native-shake" {
         static WARN: LogLevel;
         static ERROR: LogLevel;
         value: string;
-    }
-
-    export namespace ShakeFile {
-        function create(filePath: string, fileName?: string): ShakeFile;
-    }
-
-    export namespace NetworkTracker {
-        function isEnabled(): boolean;
-
-        function setEnabled(enabled: boolean): void;
     }
 }

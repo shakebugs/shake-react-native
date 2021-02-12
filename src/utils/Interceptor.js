@@ -11,16 +11,16 @@ let networkRequest;
 
 const _resetNetworkRequest = () => {
     networkRequest = {
-        url: '',
-        method: '',
-        requestBody: '',
-        responseBody: '',
+        url: "",
+        method: "",
+        requestBody: "",
+        responseBody: "",
         requestHeaders: {},
         responseHeaders: {},
         statusCode: 0,
         duration: 0,
-        timestamp: '',
-        start: 0
+        timestamp: "",
+        start: 0,
     };
 };
 
@@ -39,7 +39,7 @@ const Interceptor = {
         };
 
         XMLHttpRequest.prototype.setRequestHeader = function (header, value) {
-            if (networkRequest.requestHeaders === '') {
+            if (networkRequest.requestHeaders === "") {
                 networkRequest.requestHeaders = {};
             }
             networkRequest.requestHeaders[header] = value;
@@ -50,10 +50,12 @@ const Interceptor = {
         XMLHttpRequest.prototype.send = function (data) {
             let requestBody;
 
-            if (!data)
+            if (!data) {
                 requestBody = "";
-            if (typeof data !== 'string')
+            }
+            if (typeof data !== "string") {
                 requestBody = JSON.stringify(data);
+            }
             if (Utils.isBinary(data)) {
                 requestBody = "Binary data";
             }
@@ -67,7 +69,7 @@ const Interceptor = {
 
             if (this.addEventListener) {
                 this.addEventListener(
-                    'readystatechange',
+                    "readystatechange",
                     async () => {
                         if (!isInterceptorEnabled) {
                             return;
@@ -75,9 +77,9 @@ const Interceptor = {
 
                         if (this.readyState === this.HEADERS_RECEIVED) {
                             if (this.getAllResponseHeaders()) {
-                                const responseHeaders = this.getAllResponseHeaders().split('\r\n');
+                                const responseHeaders = this.getAllResponseHeaders().split("\r\n");
                                 const responseHeadersDictionary = {};
-                                responseHeaders.forEach(element => {
+                                responseHeaders.forEach((element) => {
                                     const key = element.split(/:(.+)/)[0];
                                     const value = element.split(/:(.+)/)[1];
                                     responseHeadersDictionary[key] = value;
@@ -85,68 +87,86 @@ const Interceptor = {
                                 cloneNetwork.responseHeaders = responseHeadersDictionary;
                             }
                         }
-                    }, false);
+                    },
+                    false
+                );
 
-                this.addEventListener('load', async () => {
-                    if (!isInterceptorEnabled) {
-                        return;
-                    }
+                this.addEventListener(
+                    "load",
+                    async () => {
+                        if (!isInterceptorEnabled) {
+                            return;
+                        }
 
-                    let responseText = await (new Response(this.response)).text();
-                    if (responseText === undefined || Utils.isBinary(responseText)) {
-                        responseText = "Binary data";
-                    }
+                        let responseText = await new Response(this.response).text();
+                        if (responseText === undefined || Utils.isBinary(responseText)) {
+                            responseText = "Binary data";
+                        }
 
-                    cloneNetwork.duration = (Date.now() - cloneNetwork.start);
-                    cloneNetwork.responseBody = responseText ? responseText : "";
-                    cloneNetwork.statusCode = this.status ? this.status.toString() : "n/a";
+                        cloneNetwork.duration = Date.now() - cloneNetwork.start;
+                        cloneNetwork.responseBody = responseText ? responseText : "";
+                        cloneNetwork.statusCode = this.status ? this.status.toString() : "n/a";
 
-                    if (onDoneCallback) {
-                        onDoneCallback(cloneNetwork);
-                    }
-                }, false);
+                        if (onDoneCallback) {
+                            onDoneCallback(cloneNetwork);
+                        }
+                    },
+                    false
+                );
 
-                this.addEventListener('error', () => {
-                    if (!isInterceptorEnabled) {
-                        return;
-                    }
+                this.addEventListener(
+                    "error",
+                    () => {
+                        if (!isInterceptorEnabled) {
+                            return;
+                        }
 
-                    cloneNetwork.duration = (Date.now() - cloneNetwork.start);
-                    cloneNetwork.responseBody = "Request error.";
-                    cloneNetwork.statusCode = "err";
+                        cloneNetwork.duration = Date.now() - cloneNetwork.start;
+                        cloneNetwork.responseBody = "Request error.";
+                        cloneNetwork.statusCode = "err";
 
-                    if (onDoneCallback) {
-                        onDoneCallback(cloneNetwork);
-                    }
-                }, false);
+                        if (onDoneCallback) {
+                            onDoneCallback(cloneNetwork);
+                        }
+                    },
+                    false
+                );
 
-                this.addEventListener('abort', () => {
-                    if (!isInterceptorEnabled) {
-                        return;
-                    }
+                this.addEventListener(
+                    "abort",
+                    () => {
+                        if (!isInterceptorEnabled) {
+                            return;
+                        }
 
-                    cloneNetwork.duration = (Date.now() - cloneNetwork.start);
-                    cloneNetwork.responseBody = "Request aborted.";
-                    cloneNetwork.statusCode = "err";
+                        cloneNetwork.duration = Date.now() - cloneNetwork.start;
+                        cloneNetwork.responseBody = "Request aborted.";
+                        cloneNetwork.statusCode = "err";
 
-                    if (onDoneCallback) {
-                        onDoneCallback(cloneNetwork);
-                    }
-                }, false);
+                        if (onDoneCallback) {
+                            onDoneCallback(cloneNetwork);
+                        }
+                    },
+                    false
+                );
 
-                this.addEventListener('timeout', () => {
-                    if (!isInterceptorEnabled) {
-                        return;
-                    }
+                this.addEventListener(
+                    "timeout",
+                    () => {
+                        if (!isInterceptorEnabled) {
+                            return;
+                        }
 
-                    cloneNetwork.duration = (Date.now() - cloneNetwork.start);
-                    cloneNetwork.responseBody = "Request timeout.";
-                    cloneNetwork.statusCode = "t/o";
+                        cloneNetwork.duration = Date.now() - cloneNetwork.start;
+                        cloneNetwork.responseBody = "Request timeout.";
+                        cloneNetwork.statusCode = "t/o";
 
-                    if (onDoneCallback) {
-                        onDoneCallback(cloneNetwork);
-                    }
-                }, false);
+                        if (onDoneCallback) {
+                            onDoneCallback(cloneNetwork);
+                        }
+                    },
+                    false
+                );
             }
 
             originalXHRSend.apply(this, arguments);
@@ -159,7 +179,7 @@ const Interceptor = {
         XMLHttpRequest.prototype.send = originalXHRSend;
         XMLHttpRequest.prototype.open = originalXHROpen;
         XMLHttpRequest.prototype.setRequestHeader = originalXHRSetRequestHeader;
-    }
+    },
 };
 
 export default Interceptor;
