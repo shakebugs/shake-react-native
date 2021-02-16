@@ -49,14 +49,17 @@ const Interceptor = {
 
         XMLHttpRequest.prototype.send = function (data) {
             let requestBody;
-
-            if (!data) {
-                requestBody = "";
-            }
             if (typeof data !== "string") {
-                requestBody = JSON.stringify(data);
+                if (!data) {
+                    requestBody = "";
+                } else {
+                    requestBody = JSON.stringify(data);
+                }
+            } else {
+                requestBody = data;
             }
-            if (Utils.isBinary(data)) {
+
+            if (Utils.isBinary(requestBody)) {
                 requestBody = "Binary data";
             }
 
