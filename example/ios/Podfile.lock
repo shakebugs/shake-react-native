@@ -328,7 +328,7 @@ DEPENDENCIES:
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Flipper (~> 0.33.1)
   - Flipper-DoubleConversion (= 1.1.7)
-  - Flipper-Folly (~> 2.3.0)
+  - Flipper-Folly (= 2.3.1)
   - Flipper-Glog (= 0.3.6)
   - Flipper-PeerTalk (~> 0.0.4)
   - Flipper-RSocket (~> 1.0)
@@ -532,6 +532,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 406fb119c5c47ed28e543d26865630ab45817284
+PODFILE CHECKSUM: 4a6fded6db7368249a9ed3d0964cc058e0c4c3b1
 
 COCOAPODS: 1.10.0

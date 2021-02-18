@@ -1,4 +1,4 @@
-declare module "@shakebugs/react-native-shake" {
+declare module "react-native-shake" {
     export function start(clientId: string, clientSecret: string): void;
 
     export function show(): void;

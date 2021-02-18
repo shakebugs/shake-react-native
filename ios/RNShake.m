@@ -11,7 +11,7 @@
     if(self == [RNShake class]) {
         NSDictionary *platformAndSdkVersionDict = @{
             @"platform": @"ReactNative",
-            @"sdkVersion": @"14.1.0"
+            @"sdkVersion": @"10.0.0"
         };
         NSNumber *disableDueToRN = @YES;
         [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:disableDueToRN];
@@ -203,7 +203,7 @@ RCT_EXPORT_METHOD(setMetadata:(NSString*)key:(NSString*)value)
 RCT_EXPORT_METHOD(log:(NSDictionary*)logLevelDic:(NSString*)message)
 {
     LogLevel logLevel = LogLevelInfo;
-    
+
     NSString* value = [logLevelDic objectForKey:@"value"];
     if ([value isEqualToString:@"VERBOSE"])
         logLevel = LogLevelVerbose;

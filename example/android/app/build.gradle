@@ -132,8 +132,8 @@ android {
         applicationId "com.shakebugs.react.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
-        versionName "14.1.0"
+        versionCode 1
+        versionName "10.0.0"
         multiDexEnabled true
     }
     splits {
@@ -162,6 +162,24 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    flavorDimensions "environment"
+
+    productFlavors {
+        development {
+            dimension "environment"
+            applicationIdSuffix ".pr"
+        }
+
+        staging {
+            dimension "environment"
+            applicationIdSuffix ".rc"
+        }
+
+        production {
+            dimension "environment"
         }
     }
 
