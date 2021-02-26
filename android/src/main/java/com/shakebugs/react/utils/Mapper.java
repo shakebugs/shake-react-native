@@ -4,6 +4,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
+import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.report.ShakeFile;
@@ -13,11 +14,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Maps React Native data to models
- */
 public class Mapper {
-   public static ShakeReportConfiguration mapToConfiguration(ReadableMap configurationMap) {
+    public static LogLevel mapToLogLevel(ReadableMap logLevelMap) {
+        LogLevel logLevel = null;
+
+        try {
+            logLevel = LogLevel.valueOf(logLevelMap.getString("value"));
+        } catch (IllegalArgumentException e) {
+            Logger.e("Failed to parse log level.", e);
+        }
+
+        return logLevel;
+    }
+
+    public static ShakeReportConfiguration mapToConfiguration(ReadableMap configurationMap) {
 
         boolean blackBoxData = configurationMap.getBoolean("blackBoxData");
         boolean activityHistoryData = configurationMap.getBoolean("activityHistoryData");

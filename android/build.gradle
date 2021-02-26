@@ -10,10 +10,10 @@
 //   original location:
 //   - https://github.com/facebook/react-native/blob/0.58-stable/local-cli/templates/HelloWorld/android/app/build.gradle
 
-def DEFAULT_COMPILE_SDK_VERSION = 28
-def DEFAULT_BUILD_TOOLS_VERSION = '28.0.3'
-def DEFAULT_MIN_SDK_VERSION = 16
-def DEFAULT_TARGET_SDK_VERSION = 28
+def DEFAULT_COMPILE_SDK_VERSION = 29
+def DEFAULT_BUILD_TOOLS_VERSION = '29.0.3'
+def DEFAULT_MIN_SDK_VERSION = 21
+def DEFAULT_TARGET_SDK_VERSION = 29
 
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -40,7 +40,7 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
-        maven { url 'https://dl.bintray.com/shake/shake' }
+        maven { url 'https://dl.bintray.com/shakebugs/shake' }
     }
 }
 
@@ -79,21 +79,11 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    api "$System.env.ANDROID_DEPENDENCY:10.0.+"
+    api "$System.env.ANDROID_DEPENDENCY:14.1.+"
 }
 
 def configureReactNativePom(def pom) {
     def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
-
-    def versionName = packageJson.version
-
-    def result = versionName.split("\\.")
-    def versionCode = (result[0].toInteger() * 10000 + result[1].toInteger() * 100 + result[2].toInteger())
-
-    android.defaultConfig.buildConfigField("String", "SHAKE_SDK_PLATFORM", "\"ReactNative\"")
-    android.defaultConfig.buildConfigField("String", "SHAKE_SDK_VERSION_NAME", "\"" + versionName + "\"")
-    android.defaultConfig.buildConfigField("String", "SHAKE_SDK_VERSION_CODE", "\"" + versionCode + "\"")
-
     pom.project {
         name packageJson.title
         artifactId packageJson.name

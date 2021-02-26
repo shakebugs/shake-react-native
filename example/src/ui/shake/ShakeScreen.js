@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import Shake, {NetworkTracker, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
+import Shake, {LogLevel, ShakeFile, ShakeReportConfiguration} from 'react-native-shake';
 import RNFS from 'react-native-fs';
 import Button from '../core/Button';
 import Title from '../core/Title';
 import Option from '../core/Option';
 import Link from '../core/Link';
 import Version from '../core/Version';
-import axios from 'axios';
+//import FetchNetworkTester from "../network/FetchNetworkTester";
+import AxiosNetworkTester from '../network/AxiosNetworkTester';
+import Private from '../core/Private';
 
 const ShakeScreen = (props) => {
     let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -15,12 +17,22 @@ const ShakeScreen = (props) => {
     const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState();
     const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState();
     const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] = useState();
+    const [rightEdgeInvokingEnabled, setRightEdgeInvokingEnabled] = useState();
     const [blackBoxEnabled, setBlackBoxEnabled] = useState();
     const [activityHistoryEnabled, setActivityHistoryEnabled] = useState();
     const [inspectScreenEnabled, setInspectScreenEnabled] = useState();
     const [shakeEnabled, setShakeEnabled] = useState();
+    const [emailFieldEnabled, setEmailFieldEnabled] = useState();
+    const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState();
+    const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState();
+    const [consoleLogsEnabled, setConsoleLogsEnabled] = useState();
+    const [networkRequestsEnabled, setNetworkRequestsEnabled] = useState();
+    const [sensitiveDataRedactionEnabled, setSensitiveDataRedactionEnabled] = useState();
 
-    const [networkTrackerEnabled, setNetworkTrackerEnabled] = useState();
+    let privateView = useRef(null);
+
+    //const networkTester = new FetchNetworkTester();
+    const networkTester = new AxiosNetworkTester();
 
     useEffect(() => {
         createFile();
@@ -44,9 +56,14 @@ const ShakeScreen = (props) => {
         setButtonInvokingEnabled(await Shake.isShowFloatingReportButton());
         setShakeInvokingEnabled(await Shake.isInvokeShakeOnShakeDeviceEvent());
         setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
+        setRightEdgeInvokingEnabled(await Shake.isInvokeShakeOnRightEdgePan());
+        setEmailFieldEnabled(await Shake.isEnableEmailField());
+        setFeedbackTypesEnabled(await Shake.isEnableMultipleFeedbackTypes());
+        setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
+        setConsoleLogsEnabled(await Shake.isConsoleLogsEnabled());
+        setNetworkRequestsEnabled(await Shake.isNetworkRequestsEnabled());
+        setSensitiveDataRedactionEnabled(await Shake.isSensitiveDataRedactionEnabled());
         setShakeEnabled(true); // Not provided by native SDK
-
-        setNetworkTrackerEnabled(NetworkTracker.isEnabled());
     };
 
     const show = () => {
@@ -54,7 +71,7 @@ const ShakeScreen = (props) => {
     };
 
     const setReportData = () => {
-        Shake.setShakeReportData([ShakeFile.create(path), ShakeFile.create(path, 'customName')], 'Test quick facts');
+        Shake.setShakeReportData([ShakeFile.create(path), ShakeFile.create(path, 'customName')]);
     };
 
     const silentReport = () => {
@@ -67,164 +84,78 @@ const ShakeScreen = (props) => {
         Shake.silentReport(
             'Silent reports are working!',
             [ShakeFile.create(path), ShakeFile.create(path, 'customName')],
-            'Test quick facts',
             reportConfig,
         );
     };
 
+    const addPrivateViewFun = () => {
+        Shake.addPrivateView(privateView);
+    };
+
+    const removePrivateViewFun = () => {
+        Shake.removePrivateView(privateView);
+    };
+
+    const clearPrivateViews = () => {
+        Shake.clearPrivateViews();
+    };
+
+    const customLog = () => {
+        Shake.log(LogLevel.INFO, 'This is a Shake custom log.');
+    };
+
+    const addMetadata = () => {
+        Shake.setMetadata('Shake', 'This is a Shake metadata.');
+    };
+
+    const networkRequestFilter = () => {
+        // Shake.setFilter((networkRequest) => {
+        //     networkRequest.url = 'pero';
+        // });
+    };
+
+    const trackNotifications = () => {
+        Shake.trackNotifications();
+    };
+
+    const handleNotification = () => {
+        Shake.handleNotification('Notification title', 'Notification description');
+    };
+
     const sendGetNetworkRequest = () => {
-        axios
-            .get('https://dummy.restapiexample.com/api/v1/employees')
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://dummy.restapiexample.com/api/v1/employees', {
-            method: 'GET',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.sendGetRequest();
     };
 
     const sendPostNetworkRequest = () => {
-        axios
-            .post('https://postman-echo.com/post', {
-                firstParam: 'firstParam',
-                secondParam: 'secondParam',
-            })
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://postman-echo.com/post', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: 'firstParam',
-                secondParam: 'secondParam',
-            }),
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.sendPostRequest();
     };
 
     const sendErrorNetworkRequest = () => {
-        axios
-            .get('https://run.mocky.io/v3/267ed439-8ea6-4495-bda7-90969e039a9e')
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://run.mocky.io/v3/267ed439-8ea6-4495-bda7-90969e039a9e', {
-            method: 'GET',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.sendErrorRequest();
     };
 
     const sendTimeoutNetworkRequest = () => {
-        axios
-            .post(
-                'https://postman-echo.com/post',
-                {
-                    firstParam: 'firstParam',
-                    secondParam: 'secondParam',
-                },
-                {
-                    timeout: 1,
-                },
-            )
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
+        networkTester.sendTimeoutRequest();
     };
 
     const sendPostFileNetworkRequest = () => {
-        const formData = new FormData();
-        formData.append('file', {uri: path, name: 'file.txt', type: 'text/plain'});
-
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data',
-            },
-        };
-        axios
-            .post('https://httpbin.org/response-headers', formData, config)
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://httpbin.org/response-headers', {
-            body: formData,
-            headers: {
-                'content-type': 'multipart/form-data',
-            },
-            method: 'POST',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.postFileRequest();
     };
 
     const sendGetImageNetworkRequest = () => {
-        axios
-            .get('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
-                responseType: 'blob',
-            })
-            .then(function (response) {
-                alert('Request sent.');
-            })
-            .catch(function (error) {
-                alert('Request error.');
-            });
-        /*        fetch('https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg', {
-            method: 'GET',
-        })
-            .then((res) => {
-                alert('Request sent.');
-            })
-            .catch((error) => {
-                alert('Request error.');
-            });*/
+        networkTester.getImageRequest();
     };
 
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Title style={styles.title} text="Actions"/>
-                <Button text="Show" onPress={show}/>
-                <Button text="Attach data" onPress={setReportData}/>
-                <Button text="Silent report" onPress={silentReport}/>
-                <Title style={styles.title} text="Invoking"/>
+                <Title style={styles.title} text="Actions" />
+                <Button text="Show" onPress={show} />
+                <Button text="Attach data" onPress={setReportData} />
+                <Button text="Silent report" onPress={silentReport} />
+                <Button text="Custom log" onPress={customLog} />
+                <Button text="Add metadata" onPress={addMetadata} />
+                <Title style={styles.title} text="Invoking" />
                 <Option
                     enabled={shakeInvokingEnabled}
                     title="Shaking"
@@ -249,7 +180,15 @@ const ShakeScreen = (props) => {
                         setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Options"/>
+                <Option
+                    enabled={rightEdgeInvokingEnabled}
+                    title="Right Edge Pan"
+                    onValueChanged={() => {
+                        Shake.setInvokeShakeOnRightEdgePan(!rightEdgeInvokingEnabled);
+                        setRightEdgeInvokingEnabled(!rightEdgeInvokingEnabled);
+                    }}
+                />
+                <Title style={styles.title} text="Options" />
                 <Option
                     enabled={shakeEnabled}
                     title="Enabled"
@@ -258,7 +197,6 @@ const ShakeScreen = (props) => {
                         setShakeEnabled(!shakeEnabled);
                     }}
                 />
-
                 <Option
                     enabled={blackBoxEnabled}
                     title="Blackbox"
@@ -268,11 +206,11 @@ const ShakeScreen = (props) => {
                     }}
                 />
                 <Option
-                    enabled={networkTrackerEnabled}
-                    title="Network tracker"
+                    enabled={inspectScreenEnabled}
+                    title="Inspect screen"
                     onValueChanged={() => {
-                        NetworkTracker.setEnabled(!networkTrackerEnabled);
-                        setNetworkTrackerEnabled(!networkTrackerEnabled);
+                        Shake.setEnableInspectScreen(!inspectScreenEnabled);
+                        setInspectScreenEnabled(!inspectScreenEnabled);
                     }}
                 />
                 <Option
@@ -284,23 +222,75 @@ const ShakeScreen = (props) => {
                     }}
                 />
                 <Option
-                    enabled={inspectScreenEnabled}
-                    title="Inspect screen"
+                    enabled={networkRequestsEnabled}
+                    title="Network requests"
                     onValueChanged={() => {
-                        Shake.setEnableInspectScreen(!inspectScreenEnabled);
-                        setInspectScreenEnabled(!inspectScreenEnabled);
+                        Shake.setNetworkRequestsEnabled(!networkRequestsEnabled);
+                        setNetworkRequestsEnabled(!networkRequestsEnabled);
                     }}
                 />
-                <Title style={styles.title} text="Network"/>
-                <Button text="Send GET request" onPress={sendGetNetworkRequest}/>
-                <Button text="Send POST request" onPress={sendPostNetworkRequest}/>
-                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest}/>
-                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest}/>
-                <Button text="Send 404 request" onPress={sendErrorNetworkRequest}/>
-                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest}/>
+                <Option
+                    enabled={consoleLogsEnabled}
+                    title="Console logs"
+                    onValueChanged={() => {
+                        Shake.setConsoleLogsEnabled(!consoleLogsEnabled);
+                        setConsoleLogsEnabled(!consoleLogsEnabled);
+                    }}
+                />
+                <Option
+                    enabled={emailFieldEnabled}
+                    title="Email field"
+                    onValueChanged={() => {
+                        Shake.setEnableEmailField(!emailFieldEnabled);
+                        setEmailFieldEnabled(!emailFieldEnabled);
+                    }}
+                />
+                <Option
+                    enabled={feedbackTypesEnabled}
+                    title="Feedback types"
+                    onValueChanged={() => {
+                        Shake.setEnableMultipleFeedbackTypes(!feedbackTypesEnabled);
+                        setFeedbackTypesEnabled(!feedbackTypesEnabled);
+                    }}
+                />
+                <Option
+                    enabled={autoVideoRecordingEnabled}
+                    title="Screen recording"
+                    onValueChanged={() => {
+                        Shake.setAutoVideoRecording(!autoVideoRecordingEnabled);
+                        setAutoVideoRecordingEnabled(!autoVideoRecordingEnabled);
+                    }}
+                />
+                <Option
+                    enabled={sensitiveDataRedactionEnabled}
+                    title="Sensitive data redaction"
+                    onValueChanged={() => {
+                        Shake.setSensitiveDataRedactionEnabled(!sensitiveDataRedactionEnabled);
+                        setSensitiveDataRedactionEnabled(!sensitiveDataRedactionEnabled);
+                    }}
+                />
+                <Title style={styles.title} text="Notifications" />
+                <Button text="Start notification tracker" onPress={trackNotifications} />
+                <Button text="Handle notification" onPress={handleNotification} />
+                <Title style={styles.title} text="Private view" />
+                <Button text="Add private view" onPress={addPrivateViewFun} />
+                <Button text="Remove private view" onPress={removePrivateViewFun} />
+                <Button text="Clear private views" onPress={clearPrivateViews} />
+                <Private
+                    customRef={(ref) => {
+                        privateView = ref;
+                    }}
+                />
+                <Title style={styles.title} text="Network" />
+                <Button text="Send GET request" onPress={sendGetNetworkRequest} />
+                <Button text="Send POST request" onPress={sendPostNetworkRequest} />
+                <Button text="Send GET image request" onPress={sendGetImageNetworkRequest} />
+                <Button text="Send POST file request" onPress={sendPostFileNetworkRequest} />
+                <Button text="Send 404 request" onPress={sendErrorNetworkRequest} />
+                <Button text="Send timeout request" onPress={sendTimeoutNetworkRequest} />
                 <View style={styles.links}>
-                    <Link text="Dashboard" link="https://app.staging5h4k3.com/"/>
-                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs"/>
+                    <Link text="Dashboard" link="https://app.staging5h4k3.com/" />
+                    <Link text="Documentation" link="https://www.staging5h4k3.com/docs" />
                 </View>
                 <Version
                     onLongPress={() => {

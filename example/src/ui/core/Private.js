@@ -1,23 +1,24 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Button = (props) => {
-    const color = props.color ? props.color : '#ffffff';
+const Private = (props) => {
     return (
-        <TouchableOpacity
-            style={[styles.button, {backgroundColor: color}]}
-            onPress={() => {
-                props.onPress();
+        <View
+            style={styles.root}
+            ref={(ref) => {
+                props.customRef(ref);
             }}>
-            <Text ref={props.childRef} style={styles.text}>
-                {props.text}
-            </Text>
-        </TouchableOpacity>
+            <Text style={styles.text}>Sample view</Text>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    button: {
+    root: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 80,
+        backgroundColor: 'white',
         marginBottom: 6,
         borderRadius: 28,
         paddingVertical: 12,
@@ -38,4 +39,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Button;
+export default Private;

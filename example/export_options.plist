@@ -8,8 +8,12 @@
         <string>enterprise</string>
         <key>provisioningProfiles</key>
         <dict>
+            <key>com.shakebugs.react.example.pr</key>
+            <string>Shake React Native Example PR</string>
+            <key>com.shakebugs.react.example.rc</key>
+            <string>Shake React Native Example RC</string>
             <key>com.shakebugs.react.example</key>
-            <string>Shake Example</string>
+            <string>Shake React Native Example</string>
         </dict>
     </dict>
 </plist>
