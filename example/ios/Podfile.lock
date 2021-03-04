@@ -239,7 +239,7 @@ PODS:
     - React
   - react-native-shake (14.1.0):
     - React
-    - Shake-Staging (= 14.1.2-rc.982)
+    - Shake-Staging (~> 14.1.0-rc)
   - react-native-slider (2.0.9):
     - React
   - react-native-webview (9.3.0):
@@ -508,7 +508,7 @@ SPEC CHECKSUMS:
   react-native-checkbox: 2d04aeb0c7e2c2cbd9a9a902ca6a5cf642688d09
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
-  react-native-shake: 5451a24caad0b1c53011afcc692da024aa8eb146
+  react-native-shake: 88ec9dc339889c57f810c1807afbacd4b58b98cc
   react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   react-native-webview: bdde2a3c4cbdc0122bc2bfba13603db193f0cc5c
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
