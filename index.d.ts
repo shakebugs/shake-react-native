@@ -61,6 +61,18 @@ declare module "react-native-shake" {
 
     export function setNetworkRequestsEnabled(networkRequestsEnabled: boolean): void;
 
+    export function insertNetworkRequest(requestBuilder: NetworkRequestBuilder): void;
+
+    export function setNetworkRequestsFilter(
+        filter: (requestBuilder: NetworkRequestBuilder) => NetworkRequestBuilder
+    ): void;
+
+    export function insertNotificationEvent(notificationBuilder: NotificationEventBuilder): void;
+
+    export function setNotificationEventsFilter(
+        filter: (notificationBuilder: NotificationEventBuilder) => NotificationEventBuilder
+    ): void;
+
     export function setShakeReportData(files: Array<ShakeFile>): void;
 
     export function isSensitiveDataRedactionEnabled(): Promise<boolean>;
@@ -83,15 +95,63 @@ declare module "react-native-shake" {
 
     export function clearPrivateViews(): void;
 
-    export function trackNotifications(): void;
-
-    export function handleNotification(title: string, description: string): void;
+    export function showNotificationsSettings(): void;
 
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
         activityHistoryData: boolean;
         screenshot: boolean;
         showReportSentMessage: boolean;
+    }
+
+    export class NotificationEvent {
+        id: number;
+        title: string;
+        description: string;
+    }
+
+    export class NetworkRequest {
+        url: string;
+        method: string;
+        requestBody: string;
+        responseBody: string;
+        requestHeaders: object;
+        responseHeaders: object;
+        statusCode: string;
+        duration: number;
+        timestamp: string;
+    }
+
+    export class NotificationEventBuilder {
+        getId: () => number;
+        setId: (id: number) => NotificationEventBuilder;
+        getTitle: () => string;
+        setTitle: (title: string) => NotificationEventBuilder;
+        getDescription: () => string;
+        setDescription: (description: string) => NotificationEventBuilder;
+        build: () => NotificationEvent;
+    }
+
+    export class NetworkRequestBuilder {
+        getUrl: () => string;
+        setUrl: (url: string) => NetworkRequestBuilder;
+        getMethod: () => string;
+        setMethod: (method: string) => NetworkRequestBuilder;
+        getRequestBody: () => string;
+        setRequestBody: (requestBody: string) => NetworkRequestBuilder;
+        getResponseBody: () => string;
+        setResponseBody: (responseBody: string) => NetworkRequestBuilder;
+        getRequestHeaders: () => object;
+        setRequestHeaders: (requestHeaders: object) => NetworkRequestBuilder;
+        getResponseHeaders: () => object;
+        setResponseHeaders: (responseHeaders: object) => NetworkRequestBuilder;
+        getStatusCode: () => string;
+        setStatusCode: (statusCode: string) => NetworkRequestBuilder;
+        getDuration: () => string;
+        setDuration: (duration: number) => NetworkRequestBuilder;
+        getDate: () => Date;
+        setDate: (date: Date) => NetworkRequestBuilder;
+        build: () => NetworkRequest;
     }
 
     export class ShakeFile {

@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
@@ -15,31 +14,28 @@ import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.shakebugs.react.utils.Constants;
-import com.shakebugs.react.utils.Events;
+import com.shakebugs.react.utils.Emitter;
 import com.shakebugs.react.utils.Logger;
 import com.shakebugs.react.utils.Mapper;
-import com.shakebugs.react.utils.Reflection;
 import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.internal.data.NetworkRequest;
-import com.shakebugs.shake.privacy.NetworkRequestEditor;
-import com.shakebugs.shake.privacy.NetworkRequestsFilter;
+import com.shakebugs.shake.internal.data.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
 import com.shakebugs.shake.privacy.NotificationEventsFilter;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
-    private ReactContext context;
+    private final Emitter emitter;
 
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.context = reactContext;
+        this.emitter = new Emitter(reactContext);
     }
 
     @Override
@@ -52,41 +48,22 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Activity activity = getCurrentActivity();
-                    if (activity == null) {
-                        Logger.e("Activity not initialized.");
-                        return;
-                    }
-
-                    Method setShakeInfo = Reflection.getMethod(Class.forName("com.shakebugs.shake.Shake"),
-                            "setShakeInfo", ShakeInfo.class);
-                    Method startFromActivity = Reflection.getMethod(Class.forName("com.shakebugs.shake.Shake"),
-                            "startFromActivity", Activity.class, String.class, String.class);
-
-                    if (setShakeInfo == null) {
-                        Logger.e("setShakeInfo() method not found.");
-                        return;
-                    }
-                    if (startFromActivity == null) {
-                        Logger.e("startFromActivity() method not found.");
-                        return;
-                    }
-
-                    ShakeInfo shakeInfo = new ShakeInfo();
-                    shakeInfo.setPlatform(Constants.PLATFORM);
-                    shakeInfo.setVersionCode(Constants.VERSION_CODE);
-                    shakeInfo.setVersionName(Constants.VERSION_NAME);
-
-                    setShakeInfo.invoke(null, shakeInfo);
-                    startFromActivity.invoke(null, activity, clientId, clientSecret);
-                } catch (Exception e) {
-                    Logger.e("Failed to start Shake", e);
+                Activity activity = getCurrentActivity();
+                if (activity == null) {
+                    Logger.e("Activity not initialized.");
+                    return;
                 }
+
+                ShakeInfo shakeInfo = new ShakeInfo();
+                shakeInfo.setPlatform(Constants.PLATFORM);
+                shakeInfo.setVersionCode(Constants.VERSION_CODE);
+                shakeInfo.setVersionName(Constants.VERSION_NAME);
+
+                ShakeReflection.setShakeInfo(shakeInfo);
+                ShakeReflection.start(activity, clientId, clientSecret);
             }
         });
     }
-
 
     @ReactMethod
     public void show() {
@@ -362,31 +339,14 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void insertNetworkRequest(final ReadableMap data) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                NetworkRequest networkRequest = Mapper.mapToNetworkRequest(data);
-                Shake.insertNetworkRequest(networkRequest);
-            }
-        });
+        NetworkRequest networkRequest = Mapper.mapToNetworkRequest(data);
+        ShakeReflection.insertNetworkRequest(networkRequest);
     }
 
     @ReactMethod
-    public void handleNotification(final String title, final String description) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.handleNotification(title, description);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void trackNotifications() {
-        Activity activity = getCurrentActivity();
-        if (activity != null) {
-            activity.startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
-        }
+    public void insertNotificationEvent(final ReadableMap data) {
+        NotificationEvent notificationEvent = Mapper.mapToNotificationEvent(data);
+        ShakeReflection.insertNotificationEvent(notificationEvent);
     }
 
     @ReactMethod
@@ -432,30 +392,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setNetworkRequestsFilter() {
-        Shake.setNetworkRequestsFilter(new NetworkRequestsFilter() {
-            @Override
-            public NetworkRequestEditor filter(NetworkRequestEditor networkRequestEditor) {
-                Events.sendNetworkRequestEvent(context, null);
-
-                return networkRequestEditor;
-            }
-        });
-    }
-
-    @ReactMethod
-    public void setNotificationEventsFilter() {
-        Shake.setNotificationEventsFilter(new NotificationEventsFilter() {
-            @Override
-            public NotificationEventEditor filter(NotificationEventEditor notificationEventEditor) {
-                Events.sendNotificationEventEvent(context, null);
-
-                return notificationEventEditor;
-            }
-        });
-    }
-
-    @ReactMethod
     public void clearPrivateViews() {
         runOnUiThread(new Runnable() {
             @Override
@@ -476,6 +412,45 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void startNotificationsEmitter() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setNotificationEventsFilter(new NotificationEventsFilter() {
+                    @Override
+                    public NotificationEventEditor filter(NotificationEventEditor notificationEventEditor) {
+                        emitter.sendNotificationEvent(notificationEventEditor.build());
+                        return null;
+                    }
+                });
+            }
+        });
+    }
+
+    @ReactMethod
+    public void stopNotificationsEmitter() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setNotificationEventsFilter(null);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void showNotificationsSettings() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Activity activity = getCurrentActivity();
+                if (activity != null) {
+                    activity.startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                }
             }
         });
     }

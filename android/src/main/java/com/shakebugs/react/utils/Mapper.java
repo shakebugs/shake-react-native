@@ -4,9 +4,12 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.internal.data.NetworkRequest;
+import com.shakebugs.shake.internal.data.NotificationEvent;
 import com.shakebugs.shake.report.ShakeFile;
 
 import java.util.ArrayList;
@@ -71,6 +74,24 @@ public class Mapper {
         networkRequest.setDuration((float) object.getDouble("duration"));
 
         return networkRequest;
+    }
+
+    public static NotificationEvent mapToNotificationEvent(ReadableMap object) {
+        NotificationEvent notificationEvent = new NotificationEvent();
+        notificationEvent.setId(object.getInt("id"));
+        notificationEvent.setTitle(object.getString("title"));
+        notificationEvent.setDescription(object.getString("description"));
+
+        return notificationEvent;
+    }
+
+    public static WritableMap notificationEventToMap(NotificationEvent notificationEvent) {
+        WritableMap map = new WritableNativeMap();
+        map.putInt("id", notificationEvent.getId());
+        map.putString("title", notificationEvent.getTitle());
+        map.putString("description", notificationEvent.getDescription());
+
+        return map;
     }
 
     private static Map<String, Object> toMap(ReadableMap readableMap) {

@@ -4,11 +4,21 @@ import ShakeReportConfiguration from "./src/models/ShakeReportConfiguration";
 import ShakeFile from "./src/models/ShakeFile";
 import LogLevel from "./src/models/LogLevel";
 import NetworkTracker from "./src/modules/NetworkTracker";
+import NotificationTracker from "./src/modules/NotificationTracker";
+import NotificationEvent from "./src/models/NotificationEvent";
+import NetworkRequest from "./src/models/NetworkRequest";
+import NetworkRequestBuilder from "./src/builders/NetworkRequestBuilder";
+import NotificationEventBuilder from "./src/builders/NotificationEventBuilder";
 
+// Export models
 export { ShakeReportConfiguration };
 export { ShakeFile };
 export { LogLevel };
 export { NetworkTracker };
+export { NotificationEvent };
+export { NetworkRequest };
+export { NetworkRequestBuilder };
+export { NotificationEventBuilder };
 
 /**
  * Interface for native methods.
@@ -18,6 +28,7 @@ class Shake {
 
     // Helpers
     static networkTracker = new NetworkTracker(this.shake);
+    static notificationTracker = new NotificationTracker(this.shake);
 
     /**
      * Starts Shake SDK.
@@ -27,6 +38,7 @@ class Shake {
     static start(clientId, clientSecret) {
         this.shake.start(clientId, clientSecret);
         this.networkTracker.setEnabled(true);
+        this.notificationTracker.setEnabled(true);
     }
 
     /**
@@ -287,6 +299,38 @@ class Shake {
     }
 
     /**
+     * Adds custom network request to the Shake report.
+     * @param requestBuilder request builder
+     */
+    static insertNetworkRequest(requestBuilder) {
+        this.networkTracker.insertNetworkRequest(requestBuilder);
+    }
+
+    /**
+     * Adds filter for network requests.
+     * @param filter filter function
+     */
+    static setNetworkRequestsFilter(filter) {
+        this.networkTracker.setFilter(filter);
+    }
+
+    /**
+     * Adds custom notification event to the Shake report.
+     * @param notificationBuilder notification builder
+     */
+    static insertNotificationEvent(notificationBuilder) {
+        this.notificationTracker.insertNotificationEvent(notificationBuilder);
+    }
+
+    /**
+     * Adds filter for notification events.
+     * @param filter filter function
+     */
+    static setNotificationEventsFilter(filter) {
+        this.notificationTracker.setFilter(filter);
+    }
+
+    /**
      * Logs a custom message to the report.
      * @param logLevel LogLevel value
      * @param message log message
@@ -346,21 +390,11 @@ class Shake {
     }
 
     /**
-     * Enables notification tracking.
-     * This is important just for Android.
-     * On iOS this feature works out of the box.
+     * Shows notifications settings screen.
+     * This is used just for Android os.
      */
-    static trackNotifications() {
-        this.shake.trackNotifications();
-    }
-
-    /**
-     * Adds custom notification to the Shake report.
-     * @param title notification title
-     * @param description notification description
-     */
-    static handleNotification(title, description) {
-        this.shake.handleNotification(title, description);
+    static showNotificationsSettings() {
+        this.shake.showNotificationsSettings();
     }
 }
 

@@ -40,7 +40,8 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
-        maven { url 'https://dl.bintray.com/shakebugs/shake' }
+        mavenCentral()
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/releases/' }
     }
 }
 
@@ -79,7 +80,7 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    api "$System.env.ANDROID_DEPENDENCY:14.1.+"
+    api "com.shakebugs:shake-staging:14.1.+"
 }
 
 def configureReactNativePom(def pom) {

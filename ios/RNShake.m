@@ -7,27 +7,31 @@
 
 @implementation RNShake
 
-+(void) initialize {
-    if(self == [RNShake class]) {
-        NSDictionary *platformAndSdkVersionDict = @{
-            @"platform": @"ReactNative",
-            @"sdkVersion": @"10.0.0"
-        };
-        NSNumber *disableDueToRN = @YES;
-        [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:disableDueToRN];
-        [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:platformAndSdkVersionDict];
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self setPlatformInfo];
+        [self disableNetworkRequests];
     }
+    return self;
 }
 
-+(BOOL)requiresMainQueueSetup
++ (BOOL)requiresMainQueueSetup
 {
 	return YES;
 }
 
--(dispatch_queue_t)methodQueue
+- (dispatch_queue_t)methodQueue
 {
 	return dispatch_get_main_queue();
 }
+
+- (NSArray<NSString *> *)supportedEvents {
+  return @[@"EventNotification"];
+}
+
+// React Native
 
 RCT_EXPORT_MODULE()
 
@@ -200,104 +204,60 @@ RCT_EXPORT_METHOD(setMetadata:(NSString*)key:(NSString*)value)
     [SHKShake setMetadataWithKey: key value: value];
 }
 
-RCT_EXPORT_METHOD(log:(NSDictionary*)logLevelDic:(NSString*)message)
+RCT_EXPORT_METHOD(log:(NSDictionary *)logLevelDic:(NSString *)message)
 {
-    LogLevel logLevel = LogLevelInfo;
-
-    NSString* value = [logLevelDic objectForKey:@"value"];
-    if ([value isEqualToString:@"VERBOSE"])
-        logLevel = LogLevelVerbose;
-    if ([value isEqualToString:@"DEBUG"])
-        logLevel = LogLevelDebug;
-    if ([value isEqualToString:@"INFO"])
-        logLevel = LogLevelInfo;
-    if ([value isEqualToString:@"WARN"])
-        logLevel = LogLevelWarn;
-    if ([value isEqualToString:@"ERROR"])
-        logLevel = LogLevelError;
-
+    LogLevel logLevel = [self mapToLogLevel:logLevelDic];
     [SHKShake logWithLevel:logLevel message:message];
 }
 
 RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files)
 {
-    NSMutableArray <SHKShakeFile *> *shakeFiles = [NSMutableArray array];
-    for(int i = 0; i < [files count]; i++) {
-        NSDictionary *file = [files objectAtIndex:i];
-        NSString *path = [file objectForKey:@"path"];
-        NSString *name = [file objectForKey:@"name"];
-
-        NSURL *url = [[NSURL alloc] initFileURLWithPath: path];
-        SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
-
-        [shakeFiles addObject:attachedFile];
-    }
-
-    SHKShake.onPrepareReportData = ^SHKShakeReportData *_Nonnull(SHKShakeReportData *_Nonnull reportData) {
-      reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
-      return reportData;
+    SHKShake.onPrepareReportData = ^NSArray<SHKShakeFile *> * _Nonnull {
+        NSMutableArray<SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
+        return shakeFiles;
     };
 }
 
 RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray *)files:(nonnull NSDictionary *)configurationMap)
 {
-    BOOL includesBlackBoxData = [[configurationMap objectForKey:@"blackBoxData"] boolValue];
-    BOOL includesActivityHistoryData = [[configurationMap objectForKey:@"activityHistoryData"] boolValue];
-    BOOL includesScreenshotImage = [[configurationMap objectForKey:@"screenshot"] boolValue];
-    BOOL showsToastMessageOnSend = [[configurationMap objectForKey:@"showReportSentMessage"] boolValue];
-
-    SHKShakeReportConfiguration *reportConfiguration = [[SHKShakeReportConfiguration alloc] init];
-    reportConfiguration.includesBlackBoxData = includesBlackBoxData;
-    reportConfiguration.includesActivityHistoryData = includesActivityHistoryData;
-    reportConfiguration.includesScreenshotImage = includesScreenshotImage;
-    reportConfiguration.showsToastMessageOnSend = showsToastMessageOnSend;
-
-    NSMutableArray <SHKShakeFile *> *shakeFiles = [NSMutableArray array];
-    for(int i = 0; i < [files count]; i++) {
-        NSDictionary *file = [files objectAtIndex:i];
-        NSString *path = [file objectForKey:@"path"];
-        NSString *name = [file objectForKey:@"name"];
-
-        NSURL *url = [[NSURL alloc] initFileURLWithPath: path];
-        SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
-
-        [shakeFiles addObject:attachedFile];
-      }
-
-    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] init];
-    reportData.bugDescription = description;
-    reportData.attachedFiles = [NSArray arrayWithArray:shakeFiles];
+    NSMutableArray <SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
+   
+    SHKShakeReportConfiguration* reportConfiguration = [self mapToConfiguration:configurationMap];
+    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] initWithBugDescription:description attachedFiles:[NSArray arrayWithArray:shakeFiles]];
 
     [SHKShake silentReportWithReportData:reportData reportConfiguration:reportConfiguration];
 }
 
-RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)request)
+RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)requestDict)
 {
-    NSDictionary *dict = [[NSDictionary alloc] init];
-    NSData *data = [request[@"requestBody"] dataUsingEncoding:NSUTF8StringEncoding];
-    dict = @{
-        @"url": request[@"url"],
-        @"method": request[@"method"],
-        @"responseBody": request[@"responseBody"],
-        @"statusCode": request[@"statusCode"],
-        @"requestBody": data,
-        @"requestHeaders": request[@"requestHeaders"],
-        @"duration": request[@"duration"],
-        @"responseHeaders": request[@"responseHeaders"],
-        @"timestamp": request[@"timestamp"]
+    NSDictionary* networkRequest = [self mapToNetworkRequest:requestDict];
+    [self insertRNNetworkRequest:networkRequest];
+}
+
+RCT_REMAP_METHOD(insertNotificationEvent, data:(NSDictionary*)notificationDict)
+{
+    NSDictionary* notificationEvent = [self mapToNotificationEvent:notificationDict];
+    [self insertRNNotificationEvent:notificationEvent];
+}
+
+RCT_EXPORT_METHOD(startNotificationsEmitter)
+{
+    SHKShake.notificationEventsFilter = ^SHKNotificationEventEditor *(SHKNotificationEventEditor * notificationEvent) {
+        NSDictionary* notificationDict = [self notificationToMap:notificationEvent];
+        [self sendEventWithName:@"EventNotification" body:notificationDict];
+        
+        return nil;
     };
-    [SHKShake performSelector:sel_getUid(@"_reportRequestCompleted:".UTF8String) withObject:dict];
 }
 
-RCT_REMAP_METHOD(handleNotification, title:(nonnull NSString*)title description:(nonnull NSString*)description)
+RCT_EXPORT_METHOD(stopNotificationsEmitter)
 {
-    [SHKShake handleNotificationWithNotificationTitle: title notificationDescription:description];
+    SHKShake.notificationEventsFilter = nil;
 }
 
-RCT_EXPORT_METHOD(trackNotifications)
+RCT_EXPORT_METHOD(showNotificationsSettings)
 {
-    // Notifications tracking works out of the box on iOS
-    // This method is just a placeholder to avoid crashes
+    // Method used just on Android
 }
 
 RCT_EXPORT_METHOD(addPrivateView:(nonnull NSNumber*)tag)
@@ -327,4 +287,125 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
     resolve(isSensitiveDataRedactionEnabled);
 }
 
+// Mappers
+
+- (LogLevel)mapToLogLevel:(NSDictionary*)logLevelDic
+{
+    NSString *value = [logLevelDic objectForKey:@"value"];
+
+    LogLevel logLevel = LogLevelInfo;
+    
+    if ([value isEqualToString:@"VERBOSE"])
+        logLevel = LogLevelVerbose;
+    if ([value isEqualToString:@"DEBUG"])
+        logLevel = LogLevelDebug;
+    if ([value isEqualToString:@"INFO"])
+        logLevel = LogLevelInfo;
+    if ([value isEqualToString:@"WARN"])
+        logLevel = LogLevelWarn;
+    if ([value isEqualToString:@"ERROR"])
+        logLevel = LogLevelError;
+    
+    return logLevel;
+}
+
+- (NSMutableArray<SHKShakeFile*>*)mapToShakeFiles:(nonnull NSArray*)files
+{
+    NSMutableArray<SHKShakeFile*>* shakeFiles = [NSMutableArray array];
+    for(int i = 0; i < [files count]; i++) {
+        NSDictionary* file = [files objectAtIndex:i];
+        NSString* path = [file objectForKey:@"path"];
+        NSString* name = [file objectForKey:@"name"];
+
+        NSURL* url = [[NSURL alloc] initFileURLWithPath: path];
+        SHKShakeFile* attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
+
+        [shakeFiles addObject:attachedFile];
+    }
+    return shakeFiles;
+}
+
+- (SHKShakeReportConfiguration*)mapToConfiguration:(nonnull NSDictionary*)configurationDic
+{
+    BOOL includesBlackBoxData = [[configurationDic objectForKey:@"blackBoxData"] boolValue];
+    BOOL includesActivityHistoryData = [[configurationDic objectForKey:@"activityHistoryData"] boolValue];
+    BOOL includesScreenshotImage = [[configurationDic objectForKey:@"screenshot"] boolValue];
+    BOOL showsToastMessageOnSend = [[configurationDic objectForKey:@"showReportSentMessage"] boolValue];
+
+    SHKShakeReportConfiguration *reportConfiguration = [[SHKShakeReportConfiguration alloc] init];
+    reportConfiguration.includesBlackBoxData = includesBlackBoxData;
+    reportConfiguration.includesActivityHistoryData = includesActivityHistoryData;
+    reportConfiguration.includesScreenshotImage = includesScreenshotImage;
+    reportConfiguration.showsToastMessageOnSend = showsToastMessageOnSend;
+
+    return reportConfiguration;
+}
+
+- (NSDictionary*)mapToNetworkRequest:(nonnull NSDictionary*)requestDict
+{
+    NSDictionary *networkRequest = [[NSDictionary alloc] init];
+    NSData *data = [requestDict[@"requestBody"] dataUsingEncoding:NSUTF8StringEncoding];
+    networkRequest = @{
+        @"url": requestDict[@"url"],
+        @"method": requestDict[@"method"],
+        @"responseBody": requestDict[@"responseBody"],
+        @"statusCode": requestDict[@"statusCode"],
+        @"requestBody": data,
+        @"requestHeaders": requestDict[@"requestHeaders"],
+        @"duration": requestDict[@"duration"],
+        @"responseHeaders": requestDict[@"responseHeaders"],
+        @"timestamp": requestDict[@"timestamp"]
+    };
+    return networkRequest;
+}
+
+- (NSDictionary*)mapToNotificationEvent:(nonnull NSDictionary*)notificationDict
+{
+    NSDictionary *notificationEvent = [[NSDictionary alloc] init];
+    notificationEvent = @{
+        @"id": notificationDict[@"id"],
+        @"title": notificationDict[@"title"],
+        @"description": notificationDict[@"description"]
+    };
+    return notificationEvent;
+}
+
+- (NSDictionary*)notificationToMap:(nonnull SHKNotificationEventEditor*)notification
+{
+    NSDictionary *notificationDict = [[NSDictionary alloc] init];
+    notificationDict = @{
+        @"id": notification.identifier,
+        @"title": notification.title,
+        @"description": notification.description,
+    };
+    return notificationDict;
+}
+
+// Private
+
+- (void)setPlatformInfo
+{
+    NSDictionary *shakeInfo = @{
+        @"platform": @"ReactNative",
+        @"sdkVersion": @"10.0.0"
+    };
+    [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
+}
+
+- (void)disableNetworkRequests
+{
+    [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:@YES];
+}
+
+- (void)insertRNNotificationEvent:(nonnull NSDictionary*)notificationEvent
+{
+    [SHKShake performSelector:sel_getUid(@"_reportNotification:".UTF8String) withObject:notificationEvent];
+}
+
+- (void)insertRNNetworkRequest:(nonnull NSDictionary*)networkRequest
+{
+    [SHKShake performSelector:sel_getUid(@"_reportRequestCompleted:".UTF8String) withObject:networkRequest];
+}
+
 @end
+

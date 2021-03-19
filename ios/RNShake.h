@@ -2,6 +2,6 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 
-@interface RNShake : RCTEventEmitter <RCTBridgeModule>
+@interface RNShake: RCTEventEmitter <RCTBridgeModule>
 
 @end

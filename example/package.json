@@ -4,9 +4,9 @@
   "private": true,
   "config": {
     "android": {
-      "dev": "com.shakebugs.android:shake-staging",
-      "stg": "com.shakebugs.android:shake-staging",
-      "prd": "com.shakebugs.android:shake"
+      "dev": "com.shakebugs:shake-staging",
+      "stg": "com.shakebugs:shake-staging",
+      "prd": "com.shakebugs:shake"
     },
     "ios": {
       "dev": "Shake-Staging",
@@ -49,6 +49,7 @@
     "@react-native-community/checkbox": "^0.3.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/picker": "^1.3.0",
+    "@react-native-community/push-notification-ios": "^1.8.0",
     "@react-native-community/slider": "^2.0.9",
     "@react-navigation/native": "^5.1.7",
     "@react-navigation/stack": "^5.2.14",
@@ -60,6 +61,7 @@
     "react-native-fs": ">=2.16.6",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-maps": "0.27.1",
+    "react-native-push-notification": "^7.2.3",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.7.0",

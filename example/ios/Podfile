@@ -89,6 +89,8 @@ target 'example' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
+
   target 'exampleTests' do
     inherit! :complete
     # Pods for testing

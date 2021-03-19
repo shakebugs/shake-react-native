@@ -17,7 +17,7 @@ const _resetNetworkRequest = () => {
         responseBody: "",
         requestHeaders: {},
         responseHeaders: {},
-        statusCode: 0,
+        statusCode: "",
         duration: 0,
         timestamp: "",
         start: 0,

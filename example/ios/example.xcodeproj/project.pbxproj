@@ -1096,7 +1096,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example;
 				PRODUCT_NAME = Shake;
-				PROVISIONING_PROFILE_SPECIFIER = "Shake Example";
+				PROVISIONING_PROFILE_SPECIFIER = "Shake React Native Example";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1424,7 +1424,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example;
 				PRODUCT_NAME = Shake;
-				PROVISIONING_PROFILE_SPECIFIER = "Shake Example";
+				PROVISIONING_PROFILE_SPECIFIER = "Shake React Native Example";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
