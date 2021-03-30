@@ -153,22 +153,6 @@ class Shake {
     }
 
     /**
-     * Enables or disables invoke by right edge pan.
-     * @param enabled true if enabled, otherwise false
-     */
-    static setInvokeShakeOnRightEdgePan(enabled) {
-        this.shake.setInvokeShakeOnRightEdgePan(enabled);
-    }
-
-    /**
-     * Checks if invoke on right edge pan is enabled.
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isInvokeShakeOnRightEdgePan() {
-        return await this.shake.isInvokeShakeOnRightEdgePan();
-    }
-
-    /**
      * Sets files to upload with report.
      * @param files shake files to upload
      */

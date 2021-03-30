@@ -63,7 +63,6 @@ const ShakeScreen = (props) => {
         setButtonInvokingEnabled(await Shake.isShowFloatingReportButton());
         setShakeInvokingEnabled(await Shake.isInvokeShakeOnShakeDeviceEvent());
         setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
-        setRightEdgeInvokingEnabled(await Shake.isInvokeShakeOnRightEdgePan());
         setEmailFieldEnabled(await Shake.isEnableEmailField());
         setFeedbackTypesEnabled(await Shake.isEnableMultipleFeedbackTypes());
         setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
@@ -228,14 +227,6 @@ const ShakeScreen = (props) => {
                     onValueChanged={() => {
                         Shake.setInvokeShakeOnScreenshot(!screenshotInvokingEnabled);
                         setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
-                    }}
-                />
-                <Option
-                    enabled={rightEdgeInvokingEnabled}
-                    title="Right Edge Pan"
-                    onValueChanged={() => {
-                        Shake.setInvokeShakeOnRightEdgePan(!rightEdgeInvokingEnabled);
-                        setRightEdgeInvokingEnabled(!rightEdgeInvokingEnabled);
                     }}
                 />
                 <Title style={styles.title} text="Options" />

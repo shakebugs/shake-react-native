@@ -29,10 +29,6 @@ declare module "react-native-shake" {
 
     export function isInvokeShakeOnScreenshot(): Promise<boolean>;
 
-    export function setInvokeShakeOnRightEdgePan(rightEdgePanInvokeEnabled: boolean): void;
-
-    export function isInvokeShakeOnRightEdgePan(): Promise<boolean>;
-
     export function isEnableEmailField(): Promise<boolean>;
 
     export function setEnableEmailField(emailFieldEnabled: boolean): void;

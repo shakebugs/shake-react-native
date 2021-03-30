@@ -122,17 +122,6 @@ RCT_REMAP_METHOD(isInvokeShakeOnScreenshot, withResolver:(RCTPromiseResolveBlock
     resolve(isInvokeOnScreenshot);
 }
 
-RCT_EXPORT_METHOD(setInvokeShakeOnRightEdgePan:(BOOL)invokeByRightEdgePan)
-{
-    SHKShake.configuration.isInvokedByRightEdgePan = invokeByRightEdgePan;
-}
-
-RCT_EXPORT_METHOD(isInvokeShakeOnRightEdgePan:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-{
-    NSNumber *isInvokeByRightEdgePan = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByRightEdgePan];
-    resolve(isInvokeByRightEdgePan);
-}
-
 RCT_EXPORT_METHOD(setEnableEmailField:(BOOL)isEmailFieldEnabled)
 {
     SHKShake.configuration.isEmailFieldEnabled = isEmailFieldEnabled;
@@ -221,7 +210,7 @@ RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files)
 RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray *)files:(nonnull NSDictionary *)configurationMap)
 {
     NSMutableArray <SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
-   
+
     SHKShakeReportConfiguration* reportConfiguration = [self mapToConfiguration:configurationMap];
     SHKShakeReportData *reportData = [[SHKShakeReportData alloc] initWithBugDescription:description attachedFiles:[NSArray arrayWithArray:shakeFiles]];
 
@@ -245,7 +234,7 @@ RCT_EXPORT_METHOD(startNotificationsEmitter)
     SHKShake.notificationEventsFilter = ^SHKNotificationEventEditor *(SHKNotificationEventEditor * notificationEvent) {
         NSDictionary* notificationDict = [self notificationToMap:notificationEvent];
         [self sendEventWithName:@"EventNotification" body:notificationDict];
-        
+
         return nil;
     };
 }
@@ -294,7 +283,7 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
     NSString *value = [logLevelDic objectForKey:@"value"];
 
     LogLevel logLevel = LogLevelInfo;
-    
+
     if ([value isEqualToString:@"VERBOSE"])
         logLevel = LogLevelVerbose;
     if ([value isEqualToString:@"DEBUG"])
@@ -305,7 +294,7 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
         logLevel = LogLevelWarn;
     if ([value isEqualToString:@"ERROR"])
         logLevel = LogLevelError;
-    
+
     return logLevel;
 }
 

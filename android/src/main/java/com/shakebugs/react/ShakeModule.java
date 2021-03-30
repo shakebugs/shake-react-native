@@ -176,21 +176,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setInvokeShakeOnRightEdgePan(final boolean invokeOnRightEdgePan) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.getReportConfiguration().setInvokeShakeOnRightEdgePan(invokeOnRightEdgePan);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void isInvokeShakeOnRightEdgePan(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnRightEdgePan());
-    }
-
-    @ReactMethod
     public void getEmailField(Promise promise) {
         promise.resolve(Shake.getReportConfiguration().getEmailField());
     }

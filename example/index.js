@@ -15,7 +15,6 @@ const CLIENT_SECRET = 'IPRqEI2iSQhmUP6NGQcPNKCs7JQCJrpFUG0qDmLx4Yx2spd3caXnC3o';
 Shake.setInvokeShakeOnScreenshot(true);
 Shake.setInvokeShakeOnShakeDeviceEvent(true);
 Shake.setShowFloatingReportButton(true);
-Shake.setInvokeShakeOnRightEdgePan(true);
 Shake.setConsoleLogsEnabled(true);
 Shake.setAutoVideoRecording(true);
 Shake.setEmailField('test@shakebugs.com');
