@@ -59,6 +59,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 shakeInfo.setVersionCode(Constants.VERSION_CODE);
                 shakeInfo.setVersionName(Constants.VERSION_NAME);
 
+                Shake.getReportConfiguration().setConsoleLogsEnabled(false);
                 ShakeReflection.setShakeInfo(shakeInfo);
                 ShakeReflection.start(activity, clientId, clientSecret);
             }

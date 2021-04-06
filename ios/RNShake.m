@@ -309,7 +309,9 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
         NSURL* url = [[NSURL alloc] initFileURLWithPath: path];
         SHKShakeFile* attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
 
-        [shakeFiles addObject:attachedFile];
+        if (attachedFile != nil) {
+            [shakeFiles addObject:attachedFile];
+        }
     }
     return shakeFiles;
 }
