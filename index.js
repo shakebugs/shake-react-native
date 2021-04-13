@@ -37,7 +37,6 @@ class Shake {
      */
     static start(clientId, clientSecret) {
         this.shake.start(clientId, clientSecret);
-        this.networkTracker.setEnabled(true);
         this.notificationTracker.setEnabled(true);
     }
 

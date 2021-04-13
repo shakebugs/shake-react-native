@@ -24,7 +24,6 @@ const ShakeScreen = (props) => {
     const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState();
     const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState();
     const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] = useState();
-    const [rightEdgeInvokingEnabled, setRightEdgeInvokingEnabled] = useState();
     const [blackBoxEnabled, setBlackBoxEnabled] = useState();
     const [activityHistoryEnabled, setActivityHistoryEnabled] = useState();
     const [inspectScreenEnabled, setInspectScreenEnabled] = useState();

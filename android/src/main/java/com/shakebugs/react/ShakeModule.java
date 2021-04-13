@@ -59,6 +59,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 shakeInfo.setVersionCode(Constants.VERSION_CODE);
                 shakeInfo.setVersionName(Constants.VERSION_NAME);
 
+                Shake.getReportConfiguration().setConsoleLogsEnabled(false);
                 ShakeReflection.setShakeInfo(shakeInfo);
                 ShakeReflection.start(activity, clientId, clientSecret);
             }
@@ -336,44 +337,44 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void addPrivateView(final double id) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
-                    uiManagerModule.prependUIBlock(new UIBlock() {
+        try {
+            UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+            uiManagerModule.prependUIBlock(new UIBlock() {
+                @Override
+                public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                    final View view = nativeViewHierarchyManager.resolveView((int) id);
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                            View view = nativeViewHierarchyManager.resolveView((int) id);
+                        public void run() {
                             Shake.addPrivateView(view);
                         }
                     });
-                } catch (Exception e) {
-                    Logger.d("Failed to add private view.", e);
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            Logger.d("Failed to add private view.", e);
+        }
     }
 
     @ReactMethod
     public void removePrivateView(final double id) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
-                    uiManagerModule.prependUIBlock(new UIBlock() {
+        try {
+            UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+            uiManagerModule.prependUIBlock(new UIBlock() {
+                @Override
+                public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                    final View view = nativeViewHierarchyManager.resolveView((int) id);
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                            View view = nativeViewHierarchyManager.resolveView((int) id);
+                        public void run() {
                             Shake.removePrivateView(view);
                         }
                     });
-                } catch (Exception e) {
-                    Logger.d("Failed to remove private view.", e);
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            Logger.d("Failed to remove private view.", e);
+        }
     }
 
     @ReactMethod
