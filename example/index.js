@@ -9,7 +9,17 @@ import Shake from 'react-native-shake';
 
 AppRegistry.registerComponent(appName, () => App);
 
-Shake.setInvokeShakeOnScreenshot(false);
+const CLIENT_ID = 'HtTFUmUziF5Qjk1XLraAJXtVB1cL62yHWWqsDnrG';
+const CLIENT_SECRET = 'IPRqEI2iSQhmUP6NGQcPNKCs7JQCJrpFUG0qDmLx4Yx2spd3caXnC3o';
+
+Shake.setInvokeShakeOnScreenshot(true);
 Shake.setInvokeShakeOnShakeDeviceEvent(true);
-Shake.setShowFloatingReportButton(false);
-Shake.start();
+Shake.setShowFloatingReportButton(true);
+Shake.setNetworkRequestsEnabled(true);
+Shake.setConsoleLogsEnabled(true);
+Shake.setAutoVideoRecording(true);
+Shake.setEmailField('test@shakebugs.com');
+Shake.setShowIntroMessage(true);
+Shake.setSensitiveDataRedactionEnabled(true);
+
+Shake.start(CLIENT_ID, CLIENT_SECRET);

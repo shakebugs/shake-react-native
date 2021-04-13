@@ -1,10 +1,7 @@
+#import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
-#import <Shake/Shake.h>
-#import <Shake/SHKShakeConfiguration.h>
-#import <Shake/SHKShakeFile.h>
-#import <Shake/SHKShakeReportData.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RNShake : NSObject <RCTBridgeModule>
-
+@interface RNShake: RCTEventEmitter <RCTBridgeModule>
 
 @end

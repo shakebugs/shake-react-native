@@ -1,7 +1,16 @@
+/**
+ * Represents Shake report file.
+ */
 class ShakeFile {
     name;
     path;
 
+    /**
+     * Used to create new shake file.
+     * @param filePath file path
+     * @param fileName file name
+     * @returns {ShakeFile} new shake file
+     */
     static create(filePath, fileName = "") {
         const fileDetails = this._parseFilePath(filePath);
         if (!fileName) {
