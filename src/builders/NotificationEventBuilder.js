@@ -18,9 +18,9 @@ class NotificationEventBuilder {
             this._title = notificationEvent.title;
             this._description = notificationEvent.description;
         } else {
-            this._id = 0;
-            this._title = "";
-            this._description = "";
+            this._id = '';
+            this._title = '';
+            this._description = '';
         }
     }
 

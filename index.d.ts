@@ -101,7 +101,7 @@ declare module "react-native-shake" {
     }
 
     export class NotificationEvent {
-        id: number;
+        id: string;
         title: string;
         description: string;
     }
@@ -119,8 +119,8 @@ declare module "react-native-shake" {
     }
 
     export class NotificationEventBuilder {
-        getId: () => number;
-        setId: (id: number) => NotificationEventBuilder;
+        getId: () => string;
+        setId: (id: string) => NotificationEventBuilder;
         getTitle: () => string;
         setTitle: (title: string) => NotificationEventBuilder;
         getDescription: () => string;

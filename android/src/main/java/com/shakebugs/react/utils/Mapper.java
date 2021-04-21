@@ -77,19 +77,27 @@ public class Mapper {
     }
 
     public static NotificationEvent mapToNotificationEvent(ReadableMap object) {
+        String id = object.hasKey("id") && !object.isNull("id") ? object.getString("id") : "";
+        String title = object.hasKey("title") && !object.isNull("title") ? object.getString("title") : "";
+        String description = object.hasKey("description") && !object.isNull("description") ? object.getString("description") : "";
+
         NotificationEvent notificationEvent = new NotificationEvent();
-        notificationEvent.setId(object.getInt("id"));
-        notificationEvent.setTitle(object.getString("title"));
-        notificationEvent.setDescription(object.getString("description"));
+        notificationEvent.setId(Converter.stringToInt(id));
+        notificationEvent.setTitle(title);
+        notificationEvent.setDescription(description);
 
         return notificationEvent;
     }
 
     public static WritableMap notificationEventToMap(NotificationEvent notificationEvent) {
+        int id = notificationEvent.getId();
+        String title = notificationEvent.getTitle() == null ? "" : notificationEvent.getTitle();
+        String description = notificationEvent.getDescription() == null ? "" : notificationEvent.getDescription();
+
         WritableMap map = new WritableNativeMap();
-        map.putInt("id", notificationEvent.getId());
-        map.putString("title", notificationEvent.getTitle());
-        map.putString("description", notificationEvent.getDescription());
+        map.putString("id", String.valueOf(id));
+        map.putString("title", title);
+        map.putString("description", description);
 
         return map;
     }
