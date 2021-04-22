@@ -150,7 +150,7 @@ const ShakeScreen = (props) => {
 
     const insertNotificationEvent = () => {
         const notificationEventBuilder = new NotificationEventBuilder()
-            .setId(0)
+            .setId('0')
             .setDescription('Description')
             .setTitle('Title');
         Shake.insertNotificationEvent(notificationEventBuilder);

@@ -18,9 +18,9 @@ class NotificationEventBuilder {
             this._title = notificationEvent.title;
             this._description = notificationEvent.description;
         } else {
-            this._id = 0;
-            this._title = "";
-            this._description = "";
+            this._id = '';
+            this._title = '';
+            this._description = '';
         }
     }
 
@@ -30,6 +30,9 @@ class NotificationEventBuilder {
 
     setId(value) {
         this._id = value;
+        if (!this._id) {
+            this._id = '';
+        }
         return this;
     }
 
@@ -39,6 +42,9 @@ class NotificationEventBuilder {
 
     setTitle(value) {
         this._title = value;
+        if (!this._title) {
+            this._title = '';
+        }
         return this;
     }
 
@@ -48,6 +54,9 @@ class NotificationEventBuilder {
 
     setDescription(value) {
         this._description = value;
+        if (!this._description) {
+            this._description = '';
+        }
         return this;
     }
 

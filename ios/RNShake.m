@@ -354,9 +354,9 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
 {
     NSDictionary *notificationEvent = [[NSDictionary alloc] init];
     notificationEvent = @{
-        @"id": notificationDict[@"id"],
-        @"title": notificationDict[@"title"],
-        @"description": notificationDict[@"description"]
+        @"id": (notificationDict[@"id"] ?: @""),
+        @"title": (notificationDict[@"title"] ?: @""),
+        @"description": (notificationDict[@"description"] ?: @"")
     };
     return notificationEvent;
 }
@@ -365,9 +365,9 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
 {
     NSDictionary *notificationDict = [[NSDictionary alloc] init];
     notificationDict = @{
-        @"id": notification.identifier,
-        @"title": notification.title,
-        @"description": notification.description,
+        @"id": (notification.identifier ?: @""),
+        @"title": (notification.title ?: @""),
+        @"description": (notification.description ?: @"")
     };
     return notificationDict;
 }
