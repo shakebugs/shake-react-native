@@ -17,28 +17,38 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>10.0.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
-	<true />
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true />
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true />
+				<true/>
 			</dict>
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string />
+	<string></string>
+	<key>Shake</key>
+	<dict>
+		<key>APIClientID</key>
+		<string>QGjkaGuR8QVUA7ZIIYX5AjpYkN6LfQRyFulwDX71</string>
+		<key>APIClientSecret</key>
+		<string>et1T78wj0AfiwGUj1Cz3CN4YqrSNQ7ydWVMUFj7vZr0BSgnQ24Nrl2S</string>
+	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>HKGrotesk-Regular.otf</string>
+		<string>HKGrotesk-SemiBold.otf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -52,18 +62,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false />
-	<key>Shake</key>
-	<dict>
-		<key>APIClientID</key>
-		<string>QGjkaGuR8QVUA7ZIIYX5AjpYkN6LfQRyFulwDX71</string>
-		<key>APIClientSecret</key>
-		<string>et1T78wj0AfiwGUj1Cz3CN4YqrSNQ7ydWVMUFj7vZr0BSgnQ24Nrl2S</string>
-	</dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>HKGrotesk-Regular.otf</string>
-		<string>HKGrotesk-SemiBold.otf</string>
-	</array>
+	<false/>
 </dict>
 </plist>

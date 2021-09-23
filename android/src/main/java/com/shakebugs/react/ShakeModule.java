@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -38,6 +40,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         this.emitter = new Emitter(reactContext);
     }
 
+    @NonNull
     @Override
     public String getName() {
         return "RNShake";
@@ -176,6 +179,36 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setScreenshotIncluded(final boolean isScreenshotIncluded) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setScreenshotIncluded(isScreenshotIncluded);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isScreenshotIncluded(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isScreenshotIncluded());
+    }
+
+    @ReactMethod
+    public void getShakingThreshold(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().getShakingThreshold());
+    }
+
+    @ReactMethod
+    public void setShakingThreshold(final int shakingThreshold) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setShakingThreshold(shakingThreshold);
+            }
+        });
+    }
+
+    @ReactMethod
     public void getEmailField(Promise promise) {
         promise.resolve(Shake.getReportConfiguration().getEmailField());
     }
@@ -207,15 +240,15 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void isEnableMultipleFeedbackTypes(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableMultipleFeedbackTypes());
+        promise.resolve(Shake.getReportConfiguration().isFeedbackTypeEnabled());
     }
 
     @ReactMethod
-    public void setEnableMultipleFeedbackTypes(final boolean enableFeedbackTypes) {
+    public void setEnableMultipleFeedbackTypes(final boolean feedbackTypeEnabled) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().setEnableMultipleFeedbackTypes(enableFeedbackTypes);
+                Shake.getReportConfiguration().setFeedbackTypeEnabled(feedbackTypeEnabled);
             }
         });
     }

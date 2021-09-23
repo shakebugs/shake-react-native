@@ -3,7 +3,7 @@
 #import <Shake/Shake.h>
 #import <Shake/SHKShakeConfiguration.h>
 #import <Shake/SHKShakeFile.h>
-#import <Shake/SHKShakeReportData.h>
+#import <Shake/SHKShakeReportConfiguration.h>
 
 @implementation RNShake
 
@@ -115,12 +115,37 @@ RCT_EXPORT_METHOD(setInvokeShakeOnScreenshot:(BOOL)invokeOnScreenshot)
     SHKShake.configuration.isInvokedByScreenshot = invokeOnScreenshot;
 }
 
-RCT_REMAP_METHOD(isInvokeShakeOnScreenshot, withResolver:(RCTPromiseResolveBlock)resolve
+RCT_REMAP_METHOD(isInvokeShakeOnScreenshot, isInvokeShakeOnScreenshotwithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isInvokeOnScreenshot = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByScreenshot];
     resolve(isInvokeOnScreenshot);
 }
+
+RCT_EXPORT_METHOD(setScreenshotIncluded:(BOOL)screenshotIncluded)
+{
+    SHKShake.configuration.isScreenshotIncluded = screenshotIncluded;
+}
+
+RCT_REMAP_METHOD(isScreenshotIncluded, isScreenshotIncludedwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *isScreenshotIncluded = [NSNumber numberWithBool:SHKShake.configuration.isScreenshotIncluded];
+    resolve(isScreenshotIncluded);
+}
+
+RCT_EXPORT_METHOD(setShakingThreshold:(float)shakingThreshold)
+{
+    SHKShake.configuration.shakingThreshold = shakingThreshold;
+}
+
+RCT_REMAP_METHOD(getShakingThreshold, getShakingThresholdwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *shakingThreshold = [NSNumber numberWithFloat:SHKShake.configuration.shakingThreshold];
+    resolve(shakingThreshold);
+}
+
 
 RCT_EXPORT_METHOD(setEnableEmailField:(BOOL)isEmailFieldEnabled)
 {
@@ -209,12 +234,14 @@ RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files)
 
 RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray *)files:(nonnull NSDictionary *)configurationMap)
 {
-    NSMutableArray <SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
+    NSArray<SHKShakeFile *> * (^fileAttachBlock)(void) = ^NSArray<SHKShakeFile *> *(void) {
+        NSMutableArray <SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
+        return shakeFiles;
+    };
 
-    SHKShakeReportConfiguration* reportConfiguration = [self mapToConfiguration:configurationMap];
-    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] initWithBugDescription:description attachedFiles:[NSArray arrayWithArray:shakeFiles]];
+    SHKShakeReportConfiguration* conf = [self mapToConfiguration:configurationMap];
 
-    [SHKShake silentReportWithReportData:reportData reportConfiguration:reportConfiguration];
+    [SHKShake silentReportWithDescription:description fileAttachBlock:fileAttachBlock reportConfiguration:conf];
 }
 
 RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)requestDict)
@@ -323,13 +350,13 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
     BOOL includesScreenshotImage = [[configurationDic objectForKey:@"screenshot"] boolValue];
     BOOL showsToastMessageOnSend = [[configurationDic objectForKey:@"showReportSentMessage"] boolValue];
 
-    SHKShakeReportConfiguration *reportConfiguration = [[SHKShakeReportConfiguration alloc] init];
-    reportConfiguration.includesBlackBoxData = includesBlackBoxData;
-    reportConfiguration.includesActivityHistoryData = includesActivityHistoryData;
-    reportConfiguration.includesScreenshotImage = includesScreenshotImage;
-    reportConfiguration.showsToastMessageOnSend = showsToastMessageOnSend;
+    SHKShakeReportConfiguration *conf = SHKShakeReportConfiguration.new;
+    conf.includesBlackBoxData = includesBlackBoxData;
+    conf.includesActivityHistoryData = includesActivityHistoryData;
+    conf.includesScreenshotImage = includesScreenshotImage;
+    conf.showsToastMessageOnSend = showsToastMessageOnSend;
 
-    return reportConfiguration;
+    return conf;
 }
 
 - (NSDictionary*)mapToNetworkRequest:(nonnull NSDictionary*)requestDict

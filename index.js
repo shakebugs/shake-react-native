@@ -152,6 +152,38 @@ class Shake {
     }
 
     /**
+     * Sets if screenshot is captured with report by default.
+     * @param screenshotIncluded true if included, otherwise false
+     */
+    static setScreenshotIncluded(screenshotIncluded) {
+        this.shake.setScreenshotIncluded(screenshotIncluded);
+    }
+
+    /**
+     * Checks if screenshot is captured with report by default.
+     * @returns {Promise<*|boolean>} true if included, otherwise false
+     */
+    static async isScreenshotIncluded() {
+        return await this.shake.isScreenshotIncluded();
+    }
+
+    /**
+     * Sets how sensitive is shaking gesture invocation.
+     * @param shakingThreshold number between 1-1000 (1 weak, 1000 strong)
+     */
+    static setShakingThreshold(shakingThreshold) {
+        this.shake.setShakingThreshold(shakingThreshold);
+    }
+
+    /**
+     * Sets how sensitive is shaking gesture invocation.
+     * @returns {Promise<*|boolean>} shaking gesture sensitivity
+     */
+    static async getShakingThreshold() {
+        return await this.shake.getShakingThreshold();
+    }
+
+    /**
      * Sets files to upload with report.
      * @param files shake files to upload
      */

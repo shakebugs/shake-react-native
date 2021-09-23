@@ -75,6 +75,14 @@ declare module "react-native-shake" {
 
     export function setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled: boolean): void;
 
+    export function isScreenshotIncluded(): Promise<boolean>;
+
+    export function setScreenshotIncluded(screenshotIncluded: boolean): void;
+
+    export function getShakingThreshold(): Promise<number>;
+
+    export function setShakingThreshold(shakingThreshold: number): void;
+
     export function silentReport(
         description: string,
         files: Array<ShakeFile>,
