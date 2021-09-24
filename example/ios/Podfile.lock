@@ -277,7 +277,7 @@ PODS:
     - React
   - react-native-shake (14.1.0):
     - React
-    - Shake-Staging (~> 15.0.0-rc)
+    - Shake (~> 15.0.0)
   - react-native-slider (2.0.9):
     - React
   - react-native-webview (9.3.0):
@@ -362,7 +362,7 @@ PODS:
     - React
   - RNScreens (2.7.0):
     - React
-  - Shake-Staging (15.0.0-rc.1373)
+  - Shake (15.0.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -435,8 +435,6 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  "git@github.com:shakebugs/Specs.git":
-    - Shake-Staging
   https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
     - CocoaAsyncSocket
@@ -452,6 +450,7 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
+    - Shake
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -573,7 +572,7 @@ SPEC CHECKSUMS:
   react-native-checkbox: 2d04aeb0c7e2c2cbd9a9a902ca6a5cf642688d09
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
-  react-native-shake: fa640393237407e57cf357a8961b9a2f1c2706ae
+  react-native-shake: 91238bed6328fc1bbdefa922c1605acce7a81313
   react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   react-native-webview: bdde2a3c4cbdc0122bc2bfba13603db193f0cc5c
   React-perflogger: fd28ee1f2b5b150b00043f0301d96bd417fdc339
@@ -596,7 +595,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
-  Shake-Staging: d7d5af5607f7b377723fd88915c7e2e410b349b8
+  Shake: c5032f2a9dbfa2a8c33002609567f44a42176525
   Yoga: aa0cb45287ebe1004c02a13f279c55a95f1572f4
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

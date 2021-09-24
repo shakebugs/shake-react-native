@@ -256,6 +256,31 @@ const ShakeScreen = props => {
             Shake.setShakingThreshold(900);
           }}
         />
+        <Title style={styles.title} text="User" />
+        <Button
+          text="Register user"
+          onPress={() => {
+            Shake.registerUser('john.smith@example.com');
+          }}
+        />
+        <Button
+          text="Update user id"
+          onPress={() => {
+            Shake.updateUserId('will.smith@example.com');
+          }}
+        />
+        <Button
+          text="Update user metadata"
+          onPress={() => {
+            Shake.updateUserMetadata({fist_name: 'John', last_name: 'Smith'});
+          }}
+        />
+        <Button
+          text="Unregister user"
+          onPress={() => {
+            Shake.unregisterUser();
+          }}
+        />
         <Title style={styles.title} text="Options" />
         <Option
           enabled={shakeEnabled}

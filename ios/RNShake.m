@@ -303,6 +303,26 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
     resolve(isSensitiveDataRedactionEnabled);
 }
 
+RCT_EXPORT_METHOD(registerUser:(NSString *)userId)
+{
+    [SHKShake registerUserWithUserId:userId];
+}
+
+RCT_EXPORT_METHOD(updateUserId:(NSString *)userId)
+{
+    [SHKShake updateUserId:userId];
+}
+
+RCT_EXPORT_METHOD(updateUserMetadata:(NSDictionary *)metadataDic)
+{
+    [SHKShake updateUserMetadata:metadataDic];
+}
+
+RCT_EXPORT_METHOD(unregisterUser)
+{
+    [SHKShake unregisterUser];
+}
+
 // Mappers
 
 - (LogLevel)mapToLogLevel:(NSDictionary*)logLevelDic

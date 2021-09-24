@@ -102,6 +102,21 @@ public class Mapper {
         return map;
     }
 
+    public static Map<String, String> mapToUserMetadata(ReadableMap metadata) {
+        Map<String, Object> map = toMap(metadata);
+
+        Map<String, String> stringMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() == null) {
+                stringMap.put(entry.getKey(), null);
+            } else {
+                stringMap.put(entry.getKey(), String.valueOf(entry.getValue()));
+            }
+        }
+
+        return stringMap;
+    }
+
     private static Map<String, Object> toMap(ReadableMap readableMap) {
         Map<String, Object> map = new HashMap<>();
         ReadableMapKeySetIterator iterator = readableMap.keySetIterator();

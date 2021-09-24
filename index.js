@@ -411,6 +411,40 @@ class Shake {
     static showNotificationsSettings() {
         this.shake.showNotificationsSettings();
     }
+
+    /**
+     * Registers new Shake user.
+     *
+     * @param id user id
+     */
+    static registerUser(id) {
+        this.shake.registerUser(id);
+    }
+
+    /**
+     * Updates existing Shake user id.
+     *
+     * @param id new user id
+     */
+    static updateUserId(id) {
+        this.shake.updateUserId(id);
+    }
+
+    /**
+     * Updates existing Shake user metadata.
+     *
+     * @param metadata user metadata to update
+     */
+    static updateUserMetadata(metadata) {
+        this.shake.updateUserMetadata(metadata);
+    }
+
+    /**
+     * Unregister current Shake user.
+     */
+    static unregisterUser() {
+        this.shake.unregisterUser();
+    }
 }
 
 export default Shake;

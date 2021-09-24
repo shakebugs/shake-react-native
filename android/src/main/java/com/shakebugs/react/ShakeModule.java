@@ -31,6 +31,7 @@ import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
 import java.util.List;
+import java.util.Map;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
     private final Emitter emitter;
@@ -371,18 +372,20 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     public void addPrivateView(final double id) {
         try {
             UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
-            uiManagerModule.prependUIBlock(new UIBlock() {
-                @Override
-                public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                    final View view = nativeViewHierarchyManager.resolveView((int) id);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Shake.addPrivateView(view);
-                        }
-                    });
-                }
-            });
+            if (uiManagerModule != null) {
+                uiManagerModule.prependUIBlock(new UIBlock() {
+                    @Override
+                    public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                        final View view = nativeViewHierarchyManager.resolveView((int) id);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Shake.addPrivateView(view);
+                            }
+                        });
+                    }
+                });
+            }
         } catch (Exception e) {
             Logger.d("Failed to add private view.", e);
         }
@@ -392,18 +395,20 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     public void removePrivateView(final double id) {
         try {
             UIManagerModule uiManagerModule = getReactApplicationContext().getNativeModule(UIManagerModule.class);
-            uiManagerModule.prependUIBlock(new UIBlock() {
-                @Override
-                public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                    final View view = nativeViewHierarchyManager.resolveView((int) id);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Shake.removePrivateView(view);
-                        }
-                    });
-                }
-            });
+            if (uiManagerModule != null) {
+                uiManagerModule.prependUIBlock(new UIBlock() {
+                    @Override
+                    public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                        final View view = nativeViewHierarchyManager.resolveView((int) id);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Shake.removePrivateView(view);
+                            }
+                        });
+                    }
+                });
+            }
         } catch (Exception e) {
             Logger.d("Failed to remove private view.", e);
         }
@@ -469,6 +474,47 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 if (activity != null) {
                     activity.startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
                 }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void registerUser(final String id) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.registerUser(id);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void updateUserId(final String id) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.updateUserId(id);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void updateUserMetadata(final ReadableMap metadataMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, String> metadata = Mapper.mapToUserMetadata(metadataMap);
+                Shake.updateUserMetadata(metadata);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void unregisterUser() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.unregisterUser();
             }
         });
     }
