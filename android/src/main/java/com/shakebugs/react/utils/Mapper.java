@@ -8,6 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.ShakeReportConfiguration;
+import com.shakebugs.shake.ShakeScreen;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.internal.data.NotificationEvent;
 import com.shakebugs.shake.report.ShakeFile;
@@ -19,15 +20,27 @@ import java.util.Map;
 
 public class Mapper {
     public static LogLevel mapToLogLevel(ReadableMap logLevelMap) {
-        LogLevel logLevel = null;
+        LogLevel logLevel = LogLevel.INFO;
 
         try {
             logLevel = LogLevel.valueOf(logLevelMap.getString("value"));
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             Logger.e("Failed to parse log level.", e);
         }
 
         return logLevel;
+    }
+
+    public static ShakeScreen mapToShakeScreen(ReadableMap shakeScreenMap) {
+        ShakeScreen shakeScreen = ShakeScreen.HOME;
+
+        try {
+            shakeScreen = ShakeScreen.valueOf(shakeScreenMap.getString("value"));
+        } catch (Exception e) {
+            Logger.e("Failed to parse shake screen.", e);
+        }
+
+        return shakeScreen;
     }
 
     public static ShakeReportConfiguration mapToConfiguration(ReadableMap configurationMap) {

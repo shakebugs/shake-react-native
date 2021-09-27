@@ -2,6 +2,8 @@ declare module "react-native-shake" {
     export function start(clientId: string, clientSecret: string): void;
 
     export function show(): void;
+    
+    export function show(shakeScreen: ShakeScreen): void;
 
     export function setEnabled(shakeEnabled: boolean): void;
 
@@ -181,6 +183,12 @@ declare module "react-native-shake" {
         static INFO: LogLevel;
         static WARN: LogLevel;
         static ERROR: LogLevel;
+        value: string;
+    }
+
+    export class ShakeScreen {
+        static HOME: ShakeScreen;
+        static NEW: ShakeScreen;
         value: string;
     }
 }

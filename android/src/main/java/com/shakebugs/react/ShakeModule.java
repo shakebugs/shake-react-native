@@ -23,6 +23,7 @@ import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
+import com.shakebugs.shake.ShakeScreen;
 import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.internal.data.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
@@ -75,6 +76,17 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.show();
+            }
+        });
+    }
+
+    @ReactMethod
+    public void show(final ReadableMap shakeScreenMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ShakeScreen shakeScreen = Mapper.mapToShakeScreen(shakeScreenMap);
+                Shake.show(shakeScreen);
             }
         });
     }

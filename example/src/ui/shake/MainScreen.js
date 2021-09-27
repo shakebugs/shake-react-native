@@ -16,8 +16,10 @@ import Version from '../core/Version';
 import AxiosNetworkTester from '../network/AxiosNetworkTester';
 import Private from '../core/Private';
 import PushNotification from 'react-native-push-notification';
+import LogLevel from '../../../../src/models/LogLevel';
+import ShakeScreen from '../../../../src/models/ShakeScreen';
 
-const ShakeScreen = props => {
+const MainScreen = props => {
   let path = RNFS.DocumentDirectoryPath + '/file.txt';
 
   const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState();
@@ -46,6 +48,7 @@ const ShakeScreen = props => {
   useEffect(() => {
     createFile();
     initialize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const createFile = () => {
@@ -77,7 +80,11 @@ const ShakeScreen = props => {
     setShakeEnabled(true); // Not provided by native SDK
   };
 
-  const show = () => {
+  const showHome = () => {
+    Shake.show(ShakeScreen.HOME);
+  };
+
+  const showNew = () => {
     Shake.show();
   };
 
@@ -207,7 +214,8 @@ const ShakeScreen = props => {
     <ScrollView>
       <View style={styles.container}>
         <Title style={styles.title} text="Actions" />
-        <Button text="Show" onPress={show} />
+        <Button text="Show Home" onPress={showHome} />
+        <Button text="Show New" onPress={showNew} />
         <Button text="Attach data" onPress={setReportData} />
         <Button text="Silent report" onPress={silentReport} />
         <Button text="Custom log" onPress={customLog} />
@@ -430,7 +438,7 @@ const ShakeScreen = props => {
   );
 };
 
-export default ShakeScreen;
+export default MainScreen;
 
 const styles = StyleSheet.create({
   container: {

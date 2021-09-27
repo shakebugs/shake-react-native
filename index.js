@@ -9,6 +9,7 @@ import NotificationEvent from "./src/models/NotificationEvent";
 import NetworkRequest from "./src/models/NetworkRequest";
 import NetworkRequestBuilder from "./src/builders/NetworkRequestBuilder";
 import NotificationEventBuilder from "./src/builders/NotificationEventBuilder";
+import ShakeScreen from "./src/models/ShakeScreen";
 
 // Export models
 export { ShakeReportConfiguration };
@@ -43,8 +44,8 @@ class Shake {
     /**
      * Shows shake screen.
      */
-    static show() {
-        this.shake.show();
+    static show(shakeScreen = ShakeScreen.NEW) {
+        this.shake.show(shakeScreen);
     }
 
     /**

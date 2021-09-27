@@ -40,9 +40,10 @@ RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)cli
     [SHKShake startWithClientId:clientId clientSecret:clientSecret];
 }
 
-RCT_EXPORT_METHOD(show)
+RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
 {
-    [SHKShake show];
+    SHKShowOption showOption = [self mapToShowOption:showOptionDic];
+    [SHKShake show:showOption];
 }
 
 RCT_EXPORT_METHOD(setEnabled:(BOOL)enabled)
@@ -343,6 +344,20 @@ RCT_EXPORT_METHOD(unregisterUser)
         logLevel = LogLevelError;
 
     return logLevel;
+}
+
+- (SHKShowOption)mapToShowOption:(NSDictionary*)showOptionDic
+{
+    NSString *value = [showOptionDic objectForKey:@"value"];
+
+    SHKShowOption showOption = SHKShowOptionHome;
+
+    if ([value isEqualToString:@"HOME"])
+        showOption = SHKShowOptionHome;
+    if ([value isEqualToString:@"NEW"])
+        showOption = SHKShowOptionNew;
+
+    return showOption;
 }
 
 - (NSMutableArray<SHKShakeFile*>*)mapToShakeFiles:(nonnull NSArray*)files
