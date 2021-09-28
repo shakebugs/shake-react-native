@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "14.1.0",
+  "version": "15.0.0",
   "private": true,
   "config": {
     "android": {
@@ -28,9 +28,9 @@
     "build:android:prd": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_prd \"npm run bundle:android && cd android && ./gradlew assembleProductionRelease\"",
     "clean:android": "cross-env-shell \"cd android && ./gradlew clean && cd ..\"",
     "ios": "npm run ios:dev",
-    "ios:dev": "export IOS_DEPENDENCY=$npm_package_config_ios_dev && npm run clean:ios && npm run ios:run:dev",
-    "ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run clean:ios && npm run ios:run:stg",
-    "ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd && npm run clean:ios && npm run ios:run:prd",
+    "ios:dev": "export IOS_DEPENDENCY=$npm_package_config_ios_dev && npm run ios:run:dev",
+    "ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run ios:run:stg",
+    "ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd  && npm run ios:run:prd",
     "ios:run:dev": "react-native run-ios --scheme=Development --configuration=DevelopmentDebug",
     "ios:run:stg": "react-native run-ios --scheme=Staging --configuration=StagingDebug",
     "ios:run:prd": "react-native run-ios --scheme=Production --configuration=ProductionDebug",

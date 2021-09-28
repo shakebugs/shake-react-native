@@ -170,15 +170,28 @@ RCT_EXPORT_METHOD(getEmailField:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejec
     resolve(emailField);
 }
 
-RCT_EXPORT_METHOD(setEnableMultipleFeedbackTypes:(BOOL)isFeedbackTypeEnabled)
+RCT_EXPORT_METHOD(setFeedbackTypeEnabled:(BOOL)isFeedbackTypeEnabled)
 {
     SHKShake.configuration.isFeedbackTypeEnabled = isFeedbackTypeEnabled;
 }
 
-RCT_EXPORT_METHOD(isEnableMultipleFeedbackTypes:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(isFeedbackTypeEnabled:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isFeedbackTypeEnabled = [NSNumber numberWithBool:SHKShake.configuration.isFeedbackTypeEnabled];
     resolve(isFeedbackTypeEnabled);
+}
+
+RCT_EXPORT_METHOD(setFeedbackTypes:(nonnull NSArray*)feedbackTypesArray)
+{
+    NSMutableArray<SHKFeedbackEntry *> *feedbackTypes = [self mapArrayToFeedbackTypes:feedbackTypesArray];
+    [SHKShake setFeedbackTypes:feedbackTypes];
+}
+
+RCT_EXPORT_METHOD(getFeedbackTypes:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+{
+    NSArray<SHKFeedbackEntry *> *feedbackTypes = [SHKShake getFeedbackTypes];
+    NSArray<NSDictionary *> *feedbackTypesArray = [self mapFeedbackTypesToArray:feedbackTypes];
+    resolve(feedbackTypesArray);
 }
 
 RCT_EXPORT_METHOD(setShowIntroMessage:(BOOL)showIntroMessage)
@@ -364,18 +377,57 @@ RCT_EXPORT_METHOD(unregisterUser)
 {
     NSMutableArray<SHKShakeFile*>* shakeFiles = [NSMutableArray array];
     for(int i = 0; i < [files count]; i++) {
-        NSDictionary* file = [files objectAtIndex:i];
-        NSString* path = [file objectForKey:@"path"];
-        NSString* name = [file objectForKey:@"name"];
+        NSDictionary *file = [files objectAtIndex:i];
+        NSString *path = [file objectForKey:@"path"];
+        NSString *name = [file objectForKey:@"name"];
 
-        NSURL* url = [[NSURL alloc] initFileURLWithPath: path];
-        SHKShakeFile* attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
+        NSURL *url = [[NSURL alloc] initFileURLWithPath: path];
+        SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
 
         if (attachedFile != nil) {
             [shakeFiles addObject:attachedFile];
         }
     }
     return shakeFiles;
+}
+
+- (NSMutableArray<SHKFeedbackEntry*>*)mapArrayToFeedbackTypes:(nonnull NSArray*)feedbackTypesArray
+{
+    NSMutableArray<SHKFeedbackEntry*>* feedbackTypes = [NSMutableArray array];
+    for(int i = 0; i < [feedbackTypesArray count]; i++) {
+        NSDictionary *feedbackTypeDic = [feedbackTypesArray objectAtIndex:i];
+        NSString *title = [feedbackTypeDic objectForKey:@"title"];
+        NSString *tag = [feedbackTypeDic objectForKey:@"tag"];
+        NSString *icon = [feedbackTypeDic objectForKey:@"icon"];
+        
+        UIImage *image = [UIImage imageNamed:icon];
+        SHKFeedbackEntry *feedbackType = [SHKFeedbackEntry entryWithTitle:title andTag:tag icon:image];
+
+        if (feedbackType != nil) {
+            [feedbackTypes addObject:feedbackType];
+        }
+    }
+    return feedbackTypes;
+}
+
+- (NSArray<NSDictionary*>*)mapFeedbackTypesToArray:(nonnull NSArray<SHKFeedbackEntry*>*)feedbackTypes
+{
+    NSMutableArray<NSDictionary*>* feedbackTypesArray = [NSMutableArray array];
+    for(int i = 0; i < [feedbackTypes count]; i++) {
+        SHKFeedbackEntry *feedbackType = [feedbackTypes objectAtIndex:i];
+        
+        NSDictionary *feedbackTypeDic = [[NSDictionary alloc] init];
+        feedbackTypeDic = @{
+            @"title": feedbackType.title,
+            @"tag": feedbackType.tag,
+            @"icon": @""
+        };
+        
+        if (feedbackTypeDic != nil) {
+            [feedbackTypesArray addObject:feedbackTypeDic];
+        }
+    }
+    return feedbackTypesArray;
 }
 
 - (SHKShakeReportConfiguration*)mapToConfiguration:(nonnull NSDictionary*)configurationDic

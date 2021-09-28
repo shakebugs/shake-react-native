@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View, Image} from 'react-native';
 import Shake, {
   NetworkRequestBuilder,
   NotificationEventBuilder,
@@ -18,6 +18,7 @@ import Private from '../core/Private';
 import PushNotification from 'react-native-push-notification';
 import LogLevel from '../../../../src/models/LogLevel';
 import ShakeScreen from '../../../../src/models/ShakeScreen';
+import FeedbackType from '../../../../src/models/FeedbackType';
 
 const MainScreen = props => {
   let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -69,7 +70,7 @@ const MainScreen = props => {
     setShakeInvokingEnabled(await Shake.isInvokeShakeOnShakeDeviceEvent());
     setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
     setEmailFieldEnabled(await Shake.isEnableEmailField());
-    setFeedbackTypesEnabled(await Shake.isEnableMultipleFeedbackTypes());
+    setFeedbackTypesEnabled(await Shake.isFeedbackTypeEnabled());
     setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
     setConsoleLogsEnabled(await Shake.isConsoleLogsEnabled());
     setNetworkRequestsEnabled(await Shake.isNetworkRequestsEnabled());
@@ -127,6 +128,17 @@ const MainScreen = props => {
 
   const addMetadata = () => {
     Shake.setMetadata('Shake', 'This is a Shake metadata.');
+  };
+
+  const setCustomFeedbackTypes = async () => {
+    const feedbackType1 = new FeedbackType('Mouse', 'mouse', 'ic_mouse');
+    const feedbackType2 = new FeedbackType('Keyboard', 'keyboard', 'ic_key');
+    const feedbackType3 = new FeedbackType('Display', 'display', 'ic_display');
+
+    const ft = await Shake.getFeedbackTypes();
+    console.log(ft);
+
+    Shake.setFeedbackTypes([feedbackType1, feedbackType2, feedbackType3]);
   };
 
   const postNotification = () => {
@@ -220,6 +232,10 @@ const MainScreen = props => {
         <Button text="Silent report" onPress={silentReport} />
         <Button text="Custom log" onPress={customLog} />
         <Button text="Add metadata" onPress={addMetadata} />
+        <Button
+          text="Set custom feedback types"
+          onPress={setCustomFeedbackTypes}
+        />
         <Title style={styles.title} text="Invoking" />
         <Option
           enabled={shakeInvokingEnabled}
@@ -350,7 +366,7 @@ const MainScreen = props => {
           enabled={feedbackTypesEnabled}
           title="Feedback types"
           onValueChanged={() => {
-            Shake.setEnableMultipleFeedbackTypes(!feedbackTypesEnabled);
+            Shake.setFeedbackTypeEnabled(!feedbackTypesEnabled);
             setFeedbackTypesEnabled(!feedbackTypesEnabled);
           }}
         />

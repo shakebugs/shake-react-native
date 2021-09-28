@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
@@ -28,6 +29,7 @@ import com.shakebugs.shake.internal.data.NetworkRequest;
 import com.shakebugs.shake.internal.data.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
 import com.shakebugs.shake.privacy.NotificationEventsFilter;
+import com.shakebugs.shake.report.FeedbackType;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
@@ -35,11 +37,13 @@ import java.util.List;
 import java.util.Map;
 
 public class ShakeModule extends ReactContextBaseJavaModule {
+    private final Mapper mapper;
     private final Emitter emitter;
 
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.emitter = new Emitter(reactContext);
+        this.mapper = new Mapper(reactContext);
+        this.emitter = new Emitter(reactContext, mapper);
     }
 
     @NonNull
@@ -85,7 +89,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ShakeScreen shakeScreen = Mapper.mapToShakeScreen(shakeScreenMap);
+                ShakeScreen shakeScreen = mapper.mapToShakeScreen(shakeScreenMap);
                 Shake.show(shakeScreen);
             }
         });
@@ -102,6 +106,11 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void isEnableBlackBox(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableBlackBox());
+    }
+
+    @ReactMethod
     public void setEnableBlackBox(final boolean enableBlackBox) {
         runOnUiThread(new Runnable() {
             @Override
@@ -112,8 +121,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isEnableBlackBox(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableBlackBox());
+    public void isEnableActivityHistory(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableActivityHistory());
     }
 
     @ReactMethod
@@ -127,8 +136,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isEnableActivityHistory(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableActivityHistory());
+    public void isEnableInspectScreen(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isEnableInspectScreen());
     }
 
     @ReactMethod
@@ -142,8 +151,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isEnableInspectScreen(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableInspectScreen());
+    public void isShowFloatingReportButton(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isShowFloatingReportButton());
     }
 
     @ReactMethod
@@ -157,8 +166,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isShowFloatingReportButton(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isShowFloatingReportButton());
+    public void isInvokeShakeOnShakeDeviceEvent(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent());
     }
 
     @ReactMethod
@@ -172,8 +181,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isInvokeShakeOnShakeDeviceEvent(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent());
+    public void isInvokeShakeOnScreenshot(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnScreenshot());
     }
 
     @ReactMethod
@@ -187,8 +196,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isInvokeShakeOnScreenshot(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnScreenshot());
+    public void isScreenshotIncluded(Promise promise) {
+        promise.resolve(Shake.getReportConfiguration().isScreenshotIncluded());
     }
 
     @ReactMethod
@@ -199,11 +208,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 Shake.getReportConfiguration().setScreenshotIncluded(isScreenshotIncluded);
             }
         });
-    }
-
-    @ReactMethod
-    public void isScreenshotIncluded(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isScreenshotIncluded());
     }
 
     @ReactMethod
@@ -252,16 +256,34 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isEnableMultipleFeedbackTypes(Promise promise) {
+    public void isFeedbackTypeEnabled(Promise promise) {
         promise.resolve(Shake.getReportConfiguration().isFeedbackTypeEnabled());
     }
 
     @ReactMethod
-    public void setEnableMultipleFeedbackTypes(final boolean feedbackTypeEnabled) {
+    public void setFeedbackTypeEnabled(final boolean feedbackTypeEnabled) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setFeedbackTypeEnabled(feedbackTypeEnabled);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getFeedbackTypes(Promise promise) {
+        List<FeedbackType> feedbackTypes = Shake.getReportConfiguration().getFeedbackTypes();
+        WritableArray feedbackTypesArray = mapper.mapFeedbackTypesToArray(feedbackTypes);
+        promise.resolve(feedbackTypesArray);
+    }
+
+    @ReactMethod
+    public void setFeedbackTypes(final ReadableArray feedbackTypesArray) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<FeedbackType> feedbackTypes = mapper.mapArrayToFeedbackTypes(feedbackTypesArray);
+                Shake.getReportConfiguration().setFeedbackTypes(feedbackTypes);
             }
         });
     }
@@ -316,10 +338,9 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                LogLevel logLevel = Mapper.mapToLogLevel(logLevelMap);
-                if (logLevel != null) {
-                    Shake.log(logLevel, message);
-                }
+                LogLevel logLevel = mapper.mapToLogLevel(logLevelMap);
+                Shake.log(logLevel, message);
+
             }
         });
     }
@@ -339,11 +360,10 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final List<ShakeFile> shakeFiles = Mapper.mapToShakeFiles(filesArray);
                 Shake.onPrepareData(new ShakeReportData() {
                     @Override
                     public List<ShakeFile> attachedFiles() {
-                        return shakeFiles;
+                        return mapper.mapArrayToShakeFiles(filesArray);
                     }
                 });
             }
@@ -355,11 +375,11 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ShakeReportConfiguration configuration = Mapper.mapToConfiguration(configurationMap);
+                ShakeReportConfiguration configuration = mapper.mapToConfiguration(configurationMap);
                 ShakeReportData shakeReportData = new ShakeReportData() {
                     @Override
                     public List<ShakeFile> attachedFiles() {
-                        return Mapper.mapToShakeFiles(filesArray);
+                        return mapper.mapArrayToShakeFiles(filesArray);
                     }
                 };
 
@@ -370,13 +390,13 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void insertNetworkRequest(final ReadableMap data) {
-        NetworkRequest networkRequest = Mapper.mapToNetworkRequest(data);
+        NetworkRequest networkRequest = mapper.mapToNetworkRequest(data);
         ShakeReflection.insertNetworkRequest(networkRequest);
     }
 
     @ReactMethod
     public void insertNotificationEvent(final ReadableMap data) {
-        NotificationEvent notificationEvent = Mapper.mapToNotificationEvent(data);
+        NotificationEvent notificationEvent = mapper.mapToNotificationEvent(data);
         ShakeReflection.insertNotificationEvent(notificationEvent);
     }
 
@@ -515,7 +535,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Map<String, String> metadata = Mapper.mapToUserMetadata(metadataMap);
+                Map<String, String> metadata = mapper.mapToUserMetadata(metadataMap);
                 Shake.updateUserMetadata(metadata);
             }
         });

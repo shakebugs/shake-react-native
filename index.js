@@ -33,6 +33,7 @@ class Shake {
 
     /**
      * Starts Shake SDK.
+     *
      * @param clientId client id
      * @param clientSecret client secret
      */
@@ -43,6 +44,8 @@ class Shake {
 
     /**
      * Shows shake screen.
+     *
+     * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
      */
     static show(shakeScreen = ShakeScreen.NEW) {
         this.shake.show(shakeScreen);
@@ -50,6 +53,7 @@ class Shake {
 
     /**
      * Enables or disables Shake.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setEnabled(enabled) {
@@ -58,6 +62,7 @@ class Shake {
 
     /**
      * Enables or disables activity history.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setEnableActivityHistory(enabled) {
@@ -66,6 +71,7 @@ class Shake {
 
     /**
      * Checks if activity history is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isEnableActivityHistory() {
@@ -74,6 +80,7 @@ class Shake {
 
     /**
      * Enables or disables black box.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setEnableBlackBox(enabled) {
@@ -82,6 +89,7 @@ class Shake {
 
     /**
      * Checks if black box is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isEnableBlackBox() {
@@ -90,6 +98,7 @@ class Shake {
 
     /**
      * Enables or disables inspect screen.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setEnableInspectScreen(enabled) {
@@ -98,6 +107,7 @@ class Shake {
 
     /**
      * Checks if inspect screen is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isEnableInspectScreen() {
@@ -106,6 +116,7 @@ class Shake {
 
     /**
      * Enables or disables invoke by floating button.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setShowFloatingReportButton(enabled) {
@@ -114,6 +125,7 @@ class Shake {
 
     /**
      * Checks if floating button invoke is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isShowFloatingReportButton() {
@@ -122,6 +134,7 @@ class Shake {
 
     /**
      * Enables or disables invoke by shake.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setInvokeShakeOnShakeDeviceEvent(enabled) {
@@ -130,6 +143,7 @@ class Shake {
 
     /**
      * Checks if shake event invoke is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isInvokeShakeOnShakeDeviceEvent() {
@@ -138,6 +152,7 @@ class Shake {
 
     /**
      * Enables or disables invoke by screenshot.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setInvokeShakeOnScreenshot(enabled) {
@@ -146,6 +161,7 @@ class Shake {
 
     /**
      * Checks if screenshot invoke is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isInvokeShakeOnScreenshot() {
@@ -154,6 +170,7 @@ class Shake {
 
     /**
      * Sets if screenshot is captured with report by default.
+     *
      * @param screenshotIncluded true if included, otherwise false
      */
     static setScreenshotIncluded(screenshotIncluded) {
@@ -162,6 +179,7 @@ class Shake {
 
     /**
      * Checks if screenshot is captured with report by default.
+     *
      * @returns {Promise<*|boolean>} true if included, otherwise false
      */
     static async isScreenshotIncluded() {
@@ -170,6 +188,7 @@ class Shake {
 
     /**
      * Sets how sensitive is shaking gesture invocation.
+     *
      * @param shakingThreshold number between 1-1000 (1 weak, 1000 strong)
      */
     static setShakingThreshold(shakingThreshold) {
@@ -178,6 +197,7 @@ class Shake {
 
     /**
      * Sets how sensitive is shaking gesture invocation.
+     *
      * @returns {Promise<*|boolean>} shaking gesture sensitivity
      */
     static async getShakingThreshold() {
@@ -186,6 +206,7 @@ class Shake {
 
     /**
      * Sets files to upload with report.
+     *
      * @param files shake files to upload
      */
     static setShakeReportData(files) {
@@ -194,6 +215,7 @@ class Shake {
 
     /**
      * Sends report silently from code.
+     *
      * @param description silent report description
      * @param files silent report files
      * @param configuration silent report configuration
@@ -204,6 +226,7 @@ class Shake {
 
     /**
      * Enables or disables email field on Shake screen.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setEnableEmailField(enabled) {
@@ -212,6 +235,7 @@ class Shake {
 
     /**
      * Checks if email field on Shake screen is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isEnableEmailField() {
@@ -220,6 +244,7 @@ class Shake {
 
     /**
      * Sets email field value on the Shake screen.
+     *
      * @param value email field value
      */
     static setEmailField(value) {
@@ -228,6 +253,7 @@ class Shake {
 
     /**
      * Gets value of the email field on the Shake screen.
+     *
      * @returns {Promise<*|string>} email field value
      */
     static async getEmailField() {
@@ -236,22 +262,43 @@ class Shake {
 
     /**
      * Checks if feedback type picker on the Shake screen is visible.
+     *
      * @returns {Promise<*|boolean>} true if visible, otherwise false
      */
-    static async isEnableMultipleFeedbackTypes() {
-        return await this.shake.isEnableMultipleFeedbackTypes();
+    static async isFeedbackTypeEnabled() {
+        return await this.shake.isFeedbackTypeEnabled();
     }
 
     /**
      * Sets if feedback type picker is visible on the Shake screen.
+     *
      * @param enabled true if visible, otherwise false
      */
-    static setEnableMultipleFeedbackTypes(enabled) {
-        this.shake.setEnableMultipleFeedbackTypes(enabled);
+    static setFeedbackTypeEnabled(enabled) {
+        this.shake.setFeedbackTypeEnabled(enabled);
+    }
+
+    /**
+     * Gets ticket feedback types.
+     *
+     * @returns {Promise<*|boolean>} list of {@link FeedbackType}
+     */
+    static async getFeedbackTypes() {
+        return await this.shake.getFeedbackTypes();
+    }
+
+    /**
+     * Sets ticket feedback types.
+     *
+     * @param feedbackTypes list of {@link FeedbackType}
+     */
+    static setFeedbackTypes(feedbackTypes) {
+        this.shake.setFeedbackTypes(feedbackTypes);
     }
 
     /**
      * Checks if intro message will be shown on the first app run.
+     *
      * @returns {Promise<*|boolean>} true if yes, otherwise false
      */
     static async getShowIntroMessage() {
@@ -260,6 +307,7 @@ class Shake {
 
     /**
      * Sets if intro message will be shown on the first app run.
+     *
      * @param enabled true if yes, otherwise false
      */
     static setShowIntroMessage(enabled) {
@@ -268,6 +316,7 @@ class Shake {
 
     /**
      * Checks if auto video recording will be enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isAutoVideoRecording() {
@@ -276,6 +325,7 @@ class Shake {
 
     /**
      * Enables or disables auto video recording.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setAutoVideoRecording(enabled) {
@@ -284,6 +334,7 @@ class Shake {
 
     /**
      * Checks if console logs are attached to the report.
+     *
      * @returns {Promise<*|boolean>} true if attached, otherwise false
      */
     static async isConsoleLogsEnabled() {
@@ -292,6 +343,7 @@ class Shake {
 
     /**
      * Sets if console logs are attached to the report.
+     *
      * @param enabled true if attached, otherwise false
      */
     static setConsoleLogsEnabled(enabled) {
@@ -300,6 +352,7 @@ class Shake {
 
     /**
      * Checks if network requests are attached to the report.
+     *
      * @returns {Promise<*|boolean>} true if attached, otherwise false
      */
     static async isNetworkRequestsEnabled() {
@@ -308,6 +361,7 @@ class Shake {
 
     /**
      * Sets if network requests are attached to the report.
+     *
      * @param enabled true if attached, otherwise false
      */
     static setNetworkRequestsEnabled(enabled) {
@@ -316,6 +370,7 @@ class Shake {
 
     /**
      * Adds custom network request to the Shake report.
+     *
      * @param requestBuilder request builder
      */
     static insertNetworkRequest(requestBuilder) {
@@ -324,6 +379,7 @@ class Shake {
 
     /**
      * Adds filter for network requests.
+     *
      * @param filter filter function
      */
     static setNetworkRequestsFilter(filter) {
@@ -332,6 +388,7 @@ class Shake {
 
     /**
      * Adds custom notification event to the Shake report.
+     *
      * @param notificationBuilder notification builder
      */
     static insertNotificationEvent(notificationBuilder) {
@@ -340,6 +397,7 @@ class Shake {
 
     /**
      * Adds filter for notification events.
+     *
      * @param filter filter function
      */
     static setNotificationEventsFilter(filter) {
@@ -348,6 +406,7 @@ class Shake {
 
     /**
      * Logs a custom message to the report.
+     *
      * @param logLevel LogLevel value
      * @param message log message
      */
@@ -357,6 +416,7 @@ class Shake {
 
     /**
      * Adds metadata to the report.
+     *
      * @param key metadata key
      * @param value metadata value
      */
@@ -366,6 +426,7 @@ class Shake {
 
     /**
      * Masks view on the screenshot.
+     *
      * @param viewRef view reference
      */
     static addPrivateView(viewRef) {
@@ -375,6 +436,7 @@ class Shake {
 
     /**
      * Removes view from private views.
+     *
      * @param viewRef view reference
      */
     static removePrivateView(viewRef) {
@@ -391,6 +453,7 @@ class Shake {
 
     /**
      * Enables or disables automatic sensitive data redaction.
+     *
      * @param enabled true if enabled, otherwise false
      */
     static setSensitiveDataRedactionEnabled(enabled) {
@@ -399,6 +462,7 @@ class Shake {
 
     /**
      * Checks if automatic sensitive data redaction is enabled.
+     *
      * @returns {Promise<*|boolean>} true if enabled, otherwise false
      */
     static async isSensitiveDataRedactionEnabled() {

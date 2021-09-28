@@ -2,7 +2,7 @@ declare module "react-native-shake" {
     export function start(clientId: string, clientSecret: string): void;
 
     export function show(): void;
-    
+
     export function show(shakeScreen: ShakeScreen): void;
 
     export function setEnabled(shakeEnabled: boolean): void;
@@ -39,9 +39,13 @@ declare module "react-native-shake" {
 
     export function setEmailField(email: string): void;
 
-    export function isEnableMultipleFeedbackTypes(): Promise<boolean>;
+    export function isFeedbackTypeEnabled(): Promise<boolean>;
 
-    export function setEnableMultipleFeedbackTypes(feedbackTypesEnabled: boolean): void;
+    export function setFeedbackTypeEnabled(feedbackTypeEnabled: boolean): void;
+
+    export function getFeedbackTypes(): Promise<Array<FeedbackType>>;
+
+    export function setFeedbackTypes(feedbackTypes: Array<FeedbackType>): void;
 
     export function getShowIntroMessage(): Promise<boolean>;
 
@@ -190,5 +194,11 @@ declare module "react-native-shake" {
         static HOME: ShakeScreen;
         static NEW: ShakeScreen;
         value: string;
+    }
+
+    export class FeedbackType {
+        title: string;
+        tag: string;
+        icon: string;
     }
 }
