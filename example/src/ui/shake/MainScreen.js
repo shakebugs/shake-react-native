@@ -97,16 +97,16 @@ const MainScreen = props => {
   };
 
   const silentReport = () => {
-    const reportConfig = new ShakeReportConfiguration();
-    reportConfig.blackBoxData = true;
-    reportConfig.activityHistoryData = true;
-    reportConfig.screenshot = true;
-    reportConfig.showReportSentMessage = false;
+    const configuration = new ShakeReportConfiguration();
+    configuration.blackBoxData = true;
+    configuration.activityHistoryData = true;
+    configuration.screenshot = true;
+    configuration.showReportSentMessage = false;
 
     Shake.silentReport(
       'Silent reports are working!',
       [ShakeFile.create(path), ShakeFile.create(path, 'customName')],
-      reportConfig,
+      configuration,
     );
   };
 
@@ -134,9 +134,6 @@ const MainScreen = props => {
     const feedbackType1 = new FeedbackType('Mouse', 'mouse', 'ic_mouse');
     const feedbackType2 = new FeedbackType('Keyboard', 'keyboard', 'ic_key');
     const feedbackType3 = new FeedbackType('Display', 'display', 'ic_display');
-
-    const ft = await Shake.getFeedbackTypes();
-    console.log(ft);
 
     Shake.setFeedbackTypes([feedbackType1, feedbackType2, feedbackType3]);
   };

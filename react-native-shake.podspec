@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "Shake-Staging", "~> 15.0.0-rc"
+  s.dependency "#{ENV['IOS_DEPENDENCY']}", "~> 15.0.0-rc"
   # ...
   # s.dependency "..."
 end

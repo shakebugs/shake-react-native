@@ -181,7 +181,7 @@ RCT_EXPORT_METHOD(isFeedbackTypeEnabled:(RCTPromiseResolveBlock)resolve:(RCTProm
     resolve(isFeedbackTypeEnabled);
 }
 
-RCT_EXPORT_METHOD(setFeedbackTypes:(nonnull NSArray*)feedbackTypesArray)
+RCT_EXPORT_METHOD(setFeedbackTypes:(NSArray*)feedbackTypesArray)
 {
     NSMutableArray<SHKFeedbackEntry *> *feedbackTypes = [self mapArrayToFeedbackTypes:feedbackTypesArray];
     [SHKShake setFeedbackTypes:feedbackTypes];
@@ -234,11 +234,12 @@ RCT_EXPORT_METHOD(setMetadata:(NSString*)key:(NSString*)value)
 
 RCT_EXPORT_METHOD(log:(NSDictionary *)logLevelDic:(NSString *)message)
 {
+    if (message == nil) message = @"";
     LogLevel logLevel = [self mapToLogLevel:logLevelDic];
     [SHKShake logWithLevel:logLevel message:message];
 }
 
-RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files)
+RCT_EXPORT_METHOD(setShakeReportData:(NSArray *)files)
 {
     SHKShake.onPrepareReportData = ^NSArray<SHKShakeFile *> * _Nonnull {
         NSMutableArray<SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
@@ -246,7 +247,7 @@ RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files)
     };
 }
 
-RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray *)files:(nonnull NSDictionary *)configurationMap)
+RCT_EXPORT_METHOD(silentReport:(NSString *)description:(NSArray *)files:(NSDictionary *)configurationMap)
 {
     NSArray<SHKShakeFile *> * (^fileAttachBlock)(void) = ^NSArray<SHKShakeFile *> *(void) {
         NSMutableArray <SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
@@ -261,13 +262,17 @@ RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray 
 RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)requestDict)
 {
     NSDictionary* networkRequest = [self mapToNetworkRequest:requestDict];
-    [self insertRNNetworkRequest:networkRequest];
+    if (networkRequest != nil) {
+        [self insertRNNetworkRequest:networkRequest];
+    }
 }
 
 RCT_REMAP_METHOD(insertNotificationEvent, data:(NSDictionary*)notificationDict)
 {
     NSDictionary* notificationEvent = [self mapToNotificationEvent:notificationDict];
-    [self insertRNNotificationEvent:notificationEvent];
+    if (notificationEvent != nil) {
+        [self insertRNNotificationEvent:notificationEvent];
+    }
 }
 
 RCT_EXPORT_METHOD(startNotificationsEmitter)
@@ -373,8 +378,10 @@ RCT_EXPORT_METHOD(unregisterUser)
     return showOption;
 }
 
-- (NSMutableArray<SHKShakeFile*>*)mapToShakeFiles:(nonnull NSArray*)files
+- (NSMutableArray<SHKShakeFile*>*)mapToShakeFiles:(NSArray*)files
 {
+    if (files == nil) return nil;
+
     NSMutableArray<SHKShakeFile*>* shakeFiles = [NSMutableArray array];
     for(int i = 0; i < [files count]; i++) {
         NSDictionary *file = [files objectAtIndex:i];
@@ -391,15 +398,17 @@ RCT_EXPORT_METHOD(unregisterUser)
     return shakeFiles;
 }
 
-- (NSMutableArray<SHKFeedbackEntry*>*)mapArrayToFeedbackTypes:(nonnull NSArray*)feedbackTypesArray
+- (NSMutableArray<SHKFeedbackEntry*>*)mapArrayToFeedbackTypes:(NSArray *)feedbackTypesArray
 {
+    if (feedbackTypesArray == nil) return nil;
+
     NSMutableArray<SHKFeedbackEntry*>* feedbackTypes = [NSMutableArray array];
     for(int i = 0; i < [feedbackTypesArray count]; i++) {
         NSDictionary *feedbackTypeDic = [feedbackTypesArray objectAtIndex:i];
         NSString *title = [feedbackTypeDic objectForKey:@"title"];
         NSString *tag = [feedbackTypeDic objectForKey:@"tag"];
         NSString *icon = [feedbackTypeDic objectForKey:@"icon"];
-        
+
         UIImage *image = [UIImage imageNamed:icon];
         SHKFeedbackEntry *feedbackType = [SHKFeedbackEntry entryWithTitle:title andTag:tag icon:image];
 
@@ -410,19 +419,21 @@ RCT_EXPORT_METHOD(unregisterUser)
     return feedbackTypes;
 }
 
-- (NSArray<NSDictionary*>*)mapFeedbackTypesToArray:(nonnull NSArray<SHKFeedbackEntry*>*)feedbackTypes
+- (NSArray<NSDictionary*>*)mapFeedbackTypesToArray:(NSArray<SHKFeedbackEntry *> *)feedbackTypes
 {
+    if (feedbackTypes == nil) return nil;
+
     NSMutableArray<NSDictionary*>* feedbackTypesArray = [NSMutableArray array];
     for(int i = 0; i < [feedbackTypes count]; i++) {
         SHKFeedbackEntry *feedbackType = [feedbackTypes objectAtIndex:i];
-        
+
         NSDictionary *feedbackTypeDic = [[NSDictionary alloc] init];
         feedbackTypeDic = @{
             @"title": feedbackType.title,
             @"tag": feedbackType.tag,
             @"icon": @""
         };
-        
+
         if (feedbackTypeDic != nil) {
             [feedbackTypesArray addObject:feedbackTypeDic];
         }
@@ -430,8 +441,10 @@ RCT_EXPORT_METHOD(unregisterUser)
     return feedbackTypesArray;
 }
 
-- (SHKShakeReportConfiguration*)mapToConfiguration:(nonnull NSDictionary*)configurationDic
+- (SHKShakeReportConfiguration*)mapToConfiguration:(NSDictionary*)configurationDic
 {
+    if (configurationDic == nil) return nil;
+
     BOOL includesBlackBoxData = [[configurationDic objectForKey:@"blackBoxData"] boolValue];
     BOOL includesActivityHistoryData = [[configurationDic objectForKey:@"activityHistoryData"] boolValue];
     BOOL includesScreenshotImage = [[configurationDic objectForKey:@"screenshot"] boolValue];
