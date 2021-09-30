@@ -14,6 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		41EA5607E1494A3CB79F3C92 /* HKGrotesk-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = E00A22DD20BE496093EC6617 /* HKGrotesk-Regular.otf */; };
 		98B32628B0EB41388DA43CC1 /* HKGrotesk-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0AAF37C588304245AE30F947 /* HKGrotesk-SemiBold.otf */; };
+		EA306CE92705E55F00C98857 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA306CE82705E55F00C98857 /* File.swift */; };
 		EA3611B026FCCF3B009EA50C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA3611AF26FCCF3B009EA50C /* LaunchScreen.storyboard */; };
 		F4311604BB8DA34E94ACE60F /* libPods-example-exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4884AC13A2FE14BC6CC0457F /* libPods-example-exampleTests.a */; };
 /* End PBXBuildFile section */
@@ -60,6 +61,8 @@
 		E00A22DD20BE496093EC6617 /* HKGrotesk-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "HKGrotesk-Regular.otf"; path = "../src/assets/fonts/HKGrotesk-Regular.otf"; sourceTree = "<group>"; };
 		E25F3ACB3181AC1C86573E00 /* Pods-example-exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-exampleTests.debug.xcconfig"; path = "Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E513E4017A8F26E55FF60542 /* Pods-example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example.release.xcconfig"; path = "Target Support Files/Pods-example/Pods-example.release.xcconfig"; sourceTree = "<group>"; };
+		EA306CE72705E55E00C98857 /* example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "example-Bridging-Header.h"; sourceTree = "<group>"; };
+		EA306CE82705E55F00C98857 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		EA3611AF26FCCF3B009EA50C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -115,6 +118,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				EA3611AF26FCCF3B009EA50C /* LaunchScreen.storyboard */,
+				EA306CE82705E55F00C98857 /* File.swift */,
+				EA306CE72705E55E00C98857 /* example-Bridging-Header.h */,
 			);
 			name = example;
 			sourceTree = "<group>";
@@ -258,7 +263,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = L32X45HDEH;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1300;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -477,6 +482,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				EA306CE92705E55F00C98857 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,6 +586,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example.pr;
 				PRODUCT_NAME = Shake;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -590,6 +597,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 95376795FE015D0CE79F3EA2 /* Pods-example-exampleTests.developmentdebug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -685,6 +693,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example.pr;
 				PRODUCT_NAME = Shake;
 				PROVISIONING_PROFILE_SPECIFIER = "Shake React Native Example PR";
+				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -694,6 +703,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8DC685346C6549A0378DB6BA /* Pods-example-exampleTests.developmentrelease.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = exampleTests/Info.plist;
@@ -798,6 +808,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example;
 				PRODUCT_NAME = Shake;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -808,6 +819,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 71B0587266CE2A947F7F0B03 /* Pods-example-exampleTests.productiondebug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -915,6 +927,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example.rc;
 				PRODUCT_NAME = Shake;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -925,6 +938,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 73F7A1EE2D218D6FBA07D146 /* Pods-example-exampleTests.stagingdebug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1020,6 +1034,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example;
 				PRODUCT_NAME = Shake;
 				PROVISIONING_PROFILE_SPECIFIER = "Shake React Native Example";
+				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1029,6 +1044,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FB47DBD0C2CC2084FC820CC1 /* Pods-example-exampleTests.productionrelease.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = exampleTests/Info.plist;
@@ -1121,6 +1137,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shakebugs.react.example.rc;
 				PRODUCT_NAME = Shake;
 				PROVISIONING_PROFILE_SPECIFIER = "Shake React Native Example RC";
+				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1130,6 +1147,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 820F856547F70AA65EB1D499 /* Pods-example-exampleTests.stagingrelease.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = exampleTests/Info.plist;
