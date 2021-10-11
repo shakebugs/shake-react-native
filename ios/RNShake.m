@@ -12,7 +12,6 @@
     self = [super init];
     if (self) {
         [self setPlatformInfo];
-        [self disableNetworkRequests];
     }
     return self;
 }
@@ -508,11 +507,6 @@ RCT_EXPORT_METHOD(unregisterUser)
         @"sdkVersion": @"10.0.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
-}
-
-- (void)disableNetworkRequests
-{
-    [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:@YES];
 }
 
 - (void)insertRNNotificationEvent:(nonnull NSDictionary*)notificationEvent
