@@ -504,7 +504,7 @@ RCT_EXPORT_METHOD(unregisterUser)
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"10.0.0"
+        @"sdkVersion": @"15.0.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
 }
