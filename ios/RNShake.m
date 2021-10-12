@@ -404,6 +404,7 @@ RCT_EXPORT_METHOD(unregisterUser)
     NSMutableArray<SHKFeedbackEntry*>* feedbackTypes = [NSMutableArray array];
     for(int i = 0; i < [feedbackTypesArray count]; i++) {
         NSDictionary *feedbackTypeDic = [feedbackTypesArray objectAtIndex:i];
+
         NSString *title = [feedbackTypeDic objectForKey:@"title"];
         NSString *tag = [feedbackTypeDic objectForKey:@"tag"];
         NSString *icon = [feedbackTypeDic objectForKey:@"icon"];

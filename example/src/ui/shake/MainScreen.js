@@ -130,8 +130,8 @@ const MainScreen = props => {
     Shake.setMetadata('Shake', 'This is a Shake metadata.');
   };
 
-  const setCustomFeedbackTypes = async () => {
-    const feedbackType1 = new FeedbackType('Mouse', 'mouse', 'ic_mouse');
+  const setFeedbackTypes = async () => {
+    const feedbackType1 = new FeedbackType('Mouse', 'mouse');
     const feedbackType2 = new FeedbackType('Keyboard', 'keyboard', 'ic_key');
     const feedbackType3 = new FeedbackType('Display', 'display', 'ic_display');
 
@@ -229,10 +229,7 @@ const MainScreen = props => {
         <Button text="Silent report" onPress={silentReport} />
         <Button text="Custom log" onPress={customLog} />
         <Button text="Add metadata" onPress={addMetadata} />
-        <Button
-          text="Set custom feedback types"
-          onPress={setCustomFeedbackTypes}
-        />
+        <Button text="Set feedback types" onPress={setFeedbackTypes} />
         <Title style={styles.title} text="Invoking" />
         <Option
           enabled={shakeInvokingEnabled}
