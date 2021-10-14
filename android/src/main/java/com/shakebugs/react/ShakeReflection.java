@@ -15,7 +15,8 @@ public class ShakeReflection {
 
     public static void start(Activity activity, String clientId, String clientSecret) {
         try {
-            Method method = Reflection.getMethod(Class.forName(CLASS_NAME), "startFromActivity", Activity.class, String.class, String.class);
+            Method method = Reflection.getMethod(Class.forName(CLASS_NAME), "startFromWrapper", Activity.class, String.class, String.class);
+            //noinspection ConstantConditions
             method.invoke(null, activity, clientId, clientSecret);
         } catch (Exception e) {
             Logger.e("Failed to start Shake", e);
@@ -25,6 +26,7 @@ public class ShakeReflection {
     public static void setShakeInfo(ShakeInfo shakeInfo) {
         try {
             Method method = Reflection.getMethod(Class.forName(CLASS_NAME), "setShakeInfo", ShakeInfo.class);
+            //noinspection ConstantConditions
             method.invoke(null, shakeInfo);
         } catch (Exception e) {
             Logger.e("Failed to set shake info", e);
@@ -34,16 +36,17 @@ public class ShakeReflection {
     public static void insertNetworkRequest(NetworkRequest networkRequest) {
         try {
             Method method = Reflection.getMethod(Class.forName(CLASS_NAME), "insertNetworkRequest", NetworkRequest.class);
+            //noinspection ConstantConditions
             method.invoke(null, networkRequest);
         } catch (Exception e) {
             Logger.e("Failed to insert network request", e);
         }
     }
 
-
     public static void insertNotificationEvent(NotificationEvent notificationEvent) {
         try {
             Method method = Reflection.getMethod(Class.forName(CLASS_NAME), "insertNotificationEvent", NotificationEvent.class);
+            //noinspection ConstantConditions
             method.invoke(null, notificationEvent);
         } catch (Exception e) {
             Logger.e("Failed to insert notification event", e);

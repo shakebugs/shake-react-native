@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "14.1.0",
+  "version": "15.0.0",
   "private": true,
   "config": {
     "android": {
@@ -28,9 +28,9 @@
     "build:android:prd": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_prd \"npm run bundle:android && cd android && ./gradlew assembleProductionRelease\"",
     "clean:android": "cross-env-shell \"cd android && ./gradlew clean && cd ..\"",
     "ios": "npm run ios:dev",
-    "ios:dev": "export IOS_DEPENDENCY=$npm_package_config_ios_dev && npm run clean:ios && npm run ios:run:dev",
-    "ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run clean:ios && npm run ios:run:stg",
-    "ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd && npm run clean:ios && npm run ios:run:prd",
+    "ios:dev": "export IOS_DEPENDENCY=$npm_package_config_ios_dev && npm run ios:run:dev",
+    "ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run ios:run:stg",
+    "ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd  && npm run ios:run:prd",
     "ios:run:dev": "react-native run-ios --scheme=Development --configuration=DevelopmentDebug",
     "ios:run:stg": "react-native run-ios --scheme=Staging --configuration=StagingDebug",
     "ios:run:prd": "react-native run-ios --scheme=Production --configuration=ProductionDebug",
@@ -54,14 +54,14 @@
     "@react-navigation/native": "^5.1.7",
     "@react-navigation/stack": "^5.2.14",
     "axios": "^0.20.0",
-    "react": "16.11.0",
-    "react-native": "0.62.2",
+    "react": "17.0.2",
+    "react-native": "0.65.1",
     "react-native-btr": "^1.1.5",
     "react-native-device-info": "^5.6.1",
     "react-native-fs": ">=2.16.6",
-    "react-native-gesture-handler": "^1.6.1",
+    "react-native-gesture-handler": "^1.10.3",
     "react-native-maps": "0.27.1",
-    "react-native-push-notification": "^7.2.3",
+    "react-native-push-notification": "^7.3.1",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.7.0",
@@ -70,16 +70,17 @@
     "react-native-webview": "^9.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/runtime": "^7.9.2",
-    "@react-native-community/eslint-config": "^1.0.0",
-    "babel-jest": "^25.3.0",
-    "cross-env": "^7.0.2",
-    "eslint": "^6.8.0",
-    "jest": "^25.3.0",
-    "metro-react-native-babel-preset": "^0.59.0",
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.15",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.14.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.66.0",
+    "react-native-codegen": "^0.0.7",
+    "react-test-renderer": "17.0.2",
     "prettier": "2.2.1",
-    "react-test-renderer": "16.11.0"
+    "cross-env": "^7.0.2"
   },
   "jest": {
     "preset": "react-native"

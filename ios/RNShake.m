@@ -3,7 +3,7 @@
 #import <Shake/Shake.h>
 #import <Shake/SHKShakeConfiguration.h>
 #import <Shake/SHKShakeFile.h>
-#import <Shake/SHKShakeReportData.h>
+#import <Shake/SHKShakeReportConfiguration.h>
 
 @implementation RNShake
 
@@ -12,7 +12,6 @@
     self = [super init];
     if (self) {
         [self setPlatformInfo];
-        [self disableNetworkRequests];
     }
     return self;
 }
@@ -40,9 +39,10 @@ RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)cli
     [SHKShake startWithClientId:clientId clientSecret:clientSecret];
 }
 
-RCT_EXPORT_METHOD(show)
+RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
 {
-    [SHKShake show];
+    SHKShowOption showOption = [self mapToShowOption:showOptionDic];
+    [SHKShake show:showOption];
 }
 
 RCT_EXPORT_METHOD(setEnabled:(BOOL)enabled)
@@ -115,12 +115,37 @@ RCT_EXPORT_METHOD(setInvokeShakeOnScreenshot:(BOOL)invokeOnScreenshot)
     SHKShake.configuration.isInvokedByScreenshot = invokeOnScreenshot;
 }
 
-RCT_REMAP_METHOD(isInvokeShakeOnScreenshot, withResolver:(RCTPromiseResolveBlock)resolve
+RCT_REMAP_METHOD(isInvokeShakeOnScreenshot, isInvokeShakeOnScreenshotwithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isInvokeOnScreenshot = [NSNumber numberWithBool:SHKShake.configuration.isInvokedByScreenshot];
     resolve(isInvokeOnScreenshot);
 }
+
+RCT_EXPORT_METHOD(setScreenshotIncluded:(BOOL)screenshotIncluded)
+{
+    SHKShake.configuration.isScreenshotIncluded = screenshotIncluded;
+}
+
+RCT_REMAP_METHOD(isScreenshotIncluded, isScreenshotIncludedwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *isScreenshotIncluded = [NSNumber numberWithBool:SHKShake.configuration.isScreenshotIncluded];
+    resolve(isScreenshotIncluded);
+}
+
+RCT_EXPORT_METHOD(setShakingThreshold:(float)shakingThreshold)
+{
+    SHKShake.configuration.shakingThreshold = shakingThreshold;
+}
+
+RCT_REMAP_METHOD(getShakingThreshold, getShakingThresholdwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *shakingThreshold = [NSNumber numberWithFloat:SHKShake.configuration.shakingThreshold];
+    resolve(shakingThreshold);
+}
+
 
 RCT_EXPORT_METHOD(setEnableEmailField:(BOOL)isEmailFieldEnabled)
 {
@@ -144,15 +169,28 @@ RCT_EXPORT_METHOD(getEmailField:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejec
     resolve(emailField);
 }
 
-RCT_EXPORT_METHOD(setEnableMultipleFeedbackTypes:(BOOL)isFeedbackTypeEnabled)
+RCT_EXPORT_METHOD(setFeedbackTypeEnabled:(BOOL)isFeedbackTypeEnabled)
 {
     SHKShake.configuration.isFeedbackTypeEnabled = isFeedbackTypeEnabled;
 }
 
-RCT_EXPORT_METHOD(isEnableMultipleFeedbackTypes:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(isFeedbackTypeEnabled:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *isFeedbackTypeEnabled = [NSNumber numberWithBool:SHKShake.configuration.isFeedbackTypeEnabled];
     resolve(isFeedbackTypeEnabled);
+}
+
+RCT_EXPORT_METHOD(setFeedbackTypes:(NSArray*)feedbackTypesArray)
+{
+    NSMutableArray<SHKFeedbackEntry *> *feedbackTypes = [self mapArrayToFeedbackTypes:feedbackTypesArray];
+    [SHKShake setFeedbackTypes:feedbackTypes];
+}
+
+RCT_EXPORT_METHOD(getFeedbackTypes:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+{
+    NSArray<SHKFeedbackEntry *> *feedbackTypes = [SHKShake getFeedbackTypes];
+    NSArray<NSDictionary *> *feedbackTypesArray = [self mapFeedbackTypesToArray:feedbackTypes];
+    resolve(feedbackTypesArray);
 }
 
 RCT_EXPORT_METHOD(setShowIntroMessage:(BOOL)showIntroMessage)
@@ -195,11 +233,12 @@ RCT_EXPORT_METHOD(setMetadata:(NSString*)key:(NSString*)value)
 
 RCT_EXPORT_METHOD(log:(NSDictionary *)logLevelDic:(NSString *)message)
 {
+    if (message == nil) message = @"";
     LogLevel logLevel = [self mapToLogLevel:logLevelDic];
     [SHKShake logWithLevel:logLevel message:message];
 }
 
-RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files)
+RCT_EXPORT_METHOD(setShakeReportData:(NSArray *)files)
 {
     SHKShake.onPrepareReportData = ^NSArray<SHKShakeFile *> * _Nonnull {
         NSMutableArray<SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
@@ -207,26 +246,32 @@ RCT_EXPORT_METHOD(setShakeReportData:(nonnull NSArray *)files)
     };
 }
 
-RCT_EXPORT_METHOD(silentReport:(nonnull NSString *)description:(nonnull NSArray *)files:(nonnull NSDictionary *)configurationMap)
+RCT_EXPORT_METHOD(silentReport:(NSString *)description:(NSArray *)files:(NSDictionary *)configurationMap)
 {
-    NSMutableArray <SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
+    NSArray<SHKShakeFile *> * (^fileAttachBlock)(void) = ^NSArray<SHKShakeFile *> *(void) {
+        NSMutableArray <SHKShakeFile*> *shakeFiles = [self mapToShakeFiles:files];
+        return shakeFiles;
+    };
 
-    SHKShakeReportConfiguration* reportConfiguration = [self mapToConfiguration:configurationMap];
-    SHKShakeReportData *reportData = [[SHKShakeReportData alloc] initWithBugDescription:description attachedFiles:[NSArray arrayWithArray:shakeFiles]];
+    SHKShakeReportConfiguration* conf = [self mapToConfiguration:configurationMap];
 
-    [SHKShake silentReportWithReportData:reportData reportConfiguration:reportConfiguration];
+    [SHKShake silentReportWithDescription:description fileAttachBlock:fileAttachBlock reportConfiguration:conf];
 }
 
 RCT_EXPORT_METHOD(insertNetworkRequest:(NSDictionary*)requestDict)
 {
     NSDictionary* networkRequest = [self mapToNetworkRequest:requestDict];
-    [self insertRNNetworkRequest:networkRequest];
+    if (networkRequest != nil) {
+        [self insertRNNetworkRequest:networkRequest];
+    }
 }
 
 RCT_REMAP_METHOD(insertNotificationEvent, data:(NSDictionary*)notificationDict)
 {
     NSDictionary* notificationEvent = [self mapToNotificationEvent:notificationDict];
-    [self insertRNNotificationEvent:notificationEvent];
+    if (notificationEvent != nil) {
+        [self insertRNNotificationEvent:notificationEvent];
+    }
 }
 
 RCT_EXPORT_METHOD(startNotificationsEmitter)
@@ -276,6 +321,26 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
     resolve(isSensitiveDataRedactionEnabled);
 }
 
+RCT_EXPORT_METHOD(registerUser:(NSString *)userId)
+{
+    [SHKShake registerUserWithUserId:userId];
+}
+
+RCT_EXPORT_METHOD(updateUserId:(NSString *)userId)
+{
+    [SHKShake updateUserId:userId];
+}
+
+RCT_EXPORT_METHOD(updateUserMetadata:(NSDictionary *)metadataDic)
+{
+    [SHKShake updateUserMetadata:metadataDic];
+}
+
+RCT_EXPORT_METHOD(unregisterUser)
+{
+    [SHKShake unregisterUser];
+}
+
 // Mappers
 
 - (LogLevel)mapToLogLevel:(NSDictionary*)logLevelDic
@@ -298,16 +363,32 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
     return logLevel;
 }
 
-- (NSMutableArray<SHKShakeFile*>*)mapToShakeFiles:(nonnull NSArray*)files
+- (SHKShowOption)mapToShowOption:(NSDictionary*)showOptionDic
 {
+    NSString *value = [showOptionDic objectForKey:@"value"];
+
+    SHKShowOption showOption = SHKShowOptionHome;
+
+    if ([value isEqualToString:@"HOME"])
+        showOption = SHKShowOptionHome;
+    if ([value isEqualToString:@"NEW"])
+        showOption = SHKShowOptionNew;
+
+    return showOption;
+}
+
+- (NSMutableArray<SHKShakeFile*>*)mapToShakeFiles:(NSArray*)files
+{
+    if (files == nil) return nil;
+
     NSMutableArray<SHKShakeFile*>* shakeFiles = [NSMutableArray array];
     for(int i = 0; i < [files count]; i++) {
-        NSDictionary* file = [files objectAtIndex:i];
-        NSString* path = [file objectForKey:@"path"];
-        NSString* name = [file objectForKey:@"name"];
+        NSDictionary *file = [files objectAtIndex:i];
+        NSString *path = [file objectForKey:@"path"];
+        NSString *name = [file objectForKey:@"name"];
 
-        NSURL* url = [[NSURL alloc] initFileURLWithPath: path];
-        SHKShakeFile* attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
+        NSURL *url = [[NSURL alloc] initFileURLWithPath: path];
+        SHKShakeFile *attachedFile = [[SHKShakeFile alloc] initWithName:name andFileURL:url];
 
         if (attachedFile != nil) {
             [shakeFiles addObject:attachedFile];
@@ -316,20 +397,66 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
     return shakeFiles;
 }
 
-- (SHKShakeReportConfiguration*)mapToConfiguration:(nonnull NSDictionary*)configurationDic
+- (NSMutableArray<SHKFeedbackEntry*>*)mapArrayToFeedbackTypes:(NSArray *)feedbackTypesArray
 {
+    if (feedbackTypesArray == nil) return nil;
+
+    NSMutableArray<SHKFeedbackEntry*>* feedbackTypes = [NSMutableArray array];
+    for(int i = 0; i < [feedbackTypesArray count]; i++) {
+        NSDictionary *feedbackTypeDic = [feedbackTypesArray objectAtIndex:i];
+
+        NSString *title = [feedbackTypeDic objectForKey:@"title"];
+        NSString *tag = [feedbackTypeDic objectForKey:@"tag"];
+        NSString *icon = [feedbackTypeDic objectForKey:@"icon"];
+
+        UIImage *image = [UIImage imageNamed:icon];
+        SHKFeedbackEntry *feedbackType = [SHKFeedbackEntry entryWithTitle:title andTag:tag icon:image];
+
+        if (feedbackType != nil) {
+            [feedbackTypes addObject:feedbackType];
+        }
+    }
+    return feedbackTypes;
+}
+
+- (NSArray<NSDictionary*>*)mapFeedbackTypesToArray:(NSArray<SHKFeedbackEntry *> *)feedbackTypes
+{
+    if (feedbackTypes == nil) return nil;
+
+    NSMutableArray<NSDictionary*>* feedbackTypesArray = [NSMutableArray array];
+    for(int i = 0; i < [feedbackTypes count]; i++) {
+        SHKFeedbackEntry *feedbackType = [feedbackTypes objectAtIndex:i];
+
+        NSDictionary *feedbackTypeDic = [[NSDictionary alloc] init];
+        feedbackTypeDic = @{
+            @"title": feedbackType.title,
+            @"tag": feedbackType.tag,
+            @"icon": @""
+        };
+
+        if (feedbackTypeDic != nil) {
+            [feedbackTypesArray addObject:feedbackTypeDic];
+        }
+    }
+    return feedbackTypesArray;
+}
+
+- (SHKShakeReportConfiguration*)mapToConfiguration:(NSDictionary*)configurationDic
+{
+    if (configurationDic == nil) return nil;
+
     BOOL includesBlackBoxData = [[configurationDic objectForKey:@"blackBoxData"] boolValue];
     BOOL includesActivityHistoryData = [[configurationDic objectForKey:@"activityHistoryData"] boolValue];
     BOOL includesScreenshotImage = [[configurationDic objectForKey:@"screenshot"] boolValue];
     BOOL showsToastMessageOnSend = [[configurationDic objectForKey:@"showReportSentMessage"] boolValue];
 
-    SHKShakeReportConfiguration *reportConfiguration = [[SHKShakeReportConfiguration alloc] init];
-    reportConfiguration.includesBlackBoxData = includesBlackBoxData;
-    reportConfiguration.includesActivityHistoryData = includesActivityHistoryData;
-    reportConfiguration.includesScreenshotImage = includesScreenshotImage;
-    reportConfiguration.showsToastMessageOnSend = showsToastMessageOnSend;
+    SHKShakeReportConfiguration *conf = SHKShakeReportConfiguration.new;
+    conf.includesBlackBoxData = includesBlackBoxData;
+    conf.includesActivityHistoryData = includesActivityHistoryData;
+    conf.includesScreenshotImage = includesScreenshotImage;
+    conf.showsToastMessageOnSend = showsToastMessageOnSend;
 
-    return reportConfiguration;
+    return conf;
 }
 
 - (NSDictionary*)mapToNetworkRequest:(nonnull NSDictionary*)requestDict
@@ -378,14 +505,9 @@ RCT_EXPORT_METHOD(isSensitiveDataRedactionEnabled:(RCTPromiseResolveBlock)resolv
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"10.0.0"
+        @"sdkVersion": @"15.0.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
-}
-
-- (void)disableNetworkRequests
-{
-    [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:@YES];
 }
 
 - (void)insertRNNotificationEvent:(nonnull NSDictionary*)notificationEvent

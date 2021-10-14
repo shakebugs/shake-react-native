@@ -3,6 +3,8 @@ declare module "react-native-shake" {
 
     export function show(): void;
 
+    export function show(shakeScreen: ShakeScreen): void;
+
     export function setEnabled(shakeEnabled: boolean): void;
 
     export function setEnableActivityHistory(activityHistoryEnabled: boolean): void;
@@ -37,9 +39,13 @@ declare module "react-native-shake" {
 
     export function setEmailField(email: string): void;
 
-    export function isEnableMultipleFeedbackTypes(): Promise<boolean>;
+    export function isFeedbackTypeEnabled(): Promise<boolean>;
 
-    export function setEnableMultipleFeedbackTypes(feedbackTypesEnabled: boolean): void;
+    export function setFeedbackTypeEnabled(feedbackTypeEnabled: boolean): void;
+
+    export function getFeedbackTypes(): Promise<Array<FeedbackType>>;
+
+    export function setFeedbackTypes(feedbackTypes: Array<FeedbackType>): void;
 
     export function getShowIntroMessage(): Promise<boolean>;
 
@@ -75,6 +81,14 @@ declare module "react-native-shake" {
 
     export function setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled: boolean): void;
 
+    export function isScreenshotIncluded(): Promise<boolean>;
+
+    export function setScreenshotIncluded(screenshotIncluded: boolean): void;
+
+    export function getShakingThreshold(): Promise<number>;
+
+    export function setShakingThreshold(shakingThreshold: number): void;
+
     export function silentReport(
         description: string,
         files: Array<ShakeFile>,
@@ -92,6 +106,14 @@ declare module "react-native-shake" {
     export function clearPrivateViews(): void;
 
     export function showNotificationsSettings(): void;
+
+    export function registerUser(id: string): void;
+
+    export function updateUserId(id: string): void;
+
+    export function updateUserMetadata(metadata: object): void;
+
+    export function unregisterUser(): void;
 
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
@@ -166,5 +188,19 @@ declare module "react-native-shake" {
         static WARN: LogLevel;
         static ERROR: LogLevel;
         value: string;
+    }
+
+    export class ShakeScreen {
+        static HOME: ShakeScreen;
+        static NEW: ShakeScreen;
+        value: string;
+    }
+
+    export class FeedbackType {
+        title: string;
+        tag: string;
+        icon: string;
+
+        constructor(title: string, tag: string, icon?: string);
     }
 }

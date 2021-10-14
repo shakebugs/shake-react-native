@@ -8,13 +8,15 @@ import com.shakebugs.shake.internal.data.NotificationEvent;
 public class Emitter {
     private static final String EVENT_NOTIFICATION = "EventNotification";
     private final ReactContext reactContext;
+    private final Mapper mapper;
 
-    public Emitter(ReactContext reactContext) {
+    public Emitter(ReactContext reactContext, Mapper mapper) {
         this.reactContext = reactContext;
+        this.mapper = mapper;
     }
 
     public void sendNotificationEvent(NotificationEvent notificationEvent) {
-        WritableMap map = Mapper.notificationEventToMap(notificationEvent);
+        WritableMap map = mapper.notificationEventToMap(notificationEvent);
         sendEvent(reactContext, EVENT_NOTIFICATION, map);
     }
 
@@ -25,5 +27,4 @@ public class Emitter {
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
     }
-
 }
