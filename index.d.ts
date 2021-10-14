@@ -200,5 +200,7 @@ declare module "react-native-shake" {
         title: string;
         tag: string;
         icon: string;
+
+        constructor(title: string, tag: string, icon?: string);
     }
 }

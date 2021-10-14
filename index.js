@@ -3,18 +3,21 @@ import { findNodeHandle, NativeModules } from "react-native";
 import ShakeReportConfiguration from "./src/models/ShakeReportConfiguration";
 import ShakeFile from "./src/models/ShakeFile";
 import LogLevel from "./src/models/LogLevel";
+import FeedbackType from "./src/models/FeedbackType";
+import ShakeScreen from "./src/models/ShakeScreen";
 import NetworkTracker from "./src/modules/NetworkTracker";
 import NotificationTracker from "./src/modules/NotificationTracker";
 import NotificationEvent from "./src/models/NotificationEvent";
 import NetworkRequest from "./src/models/NetworkRequest";
 import NetworkRequestBuilder from "./src/builders/NetworkRequestBuilder";
 import NotificationEventBuilder from "./src/builders/NotificationEventBuilder";
-import ShakeScreen from "./src/models/ShakeScreen";
 
 // Export models
 export { ShakeReportConfiguration };
 export { ShakeFile };
 export { LogLevel };
+export { FeedbackType };
+export { ShakeScreen };
 export { NetworkTracker };
 export { NotificationEvent };
 export { NetworkRequest };

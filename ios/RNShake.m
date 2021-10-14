@@ -12,7 +12,6 @@
     self = [super init];
     if (self) {
         [self setPlatformInfo];
-        [self disableNetworkRequests];
     }
     return self;
 }
@@ -405,6 +404,7 @@ RCT_EXPORT_METHOD(unregisterUser)
     NSMutableArray<SHKFeedbackEntry*>* feedbackTypes = [NSMutableArray array];
     for(int i = 0; i < [feedbackTypesArray count]; i++) {
         NSDictionary *feedbackTypeDic = [feedbackTypesArray objectAtIndex:i];
+
         NSString *title = [feedbackTypeDic objectForKey:@"title"];
         NSString *tag = [feedbackTypeDic objectForKey:@"tag"];
         NSString *icon = [feedbackTypeDic objectForKey:@"icon"];
@@ -505,14 +505,9 @@ RCT_EXPORT_METHOD(unregisterUser)
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"10.0.0"
+        @"sdkVersion": @"15.0.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
-}
-
-- (void)disableNetworkRequests
-{
-    [SHKShake performSelector:sel_getUid(@"_setNetworkRequestReporterDisabledDueToRN:".UTF8String) withObject:@YES];
 }
 
 - (void)insertRNNotificationEvent:(nonnull NSDictionary*)notificationEvent

@@ -103,13 +103,19 @@ public class Mapper {
             String tag = feedbackTypeMap.getString("tag");
             String icon = feedbackTypeMap.getString("icon");
 
-            int resourceId = context.getResources().getIdentifier(
-                    icon, "drawable", context.getPackageName());
+            if (title == null || title.trim().isEmpty()) continue;
+            if (tag == null || tag.trim().isEmpty()) continue;
 
-            if (title != null && tag != null) {
-                feedbackTypes.add(new FeedbackType(resourceId, title, tag));
+            int iconRes = 0;
+            try {
+                iconRes = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
+            } catch (Exception ignore) {
             }
+
+            if (iconRes != 0) feedbackTypes.add(new FeedbackType(iconRes, title, tag));
+            if (iconRes == 0) feedbackTypes.add(new FeedbackType(title, tag));
         }
+
         return feedbackTypes;
     }
 

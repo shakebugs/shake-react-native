@@ -7,8 +7,8 @@ class FeedbackType {
     icon;
 
     constructor(title, tag, icon) {
-        this.title = title;
-        this.tag = tag;
+        this.title = title ?? "";
+        this.tag = tag ?? "";
         this.icon = icon;
     }
 }
