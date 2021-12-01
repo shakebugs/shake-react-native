@@ -13,8 +13,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
-import com.shakebugs.shake.internal.data.NetworkRequest;
-import com.shakebugs.shake.internal.data.NotificationEvent;
+import com.shakebugs.shake.internal.domain.models.NotificationEvent;
+import com.shakebugs.shake.internal.domain.models.NetworkRequest;
 import com.shakebugs.shake.report.FeedbackType;
 import com.shakebugs.shake.report.ShakeFile;
 

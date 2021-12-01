@@ -3,7 +3,7 @@ package com.shakebugs.react.utils;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.shakebugs.shake.internal.data.NotificationEvent;
+import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 
 public class Emitter {
     private static final String EVENT_NOTIFICATION = "EventNotification";

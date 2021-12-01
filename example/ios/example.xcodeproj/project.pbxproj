@@ -354,7 +354,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-DoubleConversion/double-conversion.framework/double-conversion",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL-Universal/OpenSSL.framework/OpenSSL",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Shake/Shake.framework/Shake",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Shake-Staging/Shake.framework/Shake",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -453,7 +453,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-example/Pods-example-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-DoubleConversion/double-conversion.framework/double-conversion",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL-Universal/OpenSSL.framework/OpenSSL",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Shake/Shake.framework/Shake",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Shake-Staging/Shake.framework/Shake",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (

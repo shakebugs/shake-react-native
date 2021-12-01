@@ -79,7 +79,7 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    api "$System.env.ANDROID_DEPENDENCY:15.0.+"
+    api "$System.env.ANDROID_DEPENDENCY:15.1.+"
 }
 
 def configureReactNativePom(def pom) {
