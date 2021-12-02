@@ -31,6 +31,10 @@ declare module "react-native-shake" {
 
     export function isInvokeShakeOnScreenshot(): Promise<boolean>;
 
+    export function getDefaultScreen(): Promise<ShakeScreen>;
+
+    export function setDefaultScreen(shakeScreen: ShakeScreen): void;
+
     export function isEnableEmailField(): Promise<boolean>;
 
     export function setEnableEmailField(emailFieldEnabled: boolean): void;
@@ -99,6 +103,8 @@ declare module "react-native-shake" {
 
     export function setMetadata(key: string, value: string): void;
 
+    export function clearMetadata(): void;
+
     export function addPrivateView(viewRef: object): void;
 
     export function removePrivateView(viewRef: object): void;
@@ -119,6 +125,7 @@ declare module "react-native-shake" {
         blackBoxData: boolean;
         activityHistoryData: boolean;
         screenshot: boolean;
+        video: boolean
         showReportSentMessage: boolean;
     }
 

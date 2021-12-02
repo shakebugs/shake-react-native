@@ -100,6 +100,7 @@ const MainScreen = props => {
     const configuration = new ShakeReportConfiguration();
     configuration.blackBoxData = true;
     configuration.activityHistoryData = true;
+    configuration.video = true;
     configuration.screenshot = true;
     configuration.showReportSentMessage = false;
 
@@ -123,11 +124,13 @@ const MainScreen = props => {
   };
 
   const customLog = () => {
-    Shake.log(LogLevel.INFO, 'This is a Shake custom log.');
+    Shake.log(LogLevel.INFO, 'This is Shake custom log.');
   };
 
   const addMetadata = () => {
-    Shake.setMetadata('Shake', 'This is a Shake metadata.');
+    Shake.setMetadata('Test', 'Test metadata');
+    Shake.clearMetadata();
+    Shake.setMetadata('Shake', 'This is Shake metadata.');
   };
 
   const setFeedbackTypes = async () => {
