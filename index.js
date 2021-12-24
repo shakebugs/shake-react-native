@@ -11,6 +11,7 @@ import NotificationEvent from "./src/models/NotificationEvent";
 import NetworkRequest from "./src/models/NetworkRequest";
 import NetworkRequestBuilder from "./src/builders/NetworkRequestBuilder";
 import NotificationEventBuilder from "./src/builders/NotificationEventBuilder";
+import {mapToShakeScreen} from "./src/utils/Mappers";
 
 // Export models
 export { ShakeReportConfiguration };
@@ -169,6 +170,25 @@ class Shake {
      */
     static async isInvokeShakeOnScreenshot() {
         return await this.shake.isInvokeShakeOnScreenshot();
+    }
+
+    /**
+     * Gets screen opened on Shake manual invocation.
+     *
+     * @return shake screen
+     */
+    static async getDefaultScreen() {
+        const value = await this.shake.getDefaultScreen();
+        return mapToShakeScreen(value);
+    }
+
+    /**
+     * Sets screen opened on Shake manual invocation.
+     *
+     * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
+     */
+    static setDefaultScreen(shakeScreen) {
+        this.shake.setDefaultScreen(shakeScreen);
     }
 
     /**
@@ -425,6 +445,13 @@ class Shake {
      */
     static setMetadata(key, value) {
         this.shake.setMetadata(key, value);
+    }
+
+    /**
+     * Clear existing metadata.
+     */
+    static clearMetadata() {
+        this.shake.clearMetadata();
     }
 
     /**

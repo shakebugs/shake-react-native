@@ -21,10 +21,16 @@ class ShakeReportConfiguration {
     screenshot = true;
 
     /**
+     * Includes or excludes video in report.
+     * @type {boolean} true to include, otherwise false
+     */
+    video = true;
+
+    /**
      * Defines if report success message will be visible.
      * @type {boolean} true if visible, otherwise false
      */
-    showReportSentMessage = true;
+    showReportSentMessage = false;
 }
 
 export default ShakeReportConfiguration;

@@ -4,7 +4,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+platform :ios, '12.0'
 
 project 'example',
         'DevelopmentDebug' => :debug,
@@ -15,6 +15,7 @@ project 'example',
         'ProductionRelease' => :release
 
 target 'example' do
+
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
 
@@ -39,8 +40,5 @@ target 'example' do
 
   post_install do |installer|
     react_native_post_install(installer)
-    installer.pods_project.build_configurations.each do |config|
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-    end
   end
 end

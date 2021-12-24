@@ -5,8 +5,8 @@ import android.app.Activity;
 import com.shakebugs.react.utils.Logger;
 import com.shakebugs.react.utils.Reflection;
 import com.shakebugs.shake.ShakeInfo;
-import com.shakebugs.shake.internal.data.NetworkRequest;
-import com.shakebugs.shake.internal.data.NotificationEvent;
+import com.shakebugs.shake.internal.domain.models.NetworkRequest;
+import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 
 import java.lang.reflect.Method;
 

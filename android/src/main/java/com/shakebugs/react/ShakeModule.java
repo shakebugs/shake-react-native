@@ -25,8 +25,8 @@ import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
-import com.shakebugs.shake.internal.data.NetworkRequest;
-import com.shakebugs.shake.internal.data.NotificationEvent;
+import com.shakebugs.shake.internal.domain.models.NetworkRequest;
+import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
 import com.shakebugs.shake.privacy.NotificationEventsFilter;
 import com.shakebugs.shake.report.FeedbackType;
@@ -196,6 +196,25 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getDefaultScreen(Promise promise) {
+        ShakeScreen shakeScreen = Shake.getReportConfiguration().getDefaultScreen();
+        String shakeScreenStr = shakeScreen.toString();
+
+        promise.resolve(shakeScreenStr);
+    }
+
+    @ReactMethod
+    public void setDefaultScreen(final ReadableMap shakeScreenMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ShakeScreen shakeScreen = mapper.mapToShakeScreen(shakeScreenMap);
+                Shake.getReportConfiguration().setDefaultScreen(shakeScreen);
+            }
+        });
+    }
+
+    @ReactMethod
     public void isScreenshotIncluded(Promise promise) {
         promise.resolve(Shake.getReportConfiguration().isScreenshotIncluded());
     }
@@ -351,6 +370,16 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.setMetadata(key, value);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void clearMetadata() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.clearMetadata();
             }
         });
     }

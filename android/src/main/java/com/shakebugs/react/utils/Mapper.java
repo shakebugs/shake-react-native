@@ -13,8 +13,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
-import com.shakebugs.shake.internal.data.NetworkRequest;
-import com.shakebugs.shake.internal.data.NotificationEvent;
+import com.shakebugs.shake.internal.domain.models.NetworkRequest;
+import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.report.FeedbackType;
 import com.shakebugs.shake.report.ShakeFile;
 
@@ -63,12 +63,14 @@ public class Mapper {
         boolean blackBoxData = configurationMap.getBoolean("blackBoxData");
         boolean activityHistoryData = configurationMap.getBoolean("activityHistoryData");
         boolean screenshot = configurationMap.getBoolean("screenshot");
+        boolean video = configurationMap.getBoolean("video");
         boolean showReportSentMessage = configurationMap.getBoolean("showReportSentMessage");
 
         ShakeReportConfiguration configuration = new ShakeReportConfiguration();
         configuration.blackBoxData = blackBoxData;
         configuration.activityHistoryData = activityHistoryData;
         configuration.screenshot = screenshot;
+        configuration.video = video;
         configuration.showReportSentMessage = showReportSentMessage;
 
         return configuration;
@@ -233,10 +235,13 @@ public class Mapper {
                     map.put(key, readableMap.getString(key));
                     break;
                 case Map:
-                    map.put(key, toMap(readableMap.getMap(key)));
+                    ReadableMap m = readableMap.getMap(key);
+                    if (m != null) map.put(key, toMap(m));
+
                     break;
                 case Array:
-                    map.put(key, toArray(readableMap.getArray(key)));
+                    ReadableArray a = readableMap.getArray(key);
+                    if (a != null) map.put(key, toArray(a));
                     break;
             }
         }

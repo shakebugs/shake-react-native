@@ -134,6 +134,20 @@ RCT_REMAP_METHOD(isScreenshotIncluded, isScreenshotIncludedwithResolver:(RCTProm
     resolve(isScreenshotIncluded);
 }
 
+RCT_REMAP_METHOD(getDefaultScreen, getDefaultScreenwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    SHKShowOption showOption = SHKShake.configuration.defaultShowOption;
+    NSString *showOptionStr = [self showOptionToString:showOption];
+    resolve(showOptionStr);
+}
+
+RCT_EXPORT_METHOD(setDefaultScreen:(NSDictionary*)showOptionDic)
+{
+    SHKShowOption showOption = [self mapToShowOption:showOptionDic];
+    SHKShake.configuration.defaultShowOption = showOption;
+}
+
 RCT_EXPORT_METHOD(setShakingThreshold:(float)shakingThreshold)
 {
     SHKShake.configuration.shakingThreshold = shakingThreshold;
@@ -145,7 +159,6 @@ RCT_REMAP_METHOD(getShakingThreshold, getShakingThresholdwithResolver:(RCTPromis
     NSNumber *shakingThreshold = [NSNumber numberWithFloat:SHKShake.configuration.shakingThreshold];
     resolve(shakingThreshold);
 }
-
 
 RCT_EXPORT_METHOD(setEnableEmailField:(BOOL)isEmailFieldEnabled)
 {
@@ -229,6 +242,11 @@ RCT_EXPORT_METHOD(isConsoleLogsEnabled:(RCTPromiseResolveBlock)resolve:(RCTPromi
 RCT_EXPORT_METHOD(setMetadata:(NSString*)key:(NSString*)value)
 {
     [SHKShake setMetadataWithKey: key value: value];
+}
+
+RCT_EXPORT_METHOD(clearMetadata)
+{
+    [SHKShake clearMetadata];
 }
 
 RCT_EXPORT_METHOD(log:(NSDictionary *)logLevelDic:(NSString *)message)
@@ -377,6 +395,18 @@ RCT_EXPORT_METHOD(unregisterUser)
     return showOption;
 }
 
+- (NSString*)showOptionToString:(SHKShowOption)showOption
+{
+    NSString* result = @"";
+
+    if (showOption == SHKShowOptionHome)
+        result = @"HOME";
+    if (showOption == SHKShowOptionNew)
+        result = @"NEW";
+
+    return result;
+}
+
 - (NSMutableArray<SHKShakeFile*>*)mapToShakeFiles:(NSArray*)files
 {
     if (files == nil) return nil;
@@ -447,13 +477,15 @@ RCT_EXPORT_METHOD(unregisterUser)
 
     BOOL includesBlackBoxData = [[configurationDic objectForKey:@"blackBoxData"] boolValue];
     BOOL includesActivityHistoryData = [[configurationDic objectForKey:@"activityHistoryData"] boolValue];
-    BOOL includesScreenshotImage = [[configurationDic objectForKey:@"screenshot"] boolValue];
+    BOOL includesScreenshot = [[configurationDic objectForKey:@"screenshot"] boolValue];
+    BOOL includesVideo = [[configurationDic objectForKey:@"video"] boolValue];
     BOOL showsToastMessageOnSend = [[configurationDic objectForKey:@"showReportSentMessage"] boolValue];
 
     SHKShakeReportConfiguration *conf = SHKShakeReportConfiguration.new;
     conf.includesBlackBoxData = includesBlackBoxData;
     conf.includesActivityHistoryData = includesActivityHistoryData;
-    conf.includesScreenshotImage = includesScreenshotImage;
+    conf.includesScreenshotImage = includesScreenshot;
+    conf.includesVideo = includesVideo;
     conf.showsToastMessageOnSend = showsToastMessageOnSend;
 
     return conf;

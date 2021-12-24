@@ -1,6 +1,24 @@
-# Shake for React Native
+# Shake React Native SDK
 
-[Shake](https://www.shakebugs.com) plugin for React Native.
+[![npm version](https://badge.fury.io/js/@shakebugs%2Freact-native-shake.svg)](https://badge.fury.io/js/@shakebugs%2Freact-native-shake)
+
+React Native plugin for [bug reporting](https://www.shakebugs.com).
+
+## Features
+
+| Feature         | Available |
+|:-----------------:|:-----------:|
+| Bug reporting   |     ✅     |
+| Crash reporting |     ❌     |
+| Users           |     ✅     |
+
+## Requirements
+
+| Platform     | Version |
+|:--------------:|:---------:|
+| React Native |   0.56  |
+| Android      |   5.0   |
+| iOS          |   12.0  |
 
 ## How to use
 
@@ -26,7 +44,7 @@ Install pods from the project root directory:
 cd ios && pod install && cd ..
 ```
 
-## Start Shake
+### Start Shake
 Call `Shake.start()` method in the *index.js* file.
 
 ```javascript title="index.js"
@@ -42,6 +60,6 @@ Shake.start('client-id', 'client-secret');
 
 Replace `client-id` and `client-secret` with the actual values you have in [your workspace settings](https://app.shakebugs.com/settings/workspace#general).
 
-## Documentation
+## Resources
 
-Visit [documentation](https://www.shakebugs.com/docs) for more details.
+- [Official docs](https://www.shakebugs.com/docs/)
