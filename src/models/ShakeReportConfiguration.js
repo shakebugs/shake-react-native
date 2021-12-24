@@ -30,7 +30,7 @@ class ShakeReportConfiguration {
      * Defines if report success message will be visible.
      * @type {boolean} true if visible, otherwise false
      */
-    showReportSentMessage = true;
+    showReportSentMessage = false;
 }
 
 export default ShakeReportConfiguration;
