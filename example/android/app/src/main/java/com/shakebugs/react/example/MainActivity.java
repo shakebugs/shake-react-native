@@ -1,9 +1,6 @@
 package com.shakebugs.react.example;
 
-import android.view.MotionEvent;
-
 import com.facebook.react.ReactActivity;
-import com.shakebugs.shake.Shake;
 
 public class MainActivity extends ReactActivity {
     /**
@@ -13,11 +10,5 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "example";
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Shake.handleTouchEvent(ev, this);
-        return super.dispatchTouchEvent(ev);
     }
 }

@@ -31,17 +31,7 @@
   "readmeFilename": "README.md",
   "devDependencies": {
     "react": "^16.8.1",
-    "react-native": "^0.59.8",
-    "glob": "^7.1.6"
+    "react-native": "^0.59.8"
   },
-  "dependencies": {},
-  "rnpm": {
-    "commands": {
-      "postlink": "node node_modules/@shakebugs/react-native-shake/scripts/link_script.js",
-      "preunlink": "node node_modules/@shakebugs/react-native-shake/scripts/unlink_script.js"
-    },
-    "android": {
-      "packageInstance": "new ShakePackage()"
-    }
-  }
+  "dependencies": {}
 }
