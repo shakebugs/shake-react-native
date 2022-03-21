@@ -96,11 +96,16 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setEnabled(final boolean enabled) {
+    public void isUserFeedbackEnabled(Promise promise) {
+        promise.resolve(Shake.isUserFeedbackEnabled());
+    }
+
+    @ReactMethod
+    public void setUserFeedbackEnabled(final boolean enabled) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.setEnabled(enabled);
+                Shake.setUserFeedbackEnabled(enabled);
             }
         });
     }

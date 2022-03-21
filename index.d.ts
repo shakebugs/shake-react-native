@@ -5,7 +5,9 @@ declare module "react-native-shake" {
 
     export function show(shakeScreen: ShakeScreen): void;
 
-    export function setEnabled(shakeEnabled: boolean): void;
+    export function setUserFeedbackEnabled(enabled: boolean): void;
+
+    export function isUserFeedbackEnabled(): Promise<boolean>;
 
     export function setEnableActivityHistory(activityHistoryEnabled: boolean): void;
 

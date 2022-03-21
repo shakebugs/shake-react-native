@@ -11,7 +11,7 @@ import NotificationEvent from "./src/models/NotificationEvent";
 import NetworkRequest from "./src/models/NetworkRequest";
 import NetworkRequestBuilder from "./src/builders/NetworkRequestBuilder";
 import NotificationEventBuilder from "./src/builders/NotificationEventBuilder";
-import {mapToShakeScreen} from "./src/utils/Mappers";
+import { mapToShakeScreen } from "./src/utils/Mappers";
 
 // Export models
 export { ShakeReportConfiguration };
@@ -29,519 +29,526 @@ export { NotificationEventBuilder };
  * Interface for native methods.
  */
 class Shake {
-    static shake = NativeModules.RNShake;
+  static shake = NativeModules.RNShake;
 
-    // Helpers
-    static networkTracker = new NetworkTracker(this.shake);
-    static notificationTracker = new NotificationTracker(this.shake);
+  // Helpers
+  static networkTracker = new NetworkTracker(this.shake);
+  static notificationTracker = new NotificationTracker(this.shake);
 
-    /**
-     * Starts Shake SDK.
-     *
-     * @param clientId client id
-     * @param clientSecret client secret
-     */
-    static start(clientId, clientSecret) {
-        this.shake.start(clientId, clientSecret);
-        this.notificationTracker.setEnabled(true);
-    }
+  /**
+   * Starts Shake SDK.
+   *
+   * @param clientId client id
+   * @param clientSecret client secret
+   */
+  static start(clientId, clientSecret) {
+    this.shake.start(clientId, clientSecret);
+    this.notificationTracker.setEnabled(true);
+  }
 
-    /**
-     * Shows shake screen.
-     *
-     * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
-     */
-    static show(shakeScreen = ShakeScreen.NEW) {
-        this.shake.show(shakeScreen);
-    }
+  /**
+   * Shows shake screen.
+   *
+   * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
+   */
+  static show(shakeScreen = ShakeScreen.NEW) {
+    this.shake.show(shakeScreen);
+  }
 
-    /**
-     * Enables or disables Shake.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setEnabled(enabled) {
-        this.shake.setEnabled(enabled);
-    }
+  /**
+   * Checks if user feedback is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isUserFeedbackEnabled() {
+    return await this.shake.isUserFeedbackEnabled();
+  }
 
-    /**
-     * Enables or disables activity history.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setEnableActivityHistory(enabled) {
-        this.shake.setEnableActivityHistory(enabled);
-    }
+  /**
+   * Enables or disables user feedback.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setUserFeedbackEnabled(enabled) {
+    this.shake.setUserFeedbackEnabled(enabled);
+  }
 
-    /**
-     * Checks if activity history is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isEnableActivityHistory() {
-        return await this.shake.isEnableActivityHistory();
-    }
+  /**
+   * Enables or disables activity history.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setEnableActivityHistory(enabled) {
+    this.shake.setEnableActivityHistory(enabled);
+  }
 
-    /**
-     * Enables or disables black box.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setEnableBlackBox(enabled) {
-        this.shake.setEnableBlackBox(enabled);
-    }
+  /**
+   * Checks if activity history is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isEnableActivityHistory() {
+    return await this.shake.isEnableActivityHistory();
+  }
 
-    /**
-     * Checks if black box is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isEnableBlackBox() {
-        return await this.shake.isEnableBlackBox();
-    }
+  /**
+   * Enables or disables black box.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setEnableBlackBox(enabled) {
+    this.shake.setEnableBlackBox(enabled);
+  }
 
-    /**
-     * Enables or disables inspect screen.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setEnableInspectScreen(enabled) {
-        this.shake.setEnableInspectScreen(enabled);
-    }
+  /**
+   * Checks if black box is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isEnableBlackBox() {
+    return await this.shake.isEnableBlackBox();
+  }
 
-    /**
-     * Checks if inspect screen is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isEnableInspectScreen() {
-        return await this.shake.isEnableInspectScreen();
-    }
+  /**
+   * Enables or disables inspect screen.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setEnableInspectScreen(enabled) {
+    this.shake.setEnableInspectScreen(enabled);
+  }
 
-    /**
-     * Enables or disables invoke by floating button.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setShowFloatingReportButton(enabled) {
-        this.shake.setShowFloatingReportButton(enabled);
-    }
+  /**
+   * Checks if inspect screen is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isEnableInspectScreen() {
+    return await this.shake.isEnableInspectScreen();
+  }
 
-    /**
-     * Checks if floating button invoke is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isShowFloatingReportButton() {
-        return await this.shake.isShowFloatingReportButton();
-    }
+  /**
+   * Enables or disables invoke by floating button.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setShowFloatingReportButton(enabled) {
+    this.shake.setShowFloatingReportButton(enabled);
+  }
 
-    /**
-     * Enables or disables invoke by shake.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setInvokeShakeOnShakeDeviceEvent(enabled) {
-        this.shake.setInvokeShakeOnShakeDeviceEvent(enabled);
-    }
+  /**
+   * Checks if floating button invoke is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isShowFloatingReportButton() {
+    return await this.shake.isShowFloatingReportButton();
+  }
 
-    /**
-     * Checks if shake event invoke is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isInvokeShakeOnShakeDeviceEvent() {
-        return await this.shake.isInvokeShakeOnShakeDeviceEvent();
-    }
+  /**
+   * Enables or disables invoke by shake.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setInvokeShakeOnShakeDeviceEvent(enabled) {
+    this.shake.setInvokeShakeOnShakeDeviceEvent(enabled);
+  }
 
-    /**
-     * Enables or disables invoke by screenshot.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setInvokeShakeOnScreenshot(enabled) {
-        this.shake.setInvokeShakeOnScreenshot(enabled);
-    }
+  /**
+   * Checks if shake event invoke is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isInvokeShakeOnShakeDeviceEvent() {
+    return await this.shake.isInvokeShakeOnShakeDeviceEvent();
+  }
 
-    /**
-     * Checks if screenshot invoke is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isInvokeShakeOnScreenshot() {
-        return await this.shake.isInvokeShakeOnScreenshot();
-    }
+  /**
+   * Enables or disables invoke by screenshot.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setInvokeShakeOnScreenshot(enabled) {
+    this.shake.setInvokeShakeOnScreenshot(enabled);
+  }
 
-    /**
-     * Gets screen opened on Shake manual invocation.
-     *
-     * @return shake screen
-     */
-    static async getDefaultScreen() {
-        const value = await this.shake.getDefaultScreen();
-        return mapToShakeScreen(value);
-    }
+  /**
+   * Checks if screenshot invoke is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isInvokeShakeOnScreenshot() {
+    return await this.shake.isInvokeShakeOnScreenshot();
+  }
 
-    /**
-     * Sets screen opened on Shake manual invocation.
-     *
-     * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
-     */
-    static setDefaultScreen(shakeScreen) {
-        this.shake.setDefaultScreen(shakeScreen);
-    }
+  /**
+   * Gets screen opened on Shake manual invocation.
+   *
+   * @return shake screen
+   */
+  static async getDefaultScreen() {
+    const value = await this.shake.getDefaultScreen();
+    return mapToShakeScreen(value);
+  }
 
-    /**
-     * Sets if screenshot is captured with report by default.
-     *
-     * @param screenshotIncluded true if included, otherwise false
-     */
-    static setScreenshotIncluded(screenshotIncluded) {
-        this.shake.setScreenshotIncluded(screenshotIncluded);
-    }
+  /**
+   * Sets screen opened on Shake manual invocation.
+   *
+   * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
+   */
+  static setDefaultScreen(shakeScreen) {
+    this.shake.setDefaultScreen(shakeScreen);
+  }
 
-    /**
-     * Checks if screenshot is captured with report by default.
-     *
-     * @returns {Promise<*|boolean>} true if included, otherwise false
-     */
-    static async isScreenshotIncluded() {
-        return await this.shake.isScreenshotIncluded();
-    }
+  /**
+   * Sets if screenshot is captured with report by default.
+   *
+   * @param screenshotIncluded true if included, otherwise false
+   */
+  static setScreenshotIncluded(screenshotIncluded) {
+    this.shake.setScreenshotIncluded(screenshotIncluded);
+  }
 
-    /**
-     * Sets how sensitive is shaking gesture invocation.
-     *
-     * @param shakingThreshold number between 1-1000 (1 weak, 1000 strong)
-     */
-    static setShakingThreshold(shakingThreshold) {
-        this.shake.setShakingThreshold(shakingThreshold);
-    }
+  /**
+   * Checks if screenshot is captured with report by default.
+   *
+   * @returns {Promise<*|boolean>} true if included, otherwise false
+   */
+  static async isScreenshotIncluded() {
+    return await this.shake.isScreenshotIncluded();
+  }
 
-    /**
-     * Sets how sensitive is shaking gesture invocation.
-     *
-     * @returns {Promise<*|boolean>} shaking gesture sensitivity
-     */
-    static async getShakingThreshold() {
-        return await this.shake.getShakingThreshold();
-    }
+  /**
+   * Sets how sensitive is shaking gesture invocation.
+   *
+   * @param shakingThreshold number between 1-1000 (1 weak, 1000 strong)
+   */
+  static setShakingThreshold(shakingThreshold) {
+    this.shake.setShakingThreshold(shakingThreshold);
+  }
 
-    /**
-     * Sets files to upload with report.
-     *
-     * @param files shake files to upload
-     */
-    static setShakeReportData(files) {
-        this.shake.setShakeReportData(files);
-    }
+  /**
+   * Sets how sensitive is shaking gesture invocation.
+   *
+   * @returns {Promise<*|boolean>} shaking gesture sensitivity
+   */
+  static async getShakingThreshold() {
+    return await this.shake.getShakingThreshold();
+  }
 
-    /**
-     * Sends report silently from code.
-     *
-     * @param description silent report description
-     * @param files silent report files
-     * @param configuration silent report configuration
-     */
-    static silentReport(description, files, configuration) {
-        this.shake.silentReport(description, files, configuration);
-    }
+  /**
+   * Sets files to upload with report.
+   *
+   * @param files shake files to upload
+   */
+  static setShakeReportData(files) {
+    this.shake.setShakeReportData(files);
+  }
 
-    /**
-     * Enables or disables email field on Shake screen.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setEnableEmailField(enabled) {
-        this.shake.setEnableEmailField(enabled);
-    }
+  /**
+   * Sends report silently from code.
+   *
+   * @param description silent report description
+   * @param files silent report files
+   * @param configuration silent report configuration
+   */
+  static silentReport(description, files, configuration) {
+    this.shake.silentReport(description, files, configuration);
+  }
 
-    /**
-     * Checks if email field on Shake screen is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isEnableEmailField() {
-        return await this.shake.isEnableEmailField();
-    }
+  /**
+   * Enables or disables email field on Shake screen.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setEnableEmailField(enabled) {
+    this.shake.setEnableEmailField(enabled);
+  }
 
-    /**
-     * Sets email field value on the Shake screen.
-     *
-     * @param value email field value
-     */
-    static setEmailField(value) {
-        this.shake.setEmailField(value);
-    }
+  /**
+   * Checks if email field on Shake screen is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isEnableEmailField() {
+    return await this.shake.isEnableEmailField();
+  }
 
-    /**
-     * Gets value of the email field on the Shake screen.
-     *
-     * @returns {Promise<*|string>} email field value
-     */
-    static async getEmailField() {
-        return await this.shake.getEmailField();
-    }
+  /**
+   * Sets email field value on the Shake screen.
+   *
+   * @param value email field value
+   */
+  static setEmailField(value) {
+    this.shake.setEmailField(value);
+  }
 
-    /**
-     * Checks if feedback type picker on the Shake screen is visible.
-     *
-     * @returns {Promise<*|boolean>} true if visible, otherwise false
-     */
-    static async isFeedbackTypeEnabled() {
-        return await this.shake.isFeedbackTypeEnabled();
-    }
+  /**
+   * Gets value of the email field on the Shake screen.
+   *
+   * @returns {Promise<*|string>} email field value
+   */
+  static async getEmailField() {
+    return await this.shake.getEmailField();
+  }
 
-    /**
-     * Sets if feedback type picker is visible on the Shake screen.
-     *
-     * @param enabled true if visible, otherwise false
-     */
-    static setFeedbackTypeEnabled(enabled) {
-        this.shake.setFeedbackTypeEnabled(enabled);
-    }
+  /**
+   * Checks if feedback type picker on the Shake screen is visible.
+   *
+   * @returns {Promise<*|boolean>} true if visible, otherwise false
+   */
+  static async isFeedbackTypeEnabled() {
+    return await this.shake.isFeedbackTypeEnabled();
+  }
 
-    /**
-     * Gets ticket feedback types.
-     *
-     * @returns {Promise<*|boolean>} list of {@link FeedbackType}
-     */
-    static async getFeedbackTypes() {
-        return await this.shake.getFeedbackTypes();
-    }
+  /**
+   * Sets if feedback type picker is visible on the Shake screen.
+   *
+   * @param enabled true if visible, otherwise false
+   */
+  static setFeedbackTypeEnabled(enabled) {
+    this.shake.setFeedbackTypeEnabled(enabled);
+  }
 
-    /**
-     * Sets ticket feedback types.
-     *
-     * @param feedbackTypes list of {@link FeedbackType}
-     */
-    static setFeedbackTypes(feedbackTypes) {
-        this.shake.setFeedbackTypes(feedbackTypes);
-    }
+  /**
+   * Gets ticket feedback types.
+   *
+   * @returns {Promise<*|boolean>} list of {@link FeedbackType}
+   */
+  static async getFeedbackTypes() {
+    return await this.shake.getFeedbackTypes();
+  }
 
-    /**
-     * Checks if intro message will be shown on the first app run.
-     *
-     * @returns {Promise<*|boolean>} true if yes, otherwise false
-     */
-    static async getShowIntroMessage() {
-        return await this.shake.getShowIntroMessage();
-    }
+  /**
+   * Sets ticket feedback types.
+   *
+   * @param feedbackTypes list of {@link FeedbackType}
+   */
+  static setFeedbackTypes(feedbackTypes) {
+    this.shake.setFeedbackTypes(feedbackTypes);
+  }
 
-    /**
-     * Sets if intro message will be shown on the first app run.
-     *
-     * @param enabled true if yes, otherwise false
-     */
-    static setShowIntroMessage(enabled) {
-        this.shake.setShowIntroMessage(enabled);
-    }
+  /**
+   * Checks if intro message will be shown on the first app run.
+   *
+   * @returns {Promise<*|boolean>} true if yes, otherwise false
+   */
+  static async getShowIntroMessage() {
+    return await this.shake.getShowIntroMessage();
+  }
 
-    /**
-     * Checks if auto video recording will be enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isAutoVideoRecording() {
-        return await this.shake.isAutoVideoRecording();
-    }
+  /**
+   * Sets if intro message will be shown on the first app run.
+   *
+   * @param enabled true if yes, otherwise false
+   */
+  static setShowIntroMessage(enabled) {
+    this.shake.setShowIntroMessage(enabled);
+  }
 
-    /**
-     * Enables or disables auto video recording.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setAutoVideoRecording(enabled) {
-        this.shake.setAutoVideoRecording(enabled);
-    }
+  /**
+   * Checks if auto video recording will be enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isAutoVideoRecording() {
+    return await this.shake.isAutoVideoRecording();
+  }
 
-    /**
-     * Checks if console logs are attached to the report.
-     *
-     * @returns {Promise<*|boolean>} true if attached, otherwise false
-     */
-    static async isConsoleLogsEnabled() {
-        return await this.shake.isConsoleLogsEnabled();
-    }
+  /**
+   * Enables or disables auto video recording.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setAutoVideoRecording(enabled) {
+    this.shake.setAutoVideoRecording(enabled);
+  }
 
-    /**
-     * Sets if console logs are attached to the report.
-     *
-     * @param enabled true if attached, otherwise false
-     */
-    static setConsoleLogsEnabled(enabled) {
-        this.shake.setConsoleLogsEnabled(enabled);
-    }
+  /**
+   * Checks if console logs are attached to the report.
+   *
+   * @returns {Promise<*|boolean>} true if attached, otherwise false
+   */
+  static async isConsoleLogsEnabled() {
+    return await this.shake.isConsoleLogsEnabled();
+  }
 
-    /**
-     * Checks if network requests are attached to the report.
-     *
-     * @returns {Promise<*|boolean>} true if attached, otherwise false
-     */
-    static async isNetworkRequestsEnabled() {
-        return this.networkTracker.isEnabled();
-    }
+  /**
+   * Sets if console logs are attached to the report.
+   *
+   * @param enabled true if attached, otherwise false
+   */
+  static setConsoleLogsEnabled(enabled) {
+    this.shake.setConsoleLogsEnabled(enabled);
+  }
 
-    /**
-     * Sets if network requests are attached to the report.
-     *
-     * @param enabled true if attached, otherwise false
-     */
-    static setNetworkRequestsEnabled(enabled) {
-        this.networkTracker.setEnabled(enabled);
-    }
+  /**
+   * Checks if network requests are attached to the report.
+   *
+   * @returns {Promise<*|boolean>} true if attached, otherwise false
+   */
+  static async isNetworkRequestsEnabled() {
+    return this.networkTracker.isEnabled();
+  }
 
-    /**
-     * Adds custom network request to the Shake report.
-     *
-     * @param requestBuilder request builder
-     */
-    static insertNetworkRequest(requestBuilder) {
-        this.networkTracker.insertNetworkRequest(requestBuilder);
-    }
+  /**
+   * Sets if network requests are attached to the report.
+   *
+   * @param enabled true if attached, otherwise false
+   */
+  static setNetworkRequestsEnabled(enabled) {
+    this.networkTracker.setEnabled(enabled);
+  }
 
-    /**
-     * Adds filter for network requests.
-     *
-     * @param filter filter function
-     */
-    static setNetworkRequestsFilter(filter) {
-        this.networkTracker.setFilter(filter);
-    }
+  /**
+   * Adds custom network request to the Shake report.
+   *
+   * @param requestBuilder request builder
+   */
+  static insertNetworkRequest(requestBuilder) {
+    this.networkTracker.insertNetworkRequest(requestBuilder);
+  }
 
-    /**
-     * Adds custom notification event to the Shake report.
-     *
-     * @param notificationBuilder notification builder
-     */
-    static insertNotificationEvent(notificationBuilder) {
-        this.notificationTracker.insertNotificationEvent(notificationBuilder);
-    }
+  /**
+   * Adds filter for network requests.
+   *
+   * @param filter filter function
+   */
+  static setNetworkRequestsFilter(filter) {
+    this.networkTracker.setFilter(filter);
+  }
 
-    /**
-     * Adds filter for notification events.
-     *
-     * @param filter filter function
-     */
-    static setNotificationEventsFilter(filter) {
-        this.notificationTracker.setFilter(filter);
-    }
+  /**
+   * Adds custom notification event to the Shake report.
+   *
+   * @param notificationBuilder notification builder
+   */
+  static insertNotificationEvent(notificationBuilder) {
+    this.notificationTracker.insertNotificationEvent(notificationBuilder);
+  }
 
-    /**
-     * Logs a custom message to the report.
-     *
-     * @param logLevel LogLevel value
-     * @param message log message
-     */
-    static log(logLevel, message) {
-        this.shake.log(logLevel, message);
-    }
+  /**
+   * Adds filter for notification events.
+   *
+   * @param filter filter function
+   */
+  static setNotificationEventsFilter(filter) {
+    this.notificationTracker.setFilter(filter);
+  }
 
-    /**
-     * Adds metadata to the report.
-     *
-     * @param key metadata key
-     * @param value metadata value
-     */
-    static setMetadata(key, value) {
-        this.shake.setMetadata(key, value);
-    }
+  /**
+   * Logs a custom message to the report.
+   *
+   * @param logLevel LogLevel value
+   * @param message log message
+   */
+  static log(logLevel, message) {
+    this.shake.log(logLevel, message);
+  }
 
-    /**
-     * Clear existing metadata.
-     */
-    static clearMetadata() {
-        this.shake.clearMetadata();
-    }
+  /**
+   * Adds metadata to the report.
+   *
+   * @param key metadata key
+   * @param value metadata value
+   */
+  static setMetadata(key, value) {
+    this.shake.setMetadata(key, value);
+  }
 
-    /**
-     * Masks view on the screenshot.
-     *
-     * @param viewRef view reference
-     */
-    static addPrivateView(viewRef) {
-        const nativeTag = findNodeHandle(viewRef);
-        this.shake.addPrivateView(nativeTag);
-    }
+  /**
+   * Clear existing metadata.
+   */
+  static clearMetadata() {
+    this.shake.clearMetadata();
+  }
 
-    /**
-     * Removes view from private views.
-     *
-     * @param viewRef view reference
-     */
-    static removePrivateView(viewRef) {
-        const nativeTag = findNodeHandle(viewRef);
-        this.shake.removePrivateView(nativeTag);
-    }
+  /**
+   * Masks view on the screenshot.
+   *
+   * @param viewRef view reference
+   */
+  static addPrivateView(viewRef) {
+    const nativeTag = findNodeHandle(viewRef);
+    this.shake.addPrivateView(nativeTag);
+  }
 
-    /**
-     * Clears all private views.
-     */
-    static clearPrivateViews() {
-        this.shake.clearPrivateViews();
-    }
+  /**
+   * Removes view from private views.
+   *
+   * @param viewRef view reference
+   */
+  static removePrivateView(viewRef) {
+    const nativeTag = findNodeHandle(viewRef);
+    this.shake.removePrivateView(nativeTag);
+  }
 
-    /**
-     * Enables or disables automatic sensitive data redaction.
-     *
-     * @param enabled true if enabled, otherwise false
-     */
-    static setSensitiveDataRedactionEnabled(enabled) {
-        this.shake.setSensitiveDataRedactionEnabled(enabled);
-    }
+  /**
+   * Clears all private views.
+   */
+  static clearPrivateViews() {
+    this.shake.clearPrivateViews();
+  }
 
-    /**
-     * Checks if automatic sensitive data redaction is enabled.
-     *
-     * @returns {Promise<*|boolean>} true if enabled, otherwise false
-     */
-    static async isSensitiveDataRedactionEnabled() {
-        return await this.shake.isSensitiveDataRedactionEnabled();
-    }
+  /**
+   * Enables or disables automatic sensitive data redaction.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setSensitiveDataRedactionEnabled(enabled) {
+    this.shake.setSensitiveDataRedactionEnabled(enabled);
+  }
 
-    /**
-     * Shows notifications settings screen.
-     * This is used just for Android os.
-     */
-    static showNotificationsSettings() {
-        this.shake.showNotificationsSettings();
-    }
+  /**
+   * Checks if automatic sensitive data redaction is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isSensitiveDataRedactionEnabled() {
+    return await this.shake.isSensitiveDataRedactionEnabled();
+  }
 
-    /**
-     * Registers new Shake user.
-     *
-     * @param id user id
-     */
-    static registerUser(id) {
-        this.shake.registerUser(id);
-    }
+  /**
+   * Shows notifications settings screen.
+   * This is used just for Android os.
+   */
+  static showNotificationsSettings() {
+    this.shake.showNotificationsSettings();
+  }
 
-    /**
-     * Updates existing Shake user id.
-     *
-     * @param id new user id
-     */
-    static updateUserId(id) {
-        this.shake.updateUserId(id);
-    }
+  /**
+   * Registers new Shake user.
+   *
+   * @param id user id
+   */
+  static registerUser(id) {
+    this.shake.registerUser(id);
+  }
 
-    /**
-     * Updates existing Shake user metadata.
-     *
-     * @param metadata user metadata to update
-     */
-    static updateUserMetadata(metadata) {
-        this.shake.updateUserMetadata(metadata);
-    }
+  /**
+   * Updates existing Shake user id.
+   *
+   * @param id new user id
+   */
+  static updateUserId(id) {
+    this.shake.updateUserId(id);
+  }
 
-    /**
-     * Unregister current Shake user.
-     */
-    static unregisterUser() {
-        this.shake.unregisterUser();
-    }
+  /**
+   * Updates existing Shake user metadata.
+   *
+   * @param metadata user metadata to update
+   */
+  static updateUserMetadata(metadata) {
+    this.shake.updateUserMetadata(metadata);
+  }
+
+  /**
+   * Unregister current Shake user.
+   */
+  static unregisterUser() {
+    this.shake.unregisterUser();
+  }
 }
 
 export default Shake;
-
-
