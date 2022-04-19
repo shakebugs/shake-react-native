@@ -45,9 +45,16 @@ RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
     [SHKShake show:showOption];
 }
 
-RCT_EXPORT_METHOD(setEnabled:(BOOL)enabled)
+RCT_EXPORT_METHOD(setUserFeedbackEnabled:(BOOL)enabled)
 {
-    SHKShake.isPaused = !enabled;
+    SHKShake.configuration.isUserFeedbackEnabled = enabled;
+}
+
+RCT_REMAP_METHOD(isUserFeedbackEnabled, isUserFeedbackEnabledwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *isUserFeedbackEnabled = [NSNumber numberWithBool:SHKShake.configuration.isUserFeedbackEnabled];
+    resolve(isUserFeedbackEnabled);
 }
 
 RCT_EXPORT_METHOD(setEnableActivityHistory:(BOOL)enableActivityHistory)

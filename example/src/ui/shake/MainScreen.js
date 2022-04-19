@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, View, Image} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import Shake, {
   NetworkRequestBuilder,
   NotificationEventBuilder,
@@ -19,27 +19,32 @@ import PushNotification from 'react-native-push-notification';
 import LogLevel from '../../../../src/models/LogLevel';
 import ShakeScreen from '../../../../src/models/ShakeScreen';
 import FeedbackType from '../../../../src/models/FeedbackType';
+import {createTempFile} from '../../utils/Files';
 
 const MainScreen = props => {
   let path = RNFS.DocumentDirectoryPath + '/file.txt';
 
-  const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState();
-  const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState();
-  const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] = useState();
-  const [blackBoxEnabled, setBlackBoxEnabled] = useState();
-  const [activityHistoryEnabled, setActivityHistoryEnabled] = useState();
-  const [inspectScreenEnabled, setInspectScreenEnabled] = useState();
-  const [shakeEnabled, setShakeEnabled] = useState();
-  const [emailFieldEnabled, setEmailFieldEnabled] = useState();
-  const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState();
-  const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState();
-  const [consoleLogsEnabled, setConsoleLogsEnabled] = useState();
-  const [networkRequestsEnabled, setNetworkRequestsEnabled] = useState();
+  const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState(false);
+  const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState(false);
+  const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] = useState(
+    false,
+  );
+  const [blackBoxEnabled, setBlackBoxEnabled] = useState(false);
+  const [activityHistoryEnabled, setActivityHistoryEnabled] = useState(false);
+  const [inspectScreenEnabled, setInspectScreenEnabled] = useState(false);
+  const [userFeedbackEnabled, setUserFeedbackEnabled] = useState(false);
+  const [emailFieldEnabled, setEmailFieldEnabled] = useState(false);
+  const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState(false);
+  const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState(
+    false,
+  );
+  const [consoleLogsEnabled, setConsoleLogsEnabled] = useState(false);
+  const [networkRequestsEnabled, setNetworkRequestsEnabled] = useState(false);
   const [
     sensitiveDataRedactionEnabled,
     setSensitiveDataRedactionEnabled,
-  ] = useState();
-  const [screenshotIncluded, setScreenshotIncluded] = useState();
+  ] = useState(false);
+  const [screenshotIncluded, setScreenshotIncluded] = useState(false);
 
   let privateView = useRef(null);
 
@@ -47,20 +52,10 @@ const MainScreen = props => {
   const networkTester = new AxiosNetworkTester();
 
   useEffect(() => {
-    createFile();
+    createTempFile(path);
     initialize();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const createFile = () => {
-    RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
-      .then(success => {
-        console.log('File written');
-      })
-      .catch(error => {
-        console.log(error.message);
-      });
-  };
 
   const initialize = async () => {
     setBlackBoxEnabled(await Shake.isEnableBlackBox());
@@ -78,7 +73,7 @@ const MainScreen = props => {
       await Shake.isSensitiveDataRedactionEnabled(),
     );
     setScreenshotIncluded(await Shake.isScreenshotIncluded());
-    setShakeEnabled(true); // Not provided by native SDK
+    setUserFeedbackEnabled(await Shake.isUserFeedbackEnabled());
   };
 
   const showHome = () => {
@@ -304,11 +299,11 @@ const MainScreen = props => {
         />
         <Title style={styles.title} text="Options" />
         <Option
-          enabled={shakeEnabled}
-          title="Enabled"
+          enabled={userFeedbackEnabled}
+          title="User feedback enabled"
           onValueChanged={() => {
-            Shake.setEnabled(!shakeEnabled);
-            setShakeEnabled(!shakeEnabled);
+            Shake.setUserFeedbackEnabled(!userFeedbackEnabled);
+            setUserFeedbackEnabled(!userFeedbackEnabled);
           }}
         />
         <Option
