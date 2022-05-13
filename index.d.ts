@@ -5,33 +5,41 @@ declare module "react-native-shake" {
 
     export function show(shakeScreen: ShakeScreen): void;
 
-    export function setUserFeedbackEnabled(enabled: boolean): void;
-
     export function isUserFeedbackEnabled(): Promise<boolean>;
 
-    export function setEnableActivityHistory(activityHistoryEnabled: boolean): void;
+    export function setUserFeedbackEnabled(enabled: boolean): void;
+
+    export function isCrashReportingEnabled(): Promise<boolean>;
+
+    export function setCrashReportingEnabled(enabled: boolean): void;
+
+    export function isAskForCrashDescription(): Promise<boolean>;
+
+    export function setAskForCrashDescription(enabled: boolean): void;
 
     export function isEnableActivityHistory(): Promise<boolean>;
 
-    export function setEnableBlackBox(blackBoxEnabled: boolean): void;
+    export function setEnableActivityHistory(activityHistoryEnabled: boolean): void;
 
     export function isEnableBlackBox(): Promise<boolean>;
 
-    export function setEnableInspectScreen(inspectScreenEnabled: boolean): void;
+    export function setEnableBlackBox(blackBoxEnabled: boolean): void;
 
     export function isEnableInspectScreen(): Promise<boolean>;
 
-    export function setShowFloatingReportButton(floatingButtonEnabled: boolean): void;
+    export function setEnableInspectScreen(inspectScreenEnabled: boolean): void;
 
     export function isShowFloatingReportButton(): Promise<boolean>;
 
-    export function setInvokeShakeOnShakeDeviceEvent(shakeInvokeEnabled: boolean): void;
+    export function setShowFloatingReportButton(floatingButtonEnabled: boolean): void;
 
     export function isInvokeShakeOnShakeDeviceEvent(): Promise<boolean>;
 
-    export function setInvokeShakeOnScreenshot(screenshotInvokeEnabled: boolean): void;
+    export function setInvokeShakeOnShakeDeviceEvent(shakeInvokeEnabled: boolean): void;
 
     export function isInvokeShakeOnScreenshot(): Promise<boolean>;
+
+    export function setInvokeShakeOnScreenshot(screenshotInvokeEnabled: boolean): void;
 
     export function getDefaultScreen(): Promise<ShakeScreen>;
 

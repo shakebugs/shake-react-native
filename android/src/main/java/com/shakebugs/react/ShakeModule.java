@@ -358,6 +358,36 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void isCrashReportingEnabled(Promise promise) {
+        promise.resolve(Shake.isCrashReportingEnabled());
+    }
+
+    @ReactMethod
+    public void setCrashReportingEnabled(final boolean enabled) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setCrashReportingEnabled(enabled);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void isAskForCrashDescription(Promise promise) {
+        promise.resolve(Shake.isAskForCrashDescription());
+    }
+
+    @ReactMethod
+    public void setAskForCrashDescription(final boolean ask) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setAskForCrashDescription(ask);
+            }
+        });
+    }
+
+    @ReactMethod
     public void log(final ReadableMap logLevelMap, final String message) {
         runOnUiThread(new Runnable() {
             @Override

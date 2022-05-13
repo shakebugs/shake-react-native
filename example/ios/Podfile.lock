@@ -277,7 +277,7 @@ PODS:
     - React
   - react-native-shake (14.1.0):
     - React
-    - Shake-Staging (~> 15.1.0-rc.1447)
+    - Shake-Staging (~> 15.2.0-rc)
   - react-native-slider (2.0.9):
     - React
   - react-native-webview (9.3.0):
@@ -358,11 +358,12 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNReanimated (1.8.0):
-    - React
-  - RNScreens (2.7.0):
-    - React
-  - Shake-Staging (15.1.0-rc.1447)
+  - RNReanimated (1.13.4):
+    - React-Core
+  - RNScreens (3.13.1):
+    - React-Core
+    - React-RCTImage
+  - Shake-Staging (15.2.0-rc.1505)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -573,7 +574,7 @@ SPEC CHECKSUMS:
   react-native-checkbox: 2d04aeb0c7e2c2cbd9a9a902ca6a5cf642688d09
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
-  react-native-shake: 9b00818158045abdb40f16e8ce3c039e39c9f8b4
+  react-native-shake: 27c399853a08126fe24eb47b9a9318c00cfa6910
   react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   react-native-webview: bdde2a3c4cbdc0122bc2bfba13603db193f0cc5c
   React-perflogger: fd28ee1f2b5b150b00043f0301d96bd417fdc339
@@ -594,9 +595,9 @@ SPEC CHECKSUMS:
   RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
-  RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
-  Shake-Staging: 1e48bab5826b8192d7c0a3917f3e1e7d44d6b02e
+  RNReanimated: c1b56d030d1616239861534d9adb531f8cffab68
+  RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  Shake-Staging: c20bf6e9d2cfc7da6c219946809fd6d7a4720b64
   Yoga: aa0cb45287ebe1004c02a13f279c55a95f1572f4
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

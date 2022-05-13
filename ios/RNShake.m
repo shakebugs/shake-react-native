@@ -57,6 +57,30 @@ RCT_REMAP_METHOD(isUserFeedbackEnabled, isUserFeedbackEnabledwithResolver:(RCTPr
     resolve(isUserFeedbackEnabled);
 }
 
+RCT_EXPORT_METHOD(setCrashReportingEnabled:(BOOL)enabled)
+{
+    SHKShake.configuration.isCrashReportingEnabled = enabled;
+}
+
+RCT_REMAP_METHOD(isCrashReportingEnabled, isCrashReportingEnabledwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *enabled = [NSNumber numberWithBool:SHKShake.configuration.isCrashReportingEnabled];
+    resolve(enabled);
+}
+
+RCT_EXPORT_METHOD(setAskForCrashDescription:(BOOL)enabled)
+{
+    SHKShake.configuration.isAskForCrashDescriptionEnabled = enabled;
+}
+
+RCT_REMAP_METHOD(isAskForCrashDescription, isAskForCrashDescriptionwithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSNumber *enabled = [NSNumber numberWithBool:SHKShake.configuration.isAskForCrashDescriptionEnabled];
+    resolve(enabled);
+}
+
 RCT_EXPORT_METHOD(setEnableActivityHistory:(BOOL)enableActivityHistory)
 {
     SHKShake.configuration.isActivityHistoryEnabled = enableActivityHistory;

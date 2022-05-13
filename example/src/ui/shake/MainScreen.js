@@ -136,6 +136,10 @@ const MainScreen = props => {
     Shake.setFeedbackTypes([feedbackType1, feedbackType2, feedbackType3]);
   };
 
+  const testCrash = () => {
+    throw new Error('Test crash');
+  };
+
   const postNotification = () => {
     PushNotification.createChannel({
       channelId: 'shake-rn',
@@ -228,6 +232,7 @@ const MainScreen = props => {
         <Button text="Custom log" onPress={customLog} />
         <Button text="Add metadata" onPress={addMetadata} />
         <Button text="Set feedback types" onPress={setFeedbackTypes} />
+        <Button text="Test crash" onPress={testCrash} />
         <Title style={styles.title} text="Invoking" />
         <Option
           enabled={shakeInvokingEnabled}
@@ -253,6 +258,7 @@ const MainScreen = props => {
             setScreenshotInvokingEnabled(!screenshotInvokingEnabled);
           }}
         />
+
         <Title style={styles.title} text="Shaking threshold" />
         <Button
           text="100"
@@ -272,6 +278,7 @@ const MainScreen = props => {
             Shake.setShakingThreshold(900);
           }}
         />
+
         <Title style={styles.title} text="User" />
         <Button
           text="Register user"
@@ -297,10 +304,11 @@ const MainScreen = props => {
             Shake.unregisterUser();
           }}
         />
+
         <Title style={styles.title} text="Options" />
         <Option
           enabled={userFeedbackEnabled}
-          title="User feedback enabled"
+          title="User feedback"
           onValueChanged={() => {
             Shake.setUserFeedbackEnabled(!userFeedbackEnabled);
             setUserFeedbackEnabled(!userFeedbackEnabled);
@@ -388,6 +396,7 @@ const MainScreen = props => {
             setScreenshotIncluded(!screenshotIncluded);
           }}
         />
+
         <Title style={styles.title} text="Notifications" />
         <Button
           text="Show notification settings"
@@ -402,6 +411,7 @@ const MainScreen = props => {
           text="Set notification events filter"
           onPress={setNotificationEventsFilter}
         />
+
         <Title style={styles.title} text="Private view" />
         <Button text="Add private view" onPress={addPrivateViewFun} />
         <Button text="Remove private view" onPress={removePrivateViewFun} />
@@ -411,6 +421,7 @@ const MainScreen = props => {
             privateView = ref;
           }}
         />
+
         <Title style={styles.title} text="Network" />
         <Button text="Send GET request" onPress={sendGetNetworkRequest} />
         <Button text="Send POST request" onPress={sendPostNetworkRequest} />

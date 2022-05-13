@@ -549,6 +549,42 @@ class Shake {
   static unregisterUser() {
     this.shake.unregisterUser();
   }
+
+  /**
+   * Enables or disables crash reporting.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setCrashReportingEnabled(enabled) {
+    this.shake.setCrashReportingEnabled(enabled);
+  }
+
+  /**
+   * Checks if crash reporting is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isCrashReportingEnabled() {
+    return await this.shake.isCrashReportingEnabled();
+  }
+
+  /**
+   * Enables or disables crash description dialog.
+   *
+   * @param enabled true if enabled, otherwise false
+   */
+  static setAskForCrashDescription(enabled) {
+    this.shake.setAskForCrashDescription(enabled);
+  }
+
+  /**
+   * Checks if crash description dialog is enabled.
+   *
+   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   */
+  static async isAskForCrashDescription() {
+    return await this.shake.isAskForCrashDescription();
+  }
 }
 
 export default Shake;
