@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
@@ -25,6 +26,7 @@ import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
+import com.shakebugs.shake.chat.UnreadChatMessagesListener;
 import com.shakebugs.shake.internal.domain.models.NetworkRequest;
 import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
@@ -43,7 +45,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     public ShakeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.mapper = new Mapper(reactContext);
-        this.emitter = new Emitter(reactContext, mapper);
+        this.emitter = new Emitter(reactContext);
     }
 
     @NonNull
@@ -513,7 +515,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 Shake.setNotificationEventsFilter(new NotificationEventsFilter() {
                     @Override
                     public NotificationEventEditor filter(NotificationEventEditor notificationEventEditor) {
-                        emitter.sendNotificationEvent(notificationEventEditor.build());
+                        WritableMap map = mapper.notificationEventToMap(notificationEventEditor.build());
+                        emitter.sendEvent(Emitter.EVENT_NOTIFICATION, map);
                         return null;
                     }
                 });
@@ -527,6 +530,31 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.setNotificationEventsFilter(null);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void startUnreadChatMessagesEmitter() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setUnreadChatMessagesListener(new UnreadChatMessagesListener() {
+                    @Override
+                    public void onUnreadMessagesCountChanged(int count) {
+                        emitter.sendEvent(Emitter.EVENT_UNREAD_MESSAGES, count);
+                    }
+                });
+            }
+        });
+    }
+
+    @ReactMethod
+    public void stopUnreadChatMessagesEmitter() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setUnreadChatMessagesListener(null);
             }
         });
     }

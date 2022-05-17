@@ -7,6 +7,7 @@ import FeedbackType from "./src/models/FeedbackType";
 import ShakeScreen from "./src/models/ShakeScreen";
 import NetworkTracker from "./src/modules/NetworkTracker";
 import NotificationTracker from "./src/modules/NotificationTracker";
+import MessagesTracker from "./src/modules/MessagesTracker";
 import NotificationEvent from "./src/models/NotificationEvent";
 import NetworkRequest from "./src/models/NetworkRequest";
 import NetworkRequestBuilder from "./src/builders/NetworkRequestBuilder";
@@ -34,6 +35,7 @@ class Shake {
   // Helpers
   static networkTracker = new NetworkTracker(this.shake);
   static notificationTracker = new NotificationTracker(this.shake);
+  static messagesTracker = new MessagesTracker(this.shake);
 
   /**
    * Starts Shake SDK.
@@ -548,6 +550,15 @@ class Shake {
    */
   static unregisterUser() {
     this.shake.unregisterUser();
+  }
+
+  /**
+  * Sets unread chat messages number listener.
+  * <br><br>
+  * Set null if you want to remove listener.
+  */
+  static setUnreadMessagesListener(listener) {
+    this.messagesTracker.setUnreadMessagesListener(listener);
   }
 }
 

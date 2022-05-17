@@ -72,13 +72,17 @@ declare module "react-native-shake" {
     export function insertNetworkRequest(requestBuilder: NetworkRequestBuilder): void;
 
     export function setNetworkRequestsFilter(
-        filter: (requestBuilder: NetworkRequestBuilder) => NetworkRequestBuilder
+        filter?: (requestBuilder: NetworkRequestBuilder) => NetworkRequestBuilder
     ): void;
 
     export function insertNotificationEvent(notificationBuilder: NotificationEventBuilder): void;
 
     export function setNotificationEventsFilter(
-        filter: (notificationBuilder: NotificationEventBuilder) => NotificationEventBuilder
+        filter?: (notificationBuilder: NotificationEventBuilder) => NotificationEventBuilder
+    ): void;
+
+    export function setUnreadMessagesListener(
+        listener?: (count: number) => void
     ): void;
 
     export function setShakeReportData(files: Array<ShakeFile>): void;

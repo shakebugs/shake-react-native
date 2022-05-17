@@ -27,7 +27,7 @@
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-  return @[@"EventNotification"];
+  return @[@"EventNotification", @"UnreadMessages"];
 }
 
 // React Native
@@ -312,6 +312,18 @@ RCT_EXPORT_METHOD(startNotificationsEmitter)
 RCT_EXPORT_METHOD(stopNotificationsEmitter)
 {
     SHKShake.notificationEventsFilter = nil;
+}
+
+RCT_EXPORT_METHOD(startUnreadChatMessagesEmitter)
+{
+    SHKShake.unreadMessagesListener = ^(NSUInteger count) {
+        [self sendEventWithName:@"UnreadMessages" body:[NSNumber numberWithInt:(int)count]];
+    };
+}
+
+RCT_EXPORT_METHOD(stopUnreadChatMessagesEmitter)
+{
+    SHKShake.unreadMessagesListener = nil;
 }
 
 RCT_EXPORT_METHOD(showNotificationsSettings)
