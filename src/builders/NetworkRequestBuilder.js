@@ -139,6 +139,9 @@ class NetworkRequestBuilder {
             timestamp = new Date().toISOString();
         }
 
+        // SDK expects: 2022-07-21T09:53:36.958000+0000
+        timestamp = timestamp.replace("Z", "000+0000")
+
         method = !this._method ? "" : this._method;
         status = !this._statusCode ? "" : this._statusCode;
         url = !this._url ? INVALID_URL : this._url;

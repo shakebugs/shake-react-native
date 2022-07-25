@@ -1,17 +1,33 @@
 import { NativeEventEmitter, NativeModules } from "react-native";
 
-const EVENT_NOTIFICATION = "EventNotification";
+const eventEmitter = new NativeEventEmitter(NativeModules.RNShake);
 
-let notificationListener = null;
+const EVENT_NOTIFICATION = "EventNotification";
+let notificationListenerSub = null;
 
 export const registerNotificationListener = (listener) => {
-    const eventEmitter = new NativeEventEmitter(NativeModules.RNShake);
-    eventEmitter.addListener(EVENT_NOTIFICATION, listener);
-    notificationListener = listener;
+  notificationListenerSub = eventEmitter.addListener(
+    EVENT_NOTIFICATION,
+    listener
+  );
 };
 
 export const unregisterNotificationListener = () => {
-    const eventEmitter = new NativeEventEmitter(NativeModules.RNShake);
-    eventEmitter.removeListener(notificationListener);
-    notificationListener = null;
+  notificationListenerSub.remove();
+  notificationListenerSub = null;
+};
+
+const EVENT_UNREAD_MESSAGES = "UnreadMessages";
+let unreadMessagesListenerSub = null;
+
+export const registerUnreadMessagesListener = (listener) => {
+  unreadMessagesListenerSub = eventEmitter.addListener(
+    EVENT_UNREAD_MESSAGES,
+    listener
+  );
+};
+
+export const unregisterUnreadMessagesListener = () => {
+  unreadMessagesListenerSub.remove();
+  unreadMessagesListenerSub = null;
 };

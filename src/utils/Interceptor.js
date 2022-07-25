@@ -67,7 +67,7 @@ const Interceptor = {
 
             const cloneNetwork = JSON.parse(JSON.stringify(networkRequest));
             cloneNetwork.start = currentDate.getTime();
-            cloneNetwork.timestamp = currentDate.toISOString();
+            cloneNetwork.timestamp = currentDate;
             cloneNetwork.requestBody = requestBody ? requestBody : "";
 
             if (this.addEventListener) {

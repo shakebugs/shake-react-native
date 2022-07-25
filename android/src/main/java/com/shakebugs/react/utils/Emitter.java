@@ -3,28 +3,25 @@ package com.shakebugs.react.utils;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 
 public class Emitter {
-    private static final String EVENT_NOTIFICATION = "EventNotification";
+    public static final String EVENT_NOTIFICATION = "EventNotification";
+    public static final String EVENT_UNREAD_MESSAGES = "UnreadMessages";
     private final ReactContext reactContext;
-    private final Mapper mapper;
 
-    public Emitter(ReactContext reactContext, Mapper mapper) {
+    public Emitter(ReactContext reactContext) {
         this.reactContext = reactContext;
-        this.mapper = mapper;
     }
 
-    public void sendNotificationEvent(NotificationEvent notificationEvent) {
-        WritableMap map = mapper.notificationEventToMap(notificationEvent);
-        sendEvent(reactContext, EVENT_NOTIFICATION, map);
-    }
-
-    private void sendEvent(ReactContext reactContext,
-                           String eventName,
-                           WritableMap params) {
+    public void sendEvent(String eventName, WritableMap params) {
         reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
+    }
+
+    public void sendEvent(String eventName, int number) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, number);
     }
 }
