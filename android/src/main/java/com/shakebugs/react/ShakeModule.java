@@ -27,11 +27,11 @@ import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
 import com.shakebugs.shake.chat.UnreadChatMessagesListener;
+import com.shakebugs.shake.form.ShakeForm;
 import com.shakebugs.shake.internal.domain.models.NetworkRequest;
 import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
 import com.shakebugs.shake.privacy.NotificationEventsFilter;
-import com.shakebugs.shake.report.FeedbackType;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 
@@ -98,6 +98,24 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getShakeForm(Promise promise) {
+        ShakeForm shakeForm = Shake.getReportConfiguration().getShakeForm();
+        WritableMap shakeFormMap = mapper.mapShakeFormToMap(shakeForm);
+        promise.resolve(shakeFormMap);
+    }
+
+    @ReactMethod
+    public void setShakeForm(final ReadableMap shakeFormMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ShakeForm shakeForm = mapper.mapMapToShakeForm(shakeFormMap);
+                Shake.getReportConfiguration().setShakeForm(shakeForm);
+            }
+        });
+    }
+
+    @ReactMethod
     public void isUserFeedbackEnabled(Promise promise) {
         promise.resolve(Shake.isUserFeedbackEnabled());
     }
@@ -138,21 +156,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setEnableActivityHistory(enableActivityHistory);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void isEnableInspectScreen(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableInspectScreen());
-    }
-
-    @ReactMethod
-    public void setEnableInspectScreen(final boolean enableInspectScreen) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.getReportConfiguration().setEnableInspectScreen(enableInspectScreen);
             }
         });
     }
@@ -247,69 +250,6 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setShakingThreshold(shakingThreshold);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void getEmailField(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().getEmailField());
-    }
-
-    @ReactMethod
-    public void setEmailField(final String emailField) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.getReportConfiguration().setEmailField(emailField);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void isEnableEmailField(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableEmailField());
-    }
-
-    @ReactMethod
-    public void setEnableEmailField(final boolean enableEmailField) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.getReportConfiguration().setEnableEmailField(enableEmailField);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void isFeedbackTypeEnabled(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isFeedbackTypeEnabled());
-    }
-
-    @ReactMethod
-    public void setFeedbackTypeEnabled(final boolean feedbackTypeEnabled) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Shake.getReportConfiguration().setFeedbackTypeEnabled(feedbackTypeEnabled);
-            }
-        });
-    }
-
-    @ReactMethod
-    public void getFeedbackTypes(Promise promise) {
-        List<FeedbackType> feedbackTypes = Shake.getReportConfiguration().getFeedbackTypes();
-        WritableArray feedbackTypesArray = mapper.mapFeedbackTypesToArray(feedbackTypes);
-        promise.resolve(feedbackTypesArray);
-    }
-
-    @ReactMethod
-    public void setFeedbackTypes(final ReadableArray feedbackTypesArray) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                List<FeedbackType> feedbackTypes = mapper.mapArrayToFeedbackTypes(feedbackTypesArray);
-                Shake.getReportConfiguration().setFeedbackTypes(feedbackTypes);
             }
         });
     }

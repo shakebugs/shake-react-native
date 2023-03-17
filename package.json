@@ -1,7 +1,7 @@
 {
   "name": "react-native-shake",
   "title": "React Native Shake SDK",
-  "version": "15.0.0",
+  "version": "16.0.0",
   "description": "Shake SDK wrapper",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/decodehq/shake-react-native.git",
-    "baseUrl": "https://bitbucket.org/decodehq/shake-react-native"
+    "url": "git+https://github.com/shakebugs/shake-react-native.git",
+    "baseUrl": "https://github.com/shakebugs/shake-react-native"
   },
   "keywords": [
     "shakebugs",
@@ -30,8 +30,8 @@
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "react": "^16.8.1",
-    "react-native": "^0.59.8"
+    "react": "18.2.0",
+    "react-native": "0.71.4"
   },
   "dependencies": {}
 }

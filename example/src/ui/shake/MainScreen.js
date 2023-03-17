@@ -1,10 +1,20 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import Shake, {
+  LogLevel,
   NetworkRequestBuilder,
   NotificationEventBuilder,
+  ShakeAttachments,
+  ShakeEmail,
   ShakeFile,
+  ShakeForm,
+  ShakeInspectButton,
+  ShakePicker,
+  ShakePickerItem,
   ShakeReportConfiguration,
+  ShakeScreen,
+  ShakeTextInput,
+  ShakeTitle,
 } from 'react-native-shake';
 import RNFS from 'react-native-fs';
 import Button from '../core/Button';
@@ -16,9 +26,6 @@ import Version from '../core/Version';
 import AxiosNetworkTester from '../network/AxiosNetworkTester';
 import Private from '../core/Private';
 import PushNotification from 'react-native-push-notification';
-import LogLevel from '../../../../src/models/LogLevel';
-import ShakeScreen from '../../../../src/models/ShakeScreen';
-import FeedbackType from '../../../../src/models/FeedbackType';
 import {createTempFile} from '../../utils/Files';
 
 const MainScreen = props => {
@@ -26,24 +33,17 @@ const MainScreen = props => {
 
   const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState(false);
   const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState(false);
-  const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] = useState(
-    false,
-  );
+  const [screenshotInvokingEnabled, setScreenshotInvokingEnabled] =
+    useState(false);
   const [blackBoxEnabled, setBlackBoxEnabled] = useState(false);
   const [activityHistoryEnabled, setActivityHistoryEnabled] = useState(false);
-  const [inspectScreenEnabled, setInspectScreenEnabled] = useState(false);
   const [userFeedbackEnabled, setUserFeedbackEnabled] = useState(false);
-  const [emailFieldEnabled, setEmailFieldEnabled] = useState(false);
-  const [feedbackTypesEnabled, setFeedbackTypesEnabled] = useState(false);
-  const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] = useState(
-    false,
-  );
+  const [autoVideoRecordingEnabled, setAutoVideoRecordingEnabled] =
+    useState(false);
   const [consoleLogsEnabled, setConsoleLogsEnabled] = useState(false);
   const [networkRequestsEnabled, setNetworkRequestsEnabled] = useState(false);
-  const [
-    sensitiveDataRedactionEnabled,
-    setSensitiveDataRedactionEnabled,
-  ] = useState(false);
+  const [sensitiveDataRedactionEnabled, setSensitiveDataRedactionEnabled] =
+    useState(false);
   const [screenshotIncluded, setScreenshotIncluded] = useState(false);
 
   let privateView = useRef(null);
@@ -60,12 +60,9 @@ const MainScreen = props => {
   const initialize = async () => {
     setBlackBoxEnabled(await Shake.isEnableBlackBox());
     setActivityHistoryEnabled(await Shake.isEnableActivityHistory());
-    setInspectScreenEnabled(await Shake.isEnableInspectScreen());
     setButtonInvokingEnabled(await Shake.isShowFloatingReportButton());
     setShakeInvokingEnabled(await Shake.isInvokeShakeOnShakeDeviceEvent());
     setScreenshotInvokingEnabled(await Shake.isInvokeShakeOnScreenshot());
-    setEmailFieldEnabled(await Shake.isEnableEmailField());
-    setFeedbackTypesEnabled(await Shake.isFeedbackTypeEnabled());
     setAutoVideoRecordingEnabled(await Shake.isAutoVideoRecording());
     setConsoleLogsEnabled(await Shake.isConsoleLogsEnabled());
     setNetworkRequestsEnabled(await Shake.isNetworkRequestsEnabled());
@@ -128,12 +125,26 @@ const MainScreen = props => {
     Shake.setMetadata('Shake', 'This is Shake metadata.');
   };
 
-  const setFeedbackTypes = async () => {
-    const feedbackType1 = new FeedbackType('Mouse', 'mouse');
-    const feedbackType2 = new FeedbackType('Keyboard', 'keyboard', 'ic_key');
-    const feedbackType3 = new FeedbackType('Display', 'display', 'ic_display');
+  const setCustomForm = async () => {
+    // const oldForm = await Shake.getShakeForm();
+    // oldForm.components = oldForm.components.filter(c => c.type !== 'inspect');
 
-    Shake.setFeedbackTypes([feedbackType1, feedbackType2, feedbackType3]);
+    const pickerItems = [
+      new ShakePickerItem('Mouse', null, 'ic_mouse', 'mouse'),
+      new ShakePickerItem('Keyboard', null, 'ic_key', 'keyboard'),
+      new ShakePickerItem('Display', null, 'ic_display', 'display'),
+    ];
+
+    const shakeForm = new ShakeForm([
+      new ShakePicker('Category', null, pickerItems),
+      new ShakeTitle('Short title', null, '', true),
+      new ShakeTextInput('Repro steps', null, ''),
+      new ShakeEmail('Your email'),
+      new ShakeInspectButton(),
+      new ShakeAttachments(),
+    ]);
+
+    Shake.setShakeForm(shakeForm);
   };
 
   const postNotification = () => {
@@ -227,7 +238,7 @@ const MainScreen = props => {
         <Button text="Silent report" onPress={silentReport} />
         <Button text="Custom log" onPress={customLog} />
         <Button text="Add metadata" onPress={addMetadata} />
-        <Button text="Set feedback types" onPress={setFeedbackTypes} />
+        <Button text="Set custom form" onPress={setCustomForm} />
         <Title style={styles.title} text="Invoking" />
         <Option
           enabled={shakeInvokingEnabled}
@@ -315,14 +326,6 @@ const MainScreen = props => {
           }}
         />
         <Option
-          enabled={inspectScreenEnabled}
-          title="Inspect screen"
-          onValueChanged={() => {
-            Shake.setEnableInspectScreen(!inspectScreenEnabled);
-            setInspectScreenEnabled(!inspectScreenEnabled);
-          }}
-        />
-        <Option
           enabled={activityHistoryEnabled}
           title="Activity history"
           onValueChanged={() => {
@@ -344,22 +347,6 @@ const MainScreen = props => {
           onValueChanged={() => {
             Shake.setConsoleLogsEnabled(!consoleLogsEnabled);
             setConsoleLogsEnabled(!consoleLogsEnabled);
-          }}
-        />
-        <Option
-          enabled={emailFieldEnabled}
-          title="Email field"
-          onValueChanged={() => {
-            Shake.setEnableEmailField(!emailFieldEnabled);
-            setEmailFieldEnabled(!emailFieldEnabled);
-          }}
-        />
-        <Option
-          enabled={feedbackTypesEnabled}
-          title="Feedback types"
-          onValueChanged={() => {
-            Shake.setFeedbackTypeEnabled(!feedbackTypesEnabled);
-            setFeedbackTypesEnabled(!feedbackTypesEnabled);
           }}
         />
         <Option

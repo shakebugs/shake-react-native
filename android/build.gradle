@@ -31,9 +31,10 @@ buildscript {
     if (project == rootProject) {
         repositories {
             google()
+            mavenCentral()
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:4.2.2'
+            classpath 'com.android.tools.build:gradle:7.3.1'
         }
     }
 }
@@ -75,5 +76,5 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    api "$System.env.ANDROID_DEPENDENCY:15.3.+"
+    api "$System.env.ANDROID_DEPENDENCY:16.0.+"
 }
