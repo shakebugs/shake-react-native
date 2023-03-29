@@ -205,46 +205,46 @@ declare module "react-native-shake" {
 
     export class ShakeTitle extends ShakeFormComponent {
         label: string;
-        labelRes?: string;
-        initialValue: string;
+        labelRes: string | null;
+        initialValue: string | null;
         required: boolean;
 
-        constructor(label: string, labelRes?: string, initialValue?: string, required?: boolean);
+        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
     }
 
     export class ShakeTextInput extends ShakeFormComponent {
         label: string;
-        labelRes?: string;
-        initialValue: string;
+        labelRes: string | null;
+        initialValue: string | null;
         required: boolean;
 
-        constructor(label: string, labelRes?: string, initialValue?: string, required?: boolean);
+        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
     }
 
     export class ShakeEmail extends ShakeFormComponent {
         label: string;
-        labelRes?: string;
-        initialValue: string;
+        labelRes: string | null;
+        initialValue: string | null;
         required: boolean;
 
-        constructor(label: string, labelRes?: string, initialValue?: string, required?: boolean);
+        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
     }
 
     export class ShakePicker extends ShakeFormComponent {
         label: string;
-        labelRes?: string;
+        labelRes: string | null;
         items: Array<ShakePickerItem>;
 
-        constructor(label: string, labelRes?: string, items?: Array<ShakePickerItem>);
+        constructor(label: string, items: Array<ShakePickerItem>, labelRes?: string | null);
     }
 
     export class ShakePickerItem {
         text: string;
-        textRes?: string;
-        icon?: string;
-        tag?: string;
+        textRes: string | null;
+        icon: string | null;
+        tag: string | null;
 
-        constructor(text: string, textRes?: string, icon?: string, tag?: string);
+        constructor(text: string, textRes?: string | null, icon?: string | null, tag?: string | null);
     }
 
     export class ShakeAttachments extends ShakeFormComponent {
