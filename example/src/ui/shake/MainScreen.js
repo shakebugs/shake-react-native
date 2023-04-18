@@ -136,7 +136,7 @@ const MainScreen = props => {
     ];
 
     const shakeForm = new ShakeForm([
-      new ShakePicker('Category', null, pickerItems),
+      new ShakePicker('Category', pickerItems, null),
       new ShakeTitle('Short title', null, '', true),
       new ShakeTextInput('Repro steps', null, ''),
       new ShakeEmail('Your email'),
