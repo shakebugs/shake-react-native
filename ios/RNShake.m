@@ -4,6 +4,7 @@
 #import <Shake/SHKShakeConfiguration.h>
 #import <Shake/SHKShakeFile.h>
 #import <Shake/SHKShakeReportConfiguration.h>
+#import <Shake/SHKFormItemProtocol.h>
 
 @implementation RNShake
 
@@ -45,6 +46,19 @@ RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
     [SHKShake show:showOption];
 }
 
+RCT_EXPORT_METHOD(setShakeForm:(NSDictionary *)shakeFormDic)
+{
+    SHKForm* shakeForm = [self mapDicToShakeForm:shakeFormDic];
+    SHKShake.configuration.form = shakeForm;
+}
+
+RCT_EXPORT_METHOD(getShakeForm:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+{
+    SHKForm *shakeForm = SHKShake.configuration.form;
+    NSDictionary *shakeFormDict = [self mapShakeFormToDict:shakeForm];
+    resolve(shakeFormDict);
+}
+
 RCT_EXPORT_METHOD(setUserFeedbackEnabled:(BOOL)enabled)
 {
     SHKShake.configuration.isUserFeedbackEnabled = enabled;
@@ -81,17 +95,6 @@ RCT_REMAP_METHOD(isEnableBlackBox, isEnableBlackBoxwithResolver:(RCTPromiseResol
     resolve(isEnableBlackBox);
 }
 
-RCT_EXPORT_METHOD(setEnableInspectScreen:(BOOL)enableInspectScreen)
-{
-    SHKShake.configuration.isInspectScreenEnabled = enableInspectScreen;
-}
-
-RCT_REMAP_METHOD(isEnableInspectScreen, isEnableInspectScreenwithResolver:(RCTPromiseResolveBlock)resolve
-                 rejecter:(RCTPromiseRejectBlock)reject)
-{
-    NSNumber *isEnableInspectScreen = [NSNumber numberWithBool:SHKShake.configuration.isInspectScreenEnabled];
-    resolve(isEnableInspectScreen);
-}
 
 RCT_EXPORT_METHOD(setShowFloatingReportButton:(BOOL)showFloatingReportButton)
 {
@@ -165,52 +168,6 @@ RCT_REMAP_METHOD(getShakingThreshold, getShakingThresholdwithResolver:(RCTPromis
 {
     NSNumber *shakingThreshold = [NSNumber numberWithFloat:SHKShake.configuration.shakingThreshold];
     resolve(shakingThreshold);
-}
-
-RCT_EXPORT_METHOD(setEnableEmailField:(BOOL)isEmailFieldEnabled)
-{
-    SHKShake.configuration.isEmailFieldEnabled = isEmailFieldEnabled;
-}
-
-RCT_EXPORT_METHOD(isEnableEmailField:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-{
-    NSNumber *isEmailFieldEnabled = [NSNumber numberWithBool:SHKShake.configuration.isEmailFieldEnabled];
-    resolve(isEmailFieldEnabled);
-}
-
-RCT_EXPORT_METHOD(setEmailField:(NSString*)emailField)
-{
-    SHKShake.configuration.emailField = emailField;
-}
-
-RCT_EXPORT_METHOD(getEmailField:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-{
-    NSString *emailField = SHKShake.configuration.emailField;
-    resolve(emailField);
-}
-
-RCT_EXPORT_METHOD(setFeedbackTypeEnabled:(BOOL)isFeedbackTypeEnabled)
-{
-    SHKShake.configuration.isFeedbackTypeEnabled = isFeedbackTypeEnabled;
-}
-
-RCT_EXPORT_METHOD(isFeedbackTypeEnabled:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-{
-    NSNumber *isFeedbackTypeEnabled = [NSNumber numberWithBool:SHKShake.configuration.isFeedbackTypeEnabled];
-    resolve(isFeedbackTypeEnabled);
-}
-
-RCT_EXPORT_METHOD(setFeedbackTypes:(NSArray*)feedbackTypesArray)
-{
-    NSMutableArray<SHKFeedbackEntry *> *feedbackTypes = [self mapArrayToFeedbackTypes:feedbackTypesArray];
-    [SHKShake setFeedbackTypes:feedbackTypes];
-}
-
-RCT_EXPORT_METHOD(getFeedbackTypes:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-{
-    NSArray<SHKFeedbackEntry *> *feedbackTypes = [SHKShake getFeedbackTypes];
-    NSArray<NSDictionary *> *feedbackTypesArray = [self mapFeedbackTypesToArray:feedbackTypes];
-    resolve(feedbackTypesArray);
 }
 
 RCT_EXPORT_METHOD(setShowIntroMessage:(BOOL)showIntroMessage)
@@ -446,48 +403,191 @@ RCT_EXPORT_METHOD(unregisterUser)
     return shakeFiles;
 }
 
-- (NSMutableArray<SHKFeedbackEntry*>*)mapArrayToFeedbackTypes:(NSArray *)feedbackTypesArray
+- (SHKForm *)mapDicToShakeForm:(NSDictionary *)shakeFormDic
 {
-    if (feedbackTypesArray == nil) return nil;
+    if (shakeFormDic == nil) return nil;
+    
+    NSMutableArray *dictComponents = [shakeFormDic objectForKey:@"components"];
+    if (dictComponents == nil) dictComponents = [NSMutableArray array];
 
-    NSMutableArray<SHKFeedbackEntry*>* feedbackTypes = [NSMutableArray array];
-    for(int i = 0; i < [feedbackTypesArray count]; i++) {
-        NSDictionary *feedbackTypeDic = [feedbackTypesArray objectAtIndex:i];
+    NSMutableArray<id<SHKFormItemProtocol>>* formComponents = [NSMutableArray array];
+    
+    for(int i = 0; i < [dictComponents count]; i++) {
+        NSDictionary *component = [dictComponents objectAtIndex:i];
 
-        NSString *title = [feedbackTypeDic objectForKey:@"title"];
-        NSString *tag = [feedbackTypeDic objectForKey:@"tag"];
-        NSString *icon = [feedbackTypeDic objectForKey:@"icon"];
+        NSString *type = [component objectForKey:@"type"];
+        if ([type isEqualToString:@"title"]) {
+            NSString *label = [component objectForKey:@"label"];
+            NSString *labelRes = [component objectForKey:@"labelRes"] ?: nil;
+            NSString *initialValue = [component objectForKey:@"initialValue"];
+            BOOL required = [[component objectForKey:@"required"] boolValue];
+            
+            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
+            
+            [formComponents addObject:[[SHKTitle alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
+        }
+        if ([type isEqualToString:@"text_input"]) {
+            NSString *label = [component objectForKey:@"label"];
+            NSString *labelRes = [component objectForKey:@"labelRes"];
+            NSString *initialValue = [component objectForKey:@"initialValue"];
+            BOOL required = [[component objectForKey:@"required"] boolValue];
+            
+            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
+            
+            [formComponents addObject:[[SHKTextInput alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
+        }
+        if ([type isEqualToString:@"email"]) {
+            NSString *label = [component objectForKey:@"label"];
+            NSString *labelRes = [component objectForKey:@"labelRes"];
+            NSString *initialValue = [component objectForKey:@"initialValue"];
+            BOOL required = [[component objectForKey:@"required"] boolValue];
+            
+            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
+            
+            [formComponents addObject:[[SHKEmail alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
+        }
+        if ([type isEqualToString:@"picker"]) {
+            NSString *label = [component objectForKey:@"label"];
+            NSString *labelRes = [component objectForKey:@"labelRes"];
+            NSArray *itemsArray = [component objectForKey:@"items"];
 
-        UIImage *image = [UIImage imageNamed:icon];
-        SHKFeedbackEntry *feedbackType = [SHKFeedbackEntry entryWithTitle:title andTag:tag icon:image];
-
-        if (feedbackType != nil) {
-            [feedbackTypes addObject:feedbackType];
+            NSMutableArray<SHKPickerItem*>* items = [NSMutableArray array];
+            for(int j = 0; j < [itemsArray count]; j++) {
+                NSDictionary *arrayItem = [itemsArray objectAtIndex:j];
+                
+                NSString *icon = [arrayItem objectForKey:@"icon"];
+                NSString *text = [arrayItem objectForKey:@"text"];
+                NSString *textRes = [arrayItem objectForKey:@"textRes"];
+                NSString *tag = [arrayItem objectForKey:@"tag"];
+                
+                if (icon && [icon isEqual:[NSNull null]]) icon=nil; // NSNull causes
+                if (textRes && [textRes isEqual:[NSNull null]]) textRes=nil; // NSNull causes crash
+                
+                SHKPickerItem* item = [[SHKPickerItem alloc] initWithIconName:icon text:text textRes:textRes tag:tag];
+                [items addObject:item];
+            }
+            
+            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
+            
+            [formComponents addObject:[[SHKPicker alloc] initWithLabel:label items:items labelRes:labelRes]];
+        }
+        if ([type isEqualToString:@"attachments"]) {
+            [formComponents addObject:SHKAttachments.new];
+        }
+        
+        if ([type isEqualToString:@"inspect"]) {
+            [formComponents addObject:SHKInspectButton.new];
+        
         }
     }
-    return feedbackTypes;
+    return [[SHKForm alloc] initWithItems:formComponents];
 }
 
-- (NSArray<NSDictionary*>*)mapFeedbackTypesToArray:(NSArray<SHKFeedbackEntry *> *)feedbackTypes
+- (NSDictionary*)mapShakeFormToDict:(SHKForm*)shakeForm
 {
-    if (feedbackTypes == nil) return nil;
+    if (shakeForm == nil) return nil;
 
-    NSMutableArray<NSDictionary*>* feedbackTypesArray = [NSMutableArray array];
-    for(int i = 0; i < [feedbackTypes count]; i++) {
-        SHKFeedbackEntry *feedbackType = [feedbackTypes objectAtIndex:i];
+    NSMutableArray<NSDictionary*>* componentsArray = [NSMutableArray array];
+    
+    for(int i = 0; i < [shakeForm.items count]; i++) {
+        id<SHKFormItemProtocol> item = [shakeForm.items objectAtIndex:i];
+        
+        if ([item isKindOfClass:[SHKTitle class]]) {
+            SHKTitle *component = item;
+            
+            NSDictionary *dict = [[NSDictionary alloc] init];
+            dict = @{
+                @"type": @"title",
+                @"label": component.label,
+                @"labelRes": component.labelRes ?: [NSNull null],
+                @"initialValue": component.initialValue ?: @"",
+                @"required": [NSNumber numberWithBool:component.required]
+            };
+            
+            [componentsArray addObject:dict];
+        }
+        if ([item isKindOfClass:[SHKTextInput class]]) {
+            SHKTextInput *component = item;
+            
+            NSDictionary *dict = [[NSDictionary alloc] init];
+            dict = @{
+                @"type": @"text_input",
+                @"label": component.label,
+                @"labelRes": component.labelRes ?: [NSNull null],
+                @"initialValue": component.initialValue ?: @"",
+                @"required": [NSNumber numberWithBool:component.required]
+            };
+            
+            [componentsArray addObject:dict];
+        }
 
-        NSDictionary *feedbackTypeDic = [[NSDictionary alloc] init];
-        feedbackTypeDic = @{
-            @"title": feedbackType.title,
-            @"tag": feedbackType.tag,
-            @"icon": @""
-        };
+        if ([item isKindOfClass:[SHKEmail class]]) {
+            SHKEmail *component = item;
+            
+            NSDictionary *dict = [[NSDictionary alloc] init];
+            dict = @{
+                @"type": @"email",
+                @"label": component.label,
+                @"labelRes": component.labelRes ?: [NSNull null],
+                @"initialValue": component.initialValue ?: @"",
+                @"required": [NSNumber numberWithBool:component.required]
+            };
+            
+            [componentsArray addObject:dict];
+        }
 
-        if (feedbackTypeDic != nil) {
-            [feedbackTypesArray addObject:feedbackTypeDic];
+        if ([item isKindOfClass:[SHKPicker class]]) {
+            SHKPicker *component = item;
+            
+            NSMutableArray<NSDictionary*>* pickerItemsArray = [NSMutableArray array];
+            for(int j = 0; j < [component.items count]; j++) {
+                SHKPickerItem *pickerItem = [component.items objectAtIndex:j];
+                
+                NSDictionary *pickerItemDict = [[NSDictionary alloc] init];
+                pickerItemDict = @{
+                    @"icon": pickerItem.iconName ?: [NSNull null],
+                    @"text": pickerItem.text,
+                    @"textRes": pickerItem.textRes ?: [NSNull null],
+                    @"tag": pickerItem.tag ?: [NSNull null],
+                };
+                
+                [pickerItemsArray addObject:pickerItemDict];
+            }
+            
+
+            NSDictionary *componentDict = [[NSDictionary alloc] init];
+            componentDict = @{
+                @"type": @"picker",
+                @"label": component.label,
+                @"labelRes": component.labelRes ?: [NSNull null],
+                @"items": pickerItemsArray
+            };
+            
+            [componentsArray addObject:componentDict];
+        }
+
+        if ([item isKindOfClass:[SHKAttachments class]]) {
+            NSDictionary *dict = [[NSDictionary alloc] init];
+            dict = @{
+                @"type": @"attachments",
+            };
+            
+            [componentsArray addObject:dict];
+        }
+        if ([item isKindOfClass:[SHKInspectButton class]]) {
+            NSDictionary *dict = [[NSDictionary alloc] init];
+            dict = @{
+                @"type": @"inspect",
+            };
+            
+            [componentsArray addObject:dict];
         }
     }
-    return feedbackTypesArray;
+    
+    NSDictionary *shakeFormDict = [[NSDictionary alloc] init];
+    shakeFormDict = @{@"components": componentsArray};
+    
+    return shakeFormDict;
 }
 
 - (SHKShakeReportConfiguration*)mapToConfiguration:(NSDictionary*)configurationDic
@@ -556,7 +656,7 @@ RCT_EXPORT_METHOD(unregisterUser)
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"15.0.0"
+        @"sdkVersion": @"16.0.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
 }

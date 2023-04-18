@@ -9,17 +9,10 @@ import RefreshScreen from './ui/test/RefreshScreen';
 import ListScreen from './ui/test/ListScreen';
 import ModalScreen from './ui/test/ModalScreen';
 import DrawerScreen from './ui/test/DrawerScreen';
-import WebViewScreen from './ui/test/WebViewScreen';
-import MapScreen from './ui/test/MapScreen';
 import TabScreen from './ui/test/TabScreen';
 import Header from './ui/core/Header';
 
 const Stack = createStackNavigator();
-
-export const primaryColor = '#643ecb';
-export const secondaryColor = '#c9c1e7';
-export const disabledPrimaryColor = '#acacac';
-export const disabledSecondaryColor = '#d2d2d2';
 
 const options = {
   headerTitle: props => <Header {...props} />,
@@ -75,16 +68,6 @@ export default class App extends Component {
             options={options}
             name="TabScreen"
             component={TabScreen}
-          />
-          <Stack.Screen
-            options={options}
-            name="WebViewScreen"
-            component={WebViewScreen}
-          />
-          <Stack.Screen
-            options={options}
-            name="MapScreen"
-            component={MapScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -18,7 +18,6 @@ Shake.setShowFloatingReportButton(true);
 Shake.setNetworkRequestsEnabled(true);
 Shake.setConsoleLogsEnabled(true);
 Shake.setAutoVideoRecording(true);
-Shake.setEmailField('test@shakebugs.com');
 Shake.setShowIntroMessage(true);
 Shake.setSensitiveDataRedactionEnabled(true);
 

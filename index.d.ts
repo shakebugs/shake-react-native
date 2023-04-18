@@ -17,10 +17,6 @@ declare module "react-native-shake" {
 
     export function isEnableBlackBox(): Promise<boolean>;
 
-    export function setEnableInspectScreen(inspectScreenEnabled: boolean): void;
-
-    export function isEnableInspectScreen(): Promise<boolean>;
-
     export function setShowFloatingReportButton(floatingButtonEnabled: boolean): void;
 
     export function isShowFloatingReportButton(): Promise<boolean>;
@@ -37,21 +33,9 @@ declare module "react-native-shake" {
 
     export function setDefaultScreen(shakeScreen: ShakeScreen): void;
 
-    export function isEnableEmailField(): Promise<boolean>;
+    export function getShakeForm(): Promise<ShakeForm>;
 
-    export function setEnableEmailField(emailFieldEnabled: boolean): void;
-
-    export function getEmailField(): Promise<string>;
-
-    export function setEmailField(email: string): void;
-
-    export function isFeedbackTypeEnabled(): Promise<boolean>;
-
-    export function setFeedbackTypeEnabled(feedbackTypeEnabled: boolean): void;
-
-    export function getFeedbackTypes(): Promise<Array<FeedbackType>>;
-
-    export function setFeedbackTypes(feedbackTypes: Array<FeedbackType>): void;
+    export function setShakeForm(shakeForm: ShakeForm): void;
 
     export function getShowIntroMessage(): Promise<boolean>;
 
@@ -209,11 +193,65 @@ declare module "react-native-shake" {
         value: string;
     }
 
-    export class FeedbackType {
-        title: string;
-        tag: string;
-        icon: string;
+    export class ShakeForm {
+        components: Array<ShakeFormComponent>;
+        constructor(components: Array<ShakeFormComponent>);
+    }
 
-        constructor(title: string, tag: string, icon?: string);
+    export class ShakeFormComponent {
+        type: string;
+        constructor(type: string);
+    }
+
+    export class ShakeTitle extends ShakeFormComponent {
+        label: string;
+        labelRes: string | null;
+        initialValue: string | null;
+        required: boolean;
+
+        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
+    }
+
+    export class ShakeTextInput extends ShakeFormComponent {
+        label: string;
+        labelRes: string | null;
+        initialValue: string | null;
+        required: boolean;
+
+        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
+    }
+
+    export class ShakeEmail extends ShakeFormComponent {
+        label: string;
+        labelRes: string | null;
+        initialValue: string | null;
+        required: boolean;
+
+        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
+    }
+
+    export class ShakePicker extends ShakeFormComponent {
+        label: string;
+        labelRes: string | null;
+        items: Array<ShakePickerItem>;
+
+        constructor(label: string, items: Array<ShakePickerItem>, labelRes?: string | null);
+    }
+
+    export class ShakePickerItem {
+        text: string;
+        textRes: string | null;
+        icon: string | null;
+        tag: string | null;
+
+        constructor(text: string, textRes?: string | null, icon?: string | null, tag?: string | null);
+    }
+
+    export class ShakeAttachments extends ShakeFormComponent {
+        constructor();
+    }
+
+    export class ShakeInspectButton extends ShakeFormComponent{
+        constructor();
     }
 }

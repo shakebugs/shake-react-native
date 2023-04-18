@@ -3,7 +3,6 @@ import { findNodeHandle, NativeModules } from "react-native";
 import ShakeReportConfiguration from "./src/models/ShakeReportConfiguration";
 import ShakeFile from "./src/models/ShakeFile";
 import LogLevel from "./src/models/LogLevel";
-import FeedbackType from "./src/models/FeedbackType";
 import ShakeScreen from "./src/models/ShakeScreen";
 import NetworkTracker from "./src/modules/NetworkTracker";
 import NotificationTracker from "./src/modules/NotificationTracker";
@@ -12,19 +11,37 @@ import NotificationEvent from "./src/models/NotificationEvent";
 import NetworkRequest from "./src/models/NetworkRequest";
 import NetworkRequestBuilder from "./src/builders/NetworkRequestBuilder";
 import NotificationEventBuilder from "./src/builders/NotificationEventBuilder";
+import ShakeForm from "./src/models/ShakeForm";
+import ShakeFormComponent from "./src/models/ShakeFormComponent";
+import ShakeTitle from "./src/models/ShakeTitle";
+import ShakeTextInput from "./src/models/ShakeTextInput";
+import ShakeEmail from "./src/models/ShakeEmail";
+import ShakePicker from "./src/models/ShakePicker";
+import ShakePickerItem from "./src/models/ShakePickerItem";
+import ShakeAttachments from "./src/models/ShakeAttachments";
+import ShakeInspectButton from "./src/models/ShakeInspectButton";
+
 import { mapToShakeScreen } from "./src/utils/Mappers";
 
 // Export models
 export { ShakeReportConfiguration };
 export { ShakeFile };
 export { LogLevel };
-export { FeedbackType };
 export { ShakeScreen };
 export { NetworkTracker };
 export { NotificationEvent };
 export { NetworkRequest };
 export { NetworkRequestBuilder };
 export { NotificationEventBuilder };
+export { ShakeForm };
+export { ShakeFormComponent };
+export { ShakeTitle };
+export { ShakeTextInput };
+export { ShakeEmail };
+export { ShakePicker };
+export { ShakePickerItem };
+export { ShakeAttachments };
+export { ShakeInspectButton };
 
 /**
  * Interface for native methods.
@@ -109,24 +126,6 @@ class Shake {
    */
   static async isEnableBlackBox() {
     return await this.shake.isEnableBlackBox();
-  }
-
-  /**
-   * Enables or disables inspect screen.
-   *
-   * @param enabled true if enabled, otherwise false
-   */
-  static setEnableInspectScreen(enabled) {
-    this.shake.setEnableInspectScreen(enabled);
-  }
-
-  /**
-   * Checks if inspect screen is enabled.
-   *
-   * @returns {Promise<*|boolean>} true if enabled, otherwise false
-   */
-  static async isEnableInspectScreen() {
-    return await this.shake.isEnableInspectScreen();
   }
 
   /**
@@ -259,75 +258,21 @@ class Shake {
   }
 
   /**
-   * Enables or disables email field on Shake screen.
+   * Gets form for New ticket screen.
    *
-   * @param enabled true if enabled, otherwise false
+   * @returns {ShakeForm} instance of {@link ShakeForm}
    */
-  static setEnableEmailField(enabled) {
-    this.shake.setEnableEmailField(enabled);
+  static async getShakeForm() {
+    return await this.shake.getShakeForm();
   }
 
   /**
-   * Checks if email field on Shake screen is enabled.
+   * Sets form for New ticket screen.
    *
-   * @returns {Promise<*|boolean>} true if enabled, otherwise false
+   * @param shakeForm instance of {@link ShakeForm}
    */
-  static async isEnableEmailField() {
-    return await this.shake.isEnableEmailField();
-  }
-
-  /**
-   * Sets email field value on the Shake screen.
-   *
-   * @param value email field value
-   */
-  static setEmailField(value) {
-    this.shake.setEmailField(value);
-  }
-
-  /**
-   * Gets value of the email field on the Shake screen.
-   *
-   * @returns {Promise<*|string>} email field value
-   */
-  static async getEmailField() {
-    return await this.shake.getEmailField();
-  }
-
-  /**
-   * Checks if feedback type picker on the Shake screen is visible.
-   *
-   * @returns {Promise<*|boolean>} true if visible, otherwise false
-   */
-  static async isFeedbackTypeEnabled() {
-    return await this.shake.isFeedbackTypeEnabled();
-  }
-
-  /**
-   * Sets if feedback type picker is visible on the Shake screen.
-   *
-   * @param enabled true if visible, otherwise false
-   */
-  static setFeedbackTypeEnabled(enabled) {
-    this.shake.setFeedbackTypeEnabled(enabled);
-  }
-
-  /**
-   * Gets ticket feedback types.
-   *
-   * @returns {Promise<*|boolean>} list of {@link FeedbackType}
-   */
-  static async getFeedbackTypes() {
-    return await this.shake.getFeedbackTypes();
-  }
-
-  /**
-   * Sets ticket feedback types.
-   *
-   * @param feedbackTypes list of {@link FeedbackType}
-   */
-  static setFeedbackTypes(feedbackTypes) {
-    this.shake.setFeedbackTypes(feedbackTypes);
+  static setShakeForm(shakeForm) {
+    this.shake.setShakeForm(shakeForm);
   }
 
   /**
