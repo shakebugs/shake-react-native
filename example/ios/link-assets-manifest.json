@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/HKGrotesk-Regular.otf",
+      "sha1": "d16193c24d1d33bfed581fbf575ecbbb47645690"
+    },
+    {
+      "path": "src/assets/fonts/HKGrotesk-SemiBold.otf",
+      "sha1": "b2a30d652829a803c3c225382e37ac63f99f5f49"
+    },
+    {
+      "path": "src/assets/fonts/Lexend-Bold.ttf",
+      "sha1": "06ab06cd31d372d135c243097fb29c940efb6d6e"
+    },
+    {
+      "path": "src/assets/fonts/Lexend-Regular.ttf",
+      "sha1": "6c2aa93d8e5b5f5d831452a101c87bae0a0f913d"
+    }
+  ]
+}

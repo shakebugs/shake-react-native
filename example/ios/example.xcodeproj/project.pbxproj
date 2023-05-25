@@ -12,8 +12,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1A842C74EED9D45D04A397D9 /* libPods-example-exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 009EA06C958EA5997FE5676E /* libPods-example-exampleTests.a */; };
 		41EA5607E1494A3CB79F3C92 /* HKGrotesk-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = E00A22DD20BE496093EC6617 /* HKGrotesk-Regular.otf */; };
+		51953D6D049E463E93C9668B /* Lexend-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0173DB1313AA428C92BB9ECC /* Lexend-Regular.ttf */; };
 		754DBADED5CC5C46549BA233 /* libPods-example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D9DDE07EA5E736DA1162C6 /* libPods-example.a */; };
 		98B32628B0EB41388DA43CC1 /* HKGrotesk-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0AAF37C588304245AE30F947 /* HKGrotesk-SemiBold.otf */; };
+		C2E47B6FE9154CDFB4D3D672 /* Lexend-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 05528CF2BD0B4BA79169B8F7 /* Lexend-Bold.ttf */; };
 		EA306CE92705E55F00C98857 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA306CE82705E55F00C98857 /* File.swift */; };
 		EA3611B026FCCF3B009EA50C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA3611AF26FCCF3B009EA50C /* LaunchScreen.storyboard */; };
 		EA8DD76329C8A3B600FE097A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8DD76229C8A3B600FE097A /* AppDelegate.m */; };
@@ -35,6 +37,8 @@
 		00E356EE1AD99517003FC87E /* exampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = exampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* exampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = exampleTests.m; sourceTree = "<group>"; };
+		0173DB1313AA428C92BB9ECC /* Lexend-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Lexend-Regular.ttf"; path = "../src/assets/fonts/Lexend-Regular.ttf"; sourceTree = "<group>"; };
+		05528CF2BD0B4BA79169B8F7 /* Lexend-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Lexend-Bold.ttf"; path = "../src/assets/fonts/Lexend-Bold.ttf"; sourceTree = "<group>"; };
 		0AAF37C588304245AE30F947 /* HKGrotesk-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "HKGrotesk-SemiBold.otf"; path = "../src/assets/fonts/HKGrotesk-SemiBold.otf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Shake.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shake.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = example/AppDelegate.h; sourceTree = "<group>"; };
@@ -140,6 +144,8 @@
 			children = (
 				E00A22DD20BE496093EC6617 /* HKGrotesk-Regular.otf */,
 				0AAF37C588304245AE30F947 /* HKGrotesk-SemiBold.otf */,
+				05528CF2BD0B4BA79169B8F7 /* Lexend-Bold.ttf */,
+				0173DB1313AA428C92BB9ECC /* Lexend-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -303,6 +309,8 @@
 				41EA5607E1494A3CB79F3C92 /* HKGrotesk-Regular.otf in Resources */,
 				EA3611B026FCCF3B009EA50C /* LaunchScreen.storyboard in Resources */,
 				98B32628B0EB41388DA43CC1 /* HKGrotesk-SemiBold.otf in Resources */,
+				C2E47B6FE9154CDFB4D3D672 /* Lexend-Bold.ttf in Resources */,
+				51953D6D049E463E93C9668B /* Lexend-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

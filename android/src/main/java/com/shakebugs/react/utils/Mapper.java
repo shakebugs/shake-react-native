@@ -2,8 +2,9 @@ package com.shakebugs.react.utils;
 
 import static com.shakebugs.react.utils.Converter.resToString;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -28,7 +29,9 @@ import com.shakebugs.shake.form.ShakeTitle;
 import com.shakebugs.shake.internal.domain.models.NetworkRequest;
 import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.report.ShakeFile;
+import com.shakebugs.shake.theme.ShakeTheme;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,6 +196,37 @@ public class Mapper {
         }
 
         return new ShakeForm(formComponents);
+    }
+
+    public ShakeTheme mapMapToShakeTheme(ReadableMap shakeThemeMap) {
+        if (shakeThemeMap == null) return null;
+
+        String fontFamilyBold = shakeThemeMap.getString("fontFamilyBold");
+        String fontFamilyMedium = shakeThemeMap.getString("fontFamilyMedium");
+        String backgroundColor = shakeThemeMap.getString("backgroundColor");
+        String secondaryBackgroundColor = shakeThemeMap.getString("secondaryBackgroundColor");
+        String textColor = shakeThemeMap.getString("textColor");
+        String secondaryTextColor = shakeThemeMap.getString("secondaryTextColor");
+        String accentColor = shakeThemeMap.getString("accentColor");
+        String accentTextColor = shakeThemeMap.getString("accentTextColor");
+        String outlineColor = shakeThemeMap.getString("outlineColor");
+        double borderRadius = shakeThemeMap.getDouble("borderRadius");
+        double elevation = shakeThemeMap.getDouble("elevation");
+
+        ShakeTheme shakeTheme = new ShakeTheme();
+        shakeTheme.setFontFamilyBoldValue(findAssetPath(context, fontFamilyBold));
+        shakeTheme.setFontFamilyMediumValue(findAssetPath(context, fontFamilyMedium));
+        shakeTheme.setBackgroundColorValue(Color.parseColor(backgroundColor));
+        shakeTheme.setSecondaryBackgroundColorValue(Color.parseColor(secondaryBackgroundColor));
+        shakeTheme.setTextColorValue(Color.parseColor(textColor));
+        shakeTheme.setSecondaryTextColorValue(Color.parseColor(secondaryTextColor));
+        shakeTheme.setAccentColorValue(Color.parseColor(accentColor));
+        shakeTheme.setAccentTextColorValue(Color.parseColor(accentTextColor));
+        shakeTheme.setOutlineColorValue(Color.parseColor(outlineColor));
+        shakeTheme.setBorderRadiusValue((float)borderRadius);
+        shakeTheme.setElevationValue((float)elevation);
+
+        return shakeTheme;
     }
 
     public WritableMap mapShakeFormToMap(ShakeForm shakeForm) {
@@ -425,5 +459,21 @@ public class Mapper {
         }
 
         return array;
+    }
+
+    private String findAssetPath(Context context, String assetName) {
+        String[] assetPaths = new String[] { "fonts", "images", "sounds" };
+        for (String assetPath : assetPaths) {
+            try {
+                String[] assets = context.getAssets().list(assetPath);
+                for (String asset : assets) {
+                    if (asset.contains(assetName)) {
+                        return assetPath + "/" + asset;
+                    }
+                }
+            } catch (IOException ignore) {
+            }
+        }
+        return null;
     }
 }

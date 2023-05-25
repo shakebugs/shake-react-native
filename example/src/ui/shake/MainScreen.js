@@ -14,6 +14,7 @@ import Shake, {
   ShakeReportConfiguration,
   ShakeScreen,
   ShakeTextInput,
+  ShakeTheme,
   ShakeTitle,
 } from 'react-native-shake';
 import RNFS from 'react-native-fs';
@@ -147,6 +148,26 @@ const MainScreen = props => {
     Shake.setShakeForm(shakeForm);
   };
 
+  const setCustomTheme = async () => {
+    const shakeTheme = new ShakeTheme();
+    shakeTheme.fontFamilyBold = 'Lexend-Bold';
+    shakeTheme.fontFamilyMedium = 'Lexend-Regular';
+    shakeTheme.backgroundColor = '#FFFFFF';
+    shakeTheme.secondaryBackgroundColor = '#FFFFFF';
+    shakeTheme.textColor = '#0e0e0e';
+    shakeTheme.secondaryTextColor = '#3f3f3f';
+    shakeTheme.accentColor = '#ff0000';
+    shakeTheme.accentTextColor = '#ffffff';
+    shakeTheme.outlineColor = '#464646';
+    shakeTheme.borderRadius = 0;
+    shakeTheme.elevation = 10;
+    shakeTheme.shadowOffset = {width: 0.1, height: 0.1};
+    shakeTheme.shadowRadius = 3;
+    shakeTheme.shadowOpacity = 0.5;
+
+    Shake.setShakeTheme(shakeTheme);
+  };
+
   const postNotification = () => {
     PushNotification.createChannel({
       channelId: 'shake-rn',
@@ -239,6 +260,7 @@ const MainScreen = props => {
         <Button text="Custom log" onPress={customLog} />
         <Button text="Add metadata" onPress={addMetadata} />
         <Button text="Set custom form" onPress={setCustomForm} />
+        <Button text="Set custom theme" onPress={setCustomTheme} />
         <Title style={styles.title} text="Invoking" />
         <Option
           enabled={shakeInvokingEnabled}

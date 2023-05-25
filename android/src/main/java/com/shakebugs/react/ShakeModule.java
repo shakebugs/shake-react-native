@@ -12,7 +12,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
@@ -34,6 +33,7 @@ import com.shakebugs.shake.privacy.NotificationEventEditor;
 import com.shakebugs.shake.privacy.NotificationEventsFilter;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
+import com.shakebugs.shake.theme.ShakeTheme;
 
 import java.util.List;
 import java.util.Map;
@@ -111,6 +111,27 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             public void run() {
                 ShakeForm shakeForm = mapper.mapMapToShakeForm(shakeFormMap);
                 Shake.getReportConfiguration().setShakeForm(shakeForm);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setShakeTheme(final ReadableMap shakeThemeMap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ShakeTheme shakeTheme = mapper.mapMapToShakeTheme(shakeThemeMap);
+                Shake.getReportConfiguration().setTheme(shakeTheme);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setHomeSubtitle(final String subtitle) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setHomeSubtitle(subtitle);
             }
         });
     }

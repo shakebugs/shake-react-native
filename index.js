@@ -1,4 +1,4 @@
-import { findNodeHandle, NativeModules } from "react-native";
+import {findNodeHandle, NativeModules} from "react-native";
 
 import ShakeReportConfiguration from "./src/models/ShakeReportConfiguration";
 import ShakeFile from "./src/models/ShakeFile";
@@ -20,8 +20,9 @@ import ShakePicker from "./src/models/ShakePicker";
 import ShakePickerItem from "./src/models/ShakePickerItem";
 import ShakeAttachments from "./src/models/ShakeAttachments";
 import ShakeInspectButton from "./src/models/ShakeInspectButton";
+import ShakeTheme from "./src/models/ShakeTheme";
 
-import { mapToShakeScreen } from "./src/utils/Mappers";
+import {mapToShakeScreen} from "./src/utils/Mappers";
 
 // Export models
 export { ShakeReportConfiguration };
@@ -42,6 +43,7 @@ export { ShakePicker };
 export { ShakePickerItem };
 export { ShakeAttachments };
 export { ShakeInspectButton };
+export { ShakeTheme };
 
 /**
  * Interface for native methods.
@@ -273,6 +275,24 @@ class Shake {
    */
   static setShakeForm(shakeForm) {
     this.shake.setShakeForm(shakeForm);
+  }
+
+  /**
+   * Sets theme for Shake UI.
+   *
+   * @param shakeTheme instance of {@link ShakeTheme}
+   */
+  static setShakeTheme(shakeTheme) {
+    this.shake.setShakeTheme(shakeTheme);
+  }
+
+  /**
+   * Sets subtitle for Home screen.
+   *
+   * @param subtitle string
+   */
+  static setHomeSubtitle(subtitle) {
+    this.shake.setHomeSubtitle(subtitle);
   }
 
   /**

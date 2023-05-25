@@ -37,6 +37,10 @@ declare module "react-native-shake" {
 
     export function setShakeForm(shakeForm: ShakeForm): void;
 
+    export function setShakeTheme(shakeTheme: ShakeTheme): void;
+
+    export function setHomeSubtitle(subtitle: String): void;
+
     export function getShowIntroMessage(): Promise<boolean>;
 
     export function setShowIntroMessage(showIntroMessage: boolean): void;
@@ -196,6 +200,38 @@ declare module "react-native-shake" {
     export class ShakeForm {
         components: Array<ShakeFormComponent>;
         constructor(components: Array<ShakeFormComponent>);
+    }
+
+    export class ShakeTheme {
+        fontFamilyMedium: string | null;
+
+        fontFamilyBold: string | null;
+
+        backgroundColor: string | null;
+
+        secondaryBackgroundColor: string | null;
+
+        textColor: string | null;
+
+        secondaryTextColor: string | null;
+
+        accentColor: string | null;
+
+        accentTextColor: string | null;
+
+        outlineColor: string | null;
+
+        borderRadius: number | null;
+
+        elevation: number | null;
+
+        shadowOffset: { width: number, height: number } | null;
+
+        shadowOpacity: number | null;
+
+        shadowRadius: number | null;
+
+        constructor();
     }
 
     export class ShakeFormComponent {
