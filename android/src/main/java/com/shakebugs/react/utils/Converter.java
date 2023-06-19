@@ -2,6 +2,8 @@ package com.shakebugs.react.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.DisplayMetrics;
 
 public class Converter {
     public static int stringToInt(String string) {
@@ -37,5 +39,20 @@ public class Converter {
         } catch (Exception ignore) {
         }
         return iconRes;
+    }
+
+    public static Float convertDpToPixels(Context context, Double dp) {
+        if (dp == null) return null;
+        return dp.floatValue() * (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    public static Float convertPixelsToDp(Context context, Double px) {
+        if (px == null) return null;
+        return px.floatValue() / (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    public static Integer stringToColor(String color) {
+        if (color == null) return null;
+        return Color.parseColor(color);
     }
 }

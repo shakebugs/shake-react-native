@@ -3,8 +3,6 @@ package com.shakebugs.react.utils;
 import static com.shakebugs.react.utils.Converter.resToString;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -31,7 +29,6 @@ import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.theme.ShakeTheme;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -198,37 +195,6 @@ public class Mapper {
         return new ShakeForm(formComponents);
     }
 
-    public ShakeTheme mapMapToShakeTheme(ReadableMap shakeThemeMap) {
-        if (shakeThemeMap == null) return null;
-
-        String fontFamilyBold = shakeThemeMap.getString("fontFamilyBold");
-        String fontFamilyMedium = shakeThemeMap.getString("fontFamilyMedium");
-        String backgroundColor = shakeThemeMap.getString("backgroundColor");
-        String secondaryBackgroundColor = shakeThemeMap.getString("secondaryBackgroundColor");
-        String textColor = shakeThemeMap.getString("textColor");
-        String secondaryTextColor = shakeThemeMap.getString("secondaryTextColor");
-        String accentColor = shakeThemeMap.getString("accentColor");
-        String accentTextColor = shakeThemeMap.getString("accentTextColor");
-        String outlineColor = shakeThemeMap.getString("outlineColor");
-        double borderRadius = shakeThemeMap.getDouble("borderRadius");
-        double elevation = shakeThemeMap.getDouble("elevation");
-
-        ShakeTheme shakeTheme = new ShakeTheme();
-        shakeTheme.setFontFamilyBoldValue(findAssetPath(context, fontFamilyBold));
-        shakeTheme.setFontFamilyMediumValue(findAssetPath(context, fontFamilyMedium));
-        shakeTheme.setBackgroundColorValue(Color.parseColor(backgroundColor));
-        shakeTheme.setSecondaryBackgroundColorValue(Color.parseColor(secondaryBackgroundColor));
-        shakeTheme.setTextColorValue(Color.parseColor(textColor));
-        shakeTheme.setSecondaryTextColorValue(Color.parseColor(secondaryTextColor));
-        shakeTheme.setAccentColorValue(Color.parseColor(accentColor));
-        shakeTheme.setAccentTextColorValue(Color.parseColor(accentTextColor));
-        shakeTheme.setOutlineColorValue(Color.parseColor(outlineColor));
-        shakeTheme.setBorderRadiusValue((float)borderRadius);
-        shakeTheme.setElevationValue((float)elevation);
-
-        return shakeTheme;
-    }
-
     public WritableMap mapShakeFormToMap(ShakeForm shakeForm) {
         if (shakeForm == null) return null;
 
@@ -315,6 +281,37 @@ public class Mapper {
         shakeFormMap.putArray("components", componentsArray);
 
         return shakeFormMap;
+    }
+
+    public ShakeTheme mapMapToShakeTheme(ReadableMap shakeThemeMap) {
+        if (shakeThemeMap == null) return null;
+
+        String fontFamilyBold = shakeThemeMap.hasKey("fontFamilyBold") ? shakeThemeMap.getString("fontFamilyBold") : null;
+        String fontFamilyMedium = shakeThemeMap.hasKey("fontFamilyMedium") ? shakeThemeMap.getString("fontFamilyMedium") : null;
+        String backgroundColor = shakeThemeMap.hasKey("backgroundColor") ? shakeThemeMap.getString("backgroundColor") : null;
+        String secondaryBackgroundColor = shakeThemeMap.hasKey("secondaryBackgroundColor") ? shakeThemeMap.getString("secondaryBackgroundColor") : null;
+        String textColor = shakeThemeMap.hasKey("textColor") ? shakeThemeMap.getString("textColor") : null;
+        String secondaryTextColor = shakeThemeMap.hasKey("secondaryTextColor") ? shakeThemeMap.getString("secondaryTextColor") : null;
+        String accentColor = shakeThemeMap.hasKey("accentColor") ? shakeThemeMap.getString("accentColor") : null;
+        String accentTextColor = shakeThemeMap.hasKey("accentTextColor") ? shakeThemeMap.getString("accentTextColor") : null;
+        String outlineColor = shakeThemeMap.hasKey("outlineColor") ? shakeThemeMap.getString("outlineColor") : null;
+        Double borderRadius = shakeThemeMap.hasKey("borderRadius") ? shakeThemeMap.getDouble("borderRadius") : null;
+        Double elevation = shakeThemeMap.hasKey("elevation") ? shakeThemeMap.getDouble("elevation") : null;
+
+        ShakeTheme shakeTheme = new ShakeTheme();
+        shakeTheme.setFontFamilyBoldValue(findAssetPath(context, fontFamilyBold));
+        shakeTheme.setFontFamilyMediumValue(findAssetPath(context, fontFamilyMedium));
+        shakeTheme.setBackgroundColorValue(Converter.stringToColor(backgroundColor));
+        shakeTheme.setSecondaryBackgroundColorValue(Converter.stringToColor(secondaryBackgroundColor));
+        shakeTheme.setTextColorValue(Converter.stringToColor(textColor));
+        shakeTheme.setSecondaryTextColorValue(Converter.stringToColor(secondaryTextColor));
+        shakeTheme.setAccentColorValue(Converter.stringToColor(accentColor));
+        shakeTheme.setAccentTextColorValue(Converter.stringToColor(accentTextColor));
+        shakeTheme.setOutlineColorValue(Converter.stringToColor(outlineColor));
+        shakeTheme.setBorderRadiusValue(Converter.convertDpToPixels(context, borderRadius));
+        shakeTheme.setElevationValue(Converter.convertDpToPixels(context, elevation));
+
+        return shakeTheme;
     }
 
     public NetworkRequest mapToNetworkRequest(ReadableMap object) {
@@ -462,7 +459,9 @@ public class Mapper {
     }
 
     private String findAssetPath(Context context, String assetName) {
-        String[] assetPaths = new String[] { "fonts", "images", "sounds" };
+        if (assetName == null) return null;
+
+        String[] assetPaths = new String[]{"fonts", "images", "sounds"};
         for (String assetPath : assetPaths) {
             try {
                 String[] assets = context.getAssets().list(assetPath);
@@ -471,7 +470,7 @@ public class Mapper {
                         return assetPath + "/" + asset;
                     }
                 }
-            } catch (IOException ignore) {
+            } catch (Exception ignore) {
             }
         }
         return null;
