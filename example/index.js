@@ -20,5 +20,6 @@ Shake.setConsoleLogsEnabled(true);
 Shake.setAutoVideoRecording(true);
 Shake.setShowIntroMessage(true);
 Shake.setSensitiveDataRedactionEnabled(true);
+Shake.setHomeSubtitle('React Native Shake Example');
 
 Shake.start(CLIENT_ID, CLIENT_SECRET);

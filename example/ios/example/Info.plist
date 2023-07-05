@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>Shake</key>
 	<dict>
 		<key>APIClientID</key>
@@ -48,6 +48,8 @@
 	<array>
 		<string>HKGrotesk-Regular.otf</string>
 		<string>HKGrotesk-SemiBold.otf</string>
+		<string>Lexend-Bold.ttf</string>
+		<string>Lexend-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

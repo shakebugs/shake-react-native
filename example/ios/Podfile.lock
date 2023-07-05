@@ -338,7 +338,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-shake (16.0.0):
     - React
-    - Shake-Staging (~> 16.0.0-rc)
+    - Shake-Staging (~> 16.1.0-rc)
   - react-native-slider (4.4.2):
     - React-Core
   - React-perflogger (0.71.4)
@@ -470,7 +470,7 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - Shake-Staging (16.0.0-rc.1531)
+  - Shake-Staging (16.1.0-rc.1547)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -700,7 +700,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1f51e775819199d3fe9410e69ee8d4c4161c7b06
   React-logger: 0d58569ec51d30d1792c5e86a8e3b78d24b582c6
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
-  react-native-shake: 2694340190da89c04db06c4a39cac8dbfd7f6b48
+  react-native-shake: a41900bc657d43732d5d33887cfd10983331013b
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   React-perflogger: 0bb0522a12e058f6eb69d888bc16f40c16c4b907
   React-RCTActionSheet: bfd675a10f06a18728ea15d82082d48f228a213a
@@ -724,7 +724,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNReanimated: f0dd6b881808e635ef0673f89642937d6c141314
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
-  Shake-Staging: f517144794e05334154ca37272e1ca8b2506ef2f
+  Shake-Staging: a707415123869f692ff1c5f7d963cc02aa6354c6
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 79dd7410de6f8ad73a77c868d3d368843f0c93e0
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

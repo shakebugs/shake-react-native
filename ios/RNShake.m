@@ -2,6 +2,7 @@
 #import <React/RCTUIManager.h>
 #import <Shake/Shake.h>
 #import <Shake/SHKShakeConfiguration.h>
+#import <Shake/SHKTheme.h>
 #import <Shake/SHKShakeFile.h>
 #import <Shake/SHKShakeReportConfiguration.h>
 #import <Shake/SHKFormItemProtocol.h>
@@ -57,6 +58,17 @@ RCT_EXPORT_METHOD(getShakeForm:(RCTPromiseResolveBlock)resolve:(RCTPromiseReject
     SHKForm *shakeForm = SHKShake.configuration.form;
     NSDictionary *shakeFormDict = [self mapShakeFormToDict:shakeForm];
     resolve(shakeFormDict);
+}
+
+RCT_EXPORT_METHOD(setShakeTheme:(NSDictionary *)shakeThemeDict)
+{
+    SHKTheme *shakeTheme = [self mapDictToShakeTheme:shakeThemeDict];
+    SHKShake.configuration.theme = shakeTheme;
+}
+
+RCT_EXPORT_METHOD(setHomeSubtitle:(NSString *)subtitle)
+{
+    SHKShake.configuration.homeSubtitle = subtitle;
 }
 
 RCT_EXPORT_METHOD(setUserFeedbackEnabled:(BOOL)enabled)
@@ -483,6 +495,62 @@ RCT_EXPORT_METHOD(unregisterUser)
     return [[SHKForm alloc] initWithItems:formComponents];
 }
 
+- (SHKTheme*)mapDictToShakeTheme:(NSDictionary*)themeDict
+{
+    if (themeDict == nil) return nil;
+
+    NSString *fontFamilyBold = [themeDict objectForKey:@"fontFamilyBold"];
+    NSString *fontFamilyMedium = [themeDict objectForKey:@"fontFamilyMedium"];
+    NSString *backgroundColor = [themeDict objectForKey:@"backgroundColor"];
+    NSString *secondaryBackgroundColor = [themeDict objectForKey:@"secondaryBackgroundColor"];
+    NSString *textColor = [themeDict objectForKey:@"textColor"];
+    NSString *secondaryTextColor = [themeDict objectForKey:@"secondaryTextColor"];
+    NSString *accentColor = [themeDict objectForKey:@"accentColor"];
+    NSString *accentTextColor = [themeDict objectForKey:@"accentTextColor"];
+    NSString *outlineColor = [themeDict objectForKey:@"outlineColor"];
+    NSNumber *borderRadius = [themeDict objectForKey:@"borderRadius"];
+    NSNumber *shadowRadius = [themeDict objectForKey:@"shadowRadius"];
+    NSNumber *shadowOpacity = [themeDict objectForKey:@"shadowOpacity"];
+    NSDictionary *shadowOffset = [themeDict objectForKey:@"shadowOffset"];
+    NSNumber *shadowOffsetWidth = nil;
+    NSNumber *shadowOffsetHeight = nil;
+    if (shadowOffset) {
+        shadowOffsetWidth = shadowOffset[@"width"];
+        shadowOffsetHeight = shadowOffset[@"height"];
+    }
+    
+    NSString *fontFamilyBoldValue = !fontFamilyBold ? nil : fontFamilyBold;
+    NSString *fontFamilyMediumValue = !fontFamilyMedium ? nil : fontFamilyMedium;
+    UIColor *backgroundColorValue = !backgroundColor ? nil : [self colorFromHexString:backgroundColor];
+    UIColor *secondaryBackgroundColorValue = !secondaryBackgroundColor ? nil : [self colorFromHexString:secondaryBackgroundColor];
+    UIColor *textColorValue = !textColor ? nil : [self colorFromHexString:textColor];
+    UIColor *secondaryTextColorValue = !secondaryTextColor ? nil : [self colorFromHexString:secondaryTextColor];
+    UIColor *accentColorValue = !accentColor ? nil : [self colorFromHexString:accentColor];
+    UIColor *accentTextColorValue = !accentTextColor ? nil : [self colorFromHexString:accentTextColor];
+    UIColor *outlineColorValue = !outlineColor ? nil : [self colorFromHexString:outlineColor];
+    CGFloat borderRadiusValue = !borderRadius ? 11 : [borderRadius floatValue];
+    CGFloat shadowRadiusValue = !shadowRadius ? 0 : [shadowRadius floatValue];
+    CGFloat shadowOpacityValue = !shadowOpacity ? 0 : [shadowOpacity floatValue];
+    CGFloat shadowOffsetWidthValue = !shadowOffsetWidth ? 0 : [shadowOffsetWidth floatValue];
+    CGFloat shadowOffsetHeightValue = !shadowOffsetHeight ? 0 : [shadowOffsetHeight floatValue];
+    
+    return [[SHKTheme alloc] initWithFontFamilyMedium:fontFamilyMediumValue
+                      fontFamilyBold:fontFamilyBoldValue
+                      background:backgroundColorValue
+                      secondaryBackground:secondaryBackgroundColorValue
+                      textColor:textColorValue
+                      secondaryTextColor:secondaryTextColorValue
+                      brandAccentColor:accentColorValue
+                      brandTextColor:accentTextColorValue
+                      borderRadius:borderRadiusValue
+                      outlineColor:outlineColorValue
+                      shadowInfo:[[SHKShadowInfo alloc]initWithOffset:CGSizeMake(shadowOffsetWidthValue, shadowOffsetHeightValue)
+                      opacity:shadowOpacityValue
+                      radius:shadowRadiusValue
+                      color:UIColor.blackColor]];
+}
+
+
 - (NSDictionary*)mapShakeFormToDict:(SHKForm*)shakeForm
 {
     if (shakeForm == nil) return nil;
@@ -650,13 +718,23 @@ RCT_EXPORT_METHOD(unregisterUser)
     return notificationDict;
 }
 
+- (UIColor *)colorFromHexString:(NSString *)hexString {
+    if (hexString == nil) return nil;
+    
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
 // Private
 
 - (void)setPlatformInfo
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"16.0.0"
+        @"sdkVersion": @"16.1.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
 }
