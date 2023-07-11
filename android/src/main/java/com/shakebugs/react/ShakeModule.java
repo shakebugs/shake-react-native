@@ -25,6 +25,7 @@ import com.shakebugs.shake.Shake;
 import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
+import com.shakebugs.shake.actions.ShakeHomeAction;
 import com.shakebugs.shake.chat.UnreadChatMessagesListener;
 import com.shakebugs.shake.form.ShakeForm;
 import com.shakebugs.shake.internal.domain.models.NetworkRequest;
@@ -35,6 +36,7 @@ import com.shakebugs.shake.report.ShakeFile;
 import com.shakebugs.shake.report.ShakeReportData;
 import com.shakebugs.shake.theme.ShakeTheme;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +133,24 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Shake.getReportConfiguration().setHomeSubtitle(subtitle);
+                Shake.getReportConfiguration().setHomeSubtitleValue(subtitle);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setHomeActions(final ReadableArray array) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<ShakeHomeAction> actions = mapper.mapArrayToHomeActions(array);
+                for (ShakeHomeAction action : actions) {
+                    action.setHandler(() -> {
+                        emitter.sendEvent(Emitter.EVENT_HOME_ACTION_TAP, action.getTitleValue());
+                        return null;
+                    });
+                }
+                Shake.getReportConfiguration().setHomeActions(actions);
             }
         });
     }

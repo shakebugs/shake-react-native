@@ -418,12 +418,12 @@ RCT_EXPORT_METHOD(unregisterUser)
 - (SHKForm *)mapDicToShakeForm:(NSDictionary *)shakeFormDic
 {
     if (shakeFormDic == nil) return nil;
-    
+
     NSMutableArray *dictComponents = [shakeFormDic objectForKey:@"components"];
     if (dictComponents == nil) dictComponents = [NSMutableArray array];
 
     NSMutableArray<id<SHKFormItemProtocol>>* formComponents = [NSMutableArray array];
-    
+
     for(int i = 0; i < [dictComponents count]; i++) {
         NSDictionary *component = [dictComponents objectAtIndex:i];
 
@@ -433,9 +433,9 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *labelRes = [component objectForKey:@"labelRes"] ?: nil;
             NSString *initialValue = [component objectForKey:@"initialValue"];
             BOOL required = [[component objectForKey:@"required"] boolValue];
-            
+
             if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
+
             [formComponents addObject:[[SHKTitle alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
         }
         if ([type isEqualToString:@"text_input"]) {
@@ -443,9 +443,9 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *labelRes = [component objectForKey:@"labelRes"];
             NSString *initialValue = [component objectForKey:@"initialValue"];
             BOOL required = [[component objectForKey:@"required"] boolValue];
-            
+
             if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
+
             [formComponents addObject:[[SHKTextInput alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
         }
         if ([type isEqualToString:@"email"]) {
@@ -453,9 +453,9 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *labelRes = [component objectForKey:@"labelRes"];
             NSString *initialValue = [component objectForKey:@"initialValue"];
             BOOL required = [[component objectForKey:@"required"] boolValue];
-            
+
             if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
+
             [formComponents addObject:[[SHKEmail alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
         }
         if ([type isEqualToString:@"picker"]) {
@@ -466,30 +466,30 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSMutableArray<SHKPickerItem*>* items = [NSMutableArray array];
             for(int j = 0; j < [itemsArray count]; j++) {
                 NSDictionary *arrayItem = [itemsArray objectAtIndex:j];
-                
+
                 NSString *icon = [arrayItem objectForKey:@"icon"];
                 NSString *text = [arrayItem objectForKey:@"text"];
                 NSString *textRes = [arrayItem objectForKey:@"textRes"];
                 NSString *tag = [arrayItem objectForKey:@"tag"];
-                
+
                 if (icon && [icon isEqual:[NSNull null]]) icon=nil; // NSNull causes
                 if (textRes && [textRes isEqual:[NSNull null]]) textRes=nil; // NSNull causes crash
-                
+
                 SHKPickerItem* item = [[SHKPickerItem alloc] initWithIconName:icon text:text textRes:textRes tag:tag];
                 [items addObject:item];
             }
-            
+
             if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
+
             [formComponents addObject:[[SHKPicker alloc] initWithLabel:label items:items labelRes:labelRes]];
         }
         if ([type isEqualToString:@"attachments"]) {
             [formComponents addObject:SHKAttachments.new];
         }
-        
+
         if ([type isEqualToString:@"inspect"]) {
             [formComponents addObject:SHKInspectButton.new];
-        
+
         }
     }
     return [[SHKForm alloc] initWithItems:formComponents];
@@ -518,7 +518,7 @@ RCT_EXPORT_METHOD(unregisterUser)
         shadowOffsetWidth = shadowOffset[@"width"];
         shadowOffsetHeight = shadowOffset[@"height"];
     }
-    
+
     NSString *fontFamilyBoldValue = !fontFamilyBold ? nil : fontFamilyBold;
     NSString *fontFamilyMediumValue = !fontFamilyMedium ? nil : fontFamilyMedium;
     UIColor *backgroundColorValue = !backgroundColor ? nil : [self colorFromHexString:backgroundColor];
@@ -533,7 +533,7 @@ RCT_EXPORT_METHOD(unregisterUser)
     CGFloat shadowOpacityValue = !shadowOpacity ? 0 : [shadowOpacity floatValue];
     CGFloat shadowOffsetWidthValue = !shadowOffsetWidth ? 0 : [shadowOffsetWidth floatValue];
     CGFloat shadowOffsetHeightValue = !shadowOffsetHeight ? 0 : [shadowOffsetHeight floatValue];
-    
+
     return [[SHKTheme alloc] initWithFontFamilyMedium:fontFamilyMediumValue
                       fontFamilyBold:fontFamilyBoldValue
                       background:backgroundColorValue
@@ -556,13 +556,13 @@ RCT_EXPORT_METHOD(unregisterUser)
     if (shakeForm == nil) return nil;
 
     NSMutableArray<NSDictionary*>* componentsArray = [NSMutableArray array];
-    
+
     for(int i = 0; i < [shakeForm.items count]; i++) {
         id<SHKFormItemProtocol> item = [shakeForm.items objectAtIndex:i];
-        
+
         if ([item isKindOfClass:[SHKTitle class]]) {
             SHKTitle *component = item;
-            
+
             NSDictionary *dict = [[NSDictionary alloc] init];
             dict = @{
                 @"type": @"title",
@@ -571,12 +571,12 @@ RCT_EXPORT_METHOD(unregisterUser)
                 @"initialValue": component.initialValue ?: @"",
                 @"required": [NSNumber numberWithBool:component.required]
             };
-            
+
             [componentsArray addObject:dict];
         }
         if ([item isKindOfClass:[SHKTextInput class]]) {
             SHKTextInput *component = item;
-            
+
             NSDictionary *dict = [[NSDictionary alloc] init];
             dict = @{
                 @"type": @"text_input",
@@ -585,13 +585,13 @@ RCT_EXPORT_METHOD(unregisterUser)
                 @"initialValue": component.initialValue ?: @"",
                 @"required": [NSNumber numberWithBool:component.required]
             };
-            
+
             [componentsArray addObject:dict];
         }
 
         if ([item isKindOfClass:[SHKEmail class]]) {
             SHKEmail *component = item;
-            
+
             NSDictionary *dict = [[NSDictionary alloc] init];
             dict = @{
                 @"type": @"email",
@@ -600,17 +600,17 @@ RCT_EXPORT_METHOD(unregisterUser)
                 @"initialValue": component.initialValue ?: @"",
                 @"required": [NSNumber numberWithBool:component.required]
             };
-            
+
             [componentsArray addObject:dict];
         }
 
         if ([item isKindOfClass:[SHKPicker class]]) {
             SHKPicker *component = item;
-            
+
             NSMutableArray<NSDictionary*>* pickerItemsArray = [NSMutableArray array];
             for(int j = 0; j < [component.items count]; j++) {
                 SHKPickerItem *pickerItem = [component.items objectAtIndex:j];
-                
+
                 NSDictionary *pickerItemDict = [[NSDictionary alloc] init];
                 pickerItemDict = @{
                     @"icon": pickerItem.iconName ?: [NSNull null],
@@ -618,10 +618,10 @@ RCT_EXPORT_METHOD(unregisterUser)
                     @"textRes": pickerItem.textRes ?: [NSNull null],
                     @"tag": pickerItem.tag ?: [NSNull null],
                 };
-                
+
                 [pickerItemsArray addObject:pickerItemDict];
             }
-            
+
 
             NSDictionary *componentDict = [[NSDictionary alloc] init];
             componentDict = @{
@@ -630,7 +630,7 @@ RCT_EXPORT_METHOD(unregisterUser)
                 @"labelRes": component.labelRes ?: [NSNull null],
                 @"items": pickerItemsArray
             };
-            
+
             [componentsArray addObject:componentDict];
         }
 
@@ -639,7 +639,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             dict = @{
                 @"type": @"attachments",
             };
-            
+
             [componentsArray addObject:dict];
         }
         if ([item isKindOfClass:[SHKInspectButton class]]) {
@@ -647,14 +647,14 @@ RCT_EXPORT_METHOD(unregisterUser)
             dict = @{
                 @"type": @"inspect",
             };
-            
+
             [componentsArray addObject:dict];
         }
     }
-    
+
     NSDictionary *shakeFormDict = [[NSDictionary alloc] init];
     shakeFormDict = @{@"components": componentsArray};
-    
+
     return shakeFormDict;
 }
 
@@ -720,7 +720,7 @@ RCT_EXPORT_METHOD(unregisterUser)
 
 - (UIColor *)colorFromHexString:(NSString *)hexString {
     if (hexString == nil) return nil;
-    
+
     unsigned rgbValue = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     [scanner setScanLocation:1]; // bypass '#' character
@@ -734,7 +734,7 @@ RCT_EXPORT_METHOD(unregisterUser)
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"16.1.0"
+        @"sdkVersion": @"16.2.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
 }

@@ -21,8 +21,13 @@ import ShakePickerItem from "./src/models/ShakePickerItem";
 import ShakeAttachments from "./src/models/ShakeAttachments";
 import ShakeInspectButton from "./src/models/ShakeInspectButton";
 import ShakeTheme from "./src/models/ShakeTheme";
+import ShakeBaseAction from "./src/models/ShakeBaseAction";
+import ShakeHomeAction from "./src/models/ShakeHomeAction";
+import ShakeSubmitAction from "./src/models/ShakeSubmitAction";
+import ShakeChatAction from "./src/models/ShakeChatAction";
 
 import {mapToShakeScreen} from "./src/utils/Mappers";
+import HomeActionsTracker from "./src/modules/HomeActionsTracker";
 
 // Export models
 export { ShakeReportConfiguration };
@@ -44,6 +49,10 @@ export { ShakePickerItem };
 export { ShakeAttachments };
 export { ShakeInspectButton };
 export { ShakeTheme };
+export { ShakeBaseAction};
+export { ShakeHomeAction };
+export { ShakeChatAction };
+export { ShakeSubmitAction };
 
 /**
  * Interface for native methods.
@@ -55,6 +64,7 @@ class Shake {
   static networkTracker = new NetworkTracker(this.shake);
   static notificationTracker = new NotificationTracker(this.shake);
   static messagesTracker = new MessagesTracker(this.shake);
+  static homeActionsTracker = new HomeActionsTracker();
 
   /**
    * Starts Shake SDK.
@@ -65,12 +75,13 @@ class Shake {
   static start(clientId, clientSecret) {
     this.shake.start(clientId, clientSecret);
     this.notificationTracker.setEnabled(true);
+    this.homeActionsTracker.setEnabled(true);
   }
 
   /**
    * Shows shake screen.
    *
-   * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
+   * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW.
    */
   static show(shakeScreen = ShakeScreen.NEW) {
     this.shake.show(shakeScreen);
@@ -293,6 +304,16 @@ class Shake {
    */
   static setHomeSubtitle(subtitle) {
     this.shake.setHomeSubtitle(subtitle);
+  }
+
+  /**
+   * Sets action buttons for Home screen.
+   *
+   * @param actions list of actions
+   */
+  static setHomeActions(actions) {
+    this.homeActionsTracker.homeActions = actions;
+    this.shake.setHomeActions(actions);
   }
 
   /**

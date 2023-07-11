@@ -1,7 +1,4 @@
-import {
-  registerUnreadMessagesListener,
-  unregisterUnreadMessagesListener,
-} from "../utils/Events";
+import {registerUnreadMessagesListener, unregisterUnreadMessagesListener,} from "../utils/Events";
 
 /**
  * Responsible for handling unread chat messages.

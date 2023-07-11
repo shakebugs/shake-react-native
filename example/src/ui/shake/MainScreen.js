@@ -5,14 +5,17 @@ import Shake, {
   NetworkRequestBuilder,
   NotificationEventBuilder,
   ShakeAttachments,
+  ShakeChatAction,
   ShakeEmail,
   ShakeFile,
   ShakeForm,
+  ShakeHomeAction,
   ShakeInspectButton,
   ShakePicker,
   ShakePickerItem,
   ShakeReportConfiguration,
   ShakeScreen,
+  ShakeSubmitAction,
   ShakeTextInput,
   ShakeTheme,
   ShakeTitle,
@@ -127,28 +130,28 @@ const MainScreen = props => {
   };
 
   const setCustomForm = async () => {
-    // const oldForm = await Shake.getShakeForm();
-    // oldForm.components = oldForm.components.filter(c => c.type !== 'inspect');
+    const oldForm = await Shake.getShakeForm();
+    oldForm.components = oldForm.components.filter(c => c.type !== 'inspect');
 
     const pickerItems = [
-      new ShakePickerItem('Mouse', null, 'ic_mouse', 'mouse'),
-      new ShakePickerItem('Keyboard', null, 'ic_key', 'keyboard'),
-      new ShakePickerItem('Display', null, 'ic_display', 'display'),
+      new ShakePickerItem('Mouse', 'Mouse', null, 'mouse'),
+      new ShakePickerItem('Keyboard', 'Keyboard', null, 'keyboard'),
+      new ShakePickerItem('Display', 'Display', null, 'display'),
     ];
 
     const shakeForm = new ShakeForm([
-      new ShakePicker('Category', pickerItems, null),
-      new ShakeTitle('Short title', null, '', true),
-      new ShakeTextInput('Repro steps', null, ''),
-      new ShakeEmail('Your email'),
+      new ShakePicker('Category', 'Category', pickerItems),
+      new ShakeTitle('Short title', 'Short title', '', true),
+      new ShakeTextInput('Repro steps', 'Repro steps', ''),
+      new ShakeEmail('Your email', 'Your email'),
       new ShakeInspectButton(),
       new ShakeAttachments(),
     ]);
 
-    Shake.setShakeForm(shakeForm);
+    Shake.setShakeForm(oldForm);
   };
 
-  const setCustomTheme = async () => {
+  const setCustomTheme = () => {
     const shakeTheme = new ShakeTheme();
     shakeTheme.fontFamilyBold = 'Lexend-Bold';
     shakeTheme.fontFamilyMedium = 'Lexend-Regular';
@@ -166,6 +169,23 @@ const MainScreen = props => {
     shakeTheme.shadowOpacity = 0.5;
 
     Shake.setShakeTheme(shakeTheme);
+  };
+
+  const setCustomActions = () => {
+    const actions = [
+      new ShakeHomeAction(
+        'A custom home action',
+        'This is a test subtitle',
+        null,
+        () => {
+          console.log('Whoopppyy!');
+        },
+      ),
+      new ShakeSubmitAction(),
+      new ShakeChatAction(),
+    ];
+
+    Shake.setHomeActions(actions);
   };
 
   const postNotification = () => {
@@ -261,6 +281,7 @@ const MainScreen = props => {
         <Button text="Add metadata" onPress={addMetadata} />
         <Button text="Set custom form" onPress={setCustomForm} />
         <Button text="Set custom theme" onPress={setCustomTheme} />
+        <Button text="Set custom actions" onPress={setCustomActions} />
         <Title style={styles.title} text="Invoking" />
         <Option
           enabled={shakeInvokingEnabled}

@@ -34,14 +34,6 @@ class NetworkTracker {
     };
 
     /**
-     * Gets network requests filter.
-     * @returns {*} filter function
-     */
-    getFilter = () => {
-        return this.filter;
-    };
-
-    /**
      * Sets network requests filter.
      * @param filter filter function
      */

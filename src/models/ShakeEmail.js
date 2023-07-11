@@ -5,10 +5,16 @@ import ShakeFormComponent from "./ShakeFormComponent";
  */
 class ShakeEmail extends ShakeFormComponent {
     /**
-     * Determines component label.
+     * Determines component key.
      * @type {string} string value
      */
-    label = "";
+    key = "";
+
+    /**
+     * Determines component label.
+     * @type {string | null} string value
+     */
+    label = null;
 
     /**
      * Determines native resource name to load as a label.
@@ -28,10 +34,10 @@ class ShakeEmail extends ShakeFormComponent {
      */
     required = false;
 
-    constructor(label = "", labelRes = null, initialValue = "", required= false) {
+    constructor(key = "", label = "", initialValue = "", required= false) {
         super("email");
+        this.key = key;
         this.label = label;
-        this.labelRes = labelRes;
         this.initialValue = initialValue;
         this.required = required;
     }
