@@ -3,10 +3,16 @@
  */
 class ShakePickerItem {
     /**
-     * Represents item label.
+     * Determines item key.
      * @type {string} string value
      */
-    text = "";
+    key = "";
+
+    /**
+     * Represents item label.
+     * @type {string | null} string value
+     */
+    text = null;
 
     /**
      * Determines native resource name to load as a label.
@@ -16,9 +22,15 @@ class ShakePickerItem {
 
     /**
      * Represents item icon.
-     * @type {string | null} native resource name
+     * @type {string | null} base64 image string
      */
     icon = null;
+
+    /**
+     * Determines native resource name to load as an icon.
+     * @type {string | null} native resource name
+     */
+    iconRes = null;
 
     /**
      * Represents tag which will be added to the ticket on submit if item is selected.
@@ -26,9 +38,9 @@ class ShakePickerItem {
      */
     tag = null;
 
-    constructor(text = "", textRes = null, icon = null, tag = null) {
+    constructor(key = "", text = "", icon = null, tag = null) {
+        this.key = text;
         this.text = text;
-        this.textRes = textRes;
         this.icon = icon;
         this.tag = tag;
     }

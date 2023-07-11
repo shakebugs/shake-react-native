@@ -1,6 +1,9 @@
 package com.shakebugs.react.utils;
 
+import static com.shakebugs.react.utils.Converter.convertBase64ToDrawable;
+import static com.shakebugs.react.utils.Converter.convertDrawableToBase64;
 import static com.shakebugs.react.utils.Converter.resToString;
+import static com.shakebugs.react.utils.Converter.stringToRes;
 
 import android.content.Context;
 
@@ -15,6 +18,9 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.shakebugs.shake.LogLevel;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
+import com.shakebugs.shake.actions.ShakeHomeAction;
+import com.shakebugs.shake.actions.ShakeHomeChatAction;
+import com.shakebugs.shake.actions.ShakeHomeSubmitAction;
 import com.shakebugs.shake.form.ShakeAttachments;
 import com.shakebugs.shake.form.ShakeEmail;
 import com.shakebugs.shake.form.ShakeForm;
@@ -121,68 +127,72 @@ public class Mapper {
 
             String type = componentMap.getString("type");
             if ("title".equals(type)) {
+                String key = componentMap.getString("key");
                 String label = componentMap.getString("label");
-                String labelResName = componentMap.getString("labelRes");
                 String initialValue = componentMap.getString("initialValue");
                 boolean required = componentMap.getBoolean("required");
 
-                if (label == null) label = "";
+                if (key == null) key = "";
                 if (initialValue == null) initialValue = "";
-                Integer labelRes = Converter.stringToRes(context, labelResName, "string");
 
-
-                formComponents.add(new ShakeTitle(label, labelRes, initialValue, required));
+                ShakeTitle comp = new ShakeTitle(key, label, initialValue, required);
+                comp.setLabel(stringToRes(context, componentMap.getString("labelRes"), "string"));
+                formComponents.add(comp);
             }
             if ("text_input".equals(type)) {
+                String key = componentMap.getString("key");
                 String label = componentMap.getString("label");
-                String labelResName = componentMap.getString("labelRes");
                 String initialValue = componentMap.getString("initialValue");
                 boolean required = componentMap.getBoolean("required");
 
-                if (label == null) label = "";
+                if (key == null) key = "";
                 if (initialValue == null) initialValue = "";
-                Integer labelRes = Converter.stringToRes(context, labelResName, "string");
 
-                formComponents.add(new ShakeTextInput(label, labelRes, initialValue, required));
+                ShakeTextInput comp = new ShakeTextInput(key, label, initialValue, required);
+                comp.setLabel(stringToRes(context, componentMap.getString("labelRes"), "string"));
+                formComponents.add(comp);
             }
             if ("email".equals(type)) {
+                String key = componentMap.getString("key");
                 String label = componentMap.getString("label");
-                String labelResName = componentMap.getString("labelRes");
                 String initialValue = componentMap.getString("initialValue");
                 boolean required = componentMap.getBoolean("required");
 
-                if (label == null) label = "";
+                if (key == null) key = "";
                 if (initialValue == null) initialValue = "";
-                Integer labelRes = Converter.stringToRes(context, labelResName, "string");
 
-                formComponents.add(new ShakeEmail(label, labelRes, initialValue, required));
+                ShakeEmail comp = new ShakeEmail(key, label, initialValue, required);
+                comp.setLabel(stringToRes(context, componentMap.getString("labelRes"), "string"));
+                formComponents.add(comp);
             }
             if ("picker".equals(type)) {
-                String label = componentMap.getString("label");
-                String labelResName = componentMap.getString("labelRes");
                 ReadableArray itemsArray = componentMap.getArray("items");
-
                 List<ShakePickerItem> items = new ArrayList<>();
                 if (itemsArray != null) {
                     for (int j = 0; j < itemsArray.size(); j++) {
                         ReadableMap itemMap = itemsArray.getMap(j);
-                        String icon = itemMap.getString("icon");
+                        String itemKey = itemMap.getString("key");
                         String text = itemMap.getString("text");
-                        String textResName = itemMap.getString("textRes");
+                        String icon = itemMap.getString("icon");
                         String tag = itemMap.getString("tag");
 
-                        if (text == null) text = "";
-                        Integer iconRes = Converter.stringToRes(context, icon, "drawable");
-                        Integer textRes = Converter.stringToRes(context, textResName, "string");
+                        if (itemKey == null) itemKey = "";
 
-                        items.add(new ShakePickerItem(iconRes, text, textRes, tag));
+                        ShakePickerItem item = new ShakePickerItem(itemKey, text, convertBase64ToDrawable(context, icon), tag);
+                        item.setText(stringToRes(context, itemMap.getString("textRes"), "string"));
+                        item.setIcon(stringToRes(context, itemMap.getString("iconRes"), "drawable"));
+                        items.add(item);
                     }
                 }
 
-                if (label == null) label = "";
-                Integer labelRes = Converter.stringToRes(context, labelResName, "string");
+                String key = componentMap.getString("key");
+                String label = componentMap.getString("label");
 
-                formComponents.add(new ShakePicker(label, labelRes, items));
+                if (key == null) key = "";
+
+                ShakePicker comp = new ShakePicker(key, label, items);
+                comp.setLabel(stringToRes(context, componentMap.getString("labelRes"), "string"));
+                formComponents.add(comp);
             }
             if ("attachments".equals(type)) {
                 formComponents.add(new ShakeAttachments());
@@ -206,8 +216,9 @@ public class Mapper {
 
                 WritableMap componentMap = new WritableNativeMap();
                 componentMap.putString("type", component.getType());
-                componentMap.putString("label", component.getLabel());
-                componentMap.putString("labelRes", resToString(context, component.getLabelRes()));
+                componentMap.putString("key", component.getKey());
+                componentMap.putString("label", component.getLabelValue());
+                componentMap.putString("labelRes", resToString(context, component.getLabel()));
                 componentMap.putString("initialValue", component.getInitialValue());
                 componentMap.putBoolean("required", component.getRequired());
 
@@ -218,8 +229,9 @@ public class Mapper {
 
                 WritableMap componentMap = new WritableNativeMap();
                 componentMap.putString("type", component.getType());
-                componentMap.putString("label", component.getLabel());
-                componentMap.putString("labelRes", resToString(context, component.getLabelRes()));
+                componentMap.putString("key", component.getKey());
+                componentMap.putString("label", component.getLabelValue());
+                componentMap.putString("labelRes", resToString(context, component.getLabel()));
                 componentMap.putString("initialValue", component.getInitialValue());
                 componentMap.putBoolean("required", component.getRequired());
 
@@ -230,8 +242,9 @@ public class Mapper {
 
                 WritableMap componentMap = new WritableNativeMap();
                 componentMap.putString("type", component.getType());
-                componentMap.putString("label", component.getLabel());
-                componentMap.putString("labelRes", resToString(context, component.getLabelRes()));
+                componentMap.putString("key", component.getKey());
+                componentMap.putString("label", component.getLabelValue());
+                componentMap.putString("labelRes", resToString(context, component.getLabel()));
                 componentMap.putString("initialValue", component.getInitialValue());
                 componentMap.putBoolean("required", component.getRequired());
 
@@ -243,18 +256,22 @@ public class Mapper {
                 WritableArray items = new WritableNativeArray();
                 for (ShakePickerItem item : component.getItems()) {
                     WritableMap itemMap = new WritableNativeMap();
-                    itemMap.putString("icon", resToString(context, item.getIcon()));
-                    itemMap.putString("text", item.getText());
-                    itemMap.putString("textRes", resToString(context, item.getTextRes()));
+                    itemMap.putString("key", item.getKey());
+                    itemMap.putString("text", item.getTextValue());
+                    itemMap.putString("icon", convertDrawableToBase64(item.getIconValue()));
                     itemMap.putString("tag", item.getTag());
+
+                    itemMap.putString("textRes", resToString(context, item.getText()));
+                    itemMap.putString("iconRes", resToString(context, item.getIcon()));
 
                     items.pushMap(itemMap);
                 }
 
                 WritableMap componentMap = new WritableNativeMap();
                 componentMap.putString("type", component.getType());
-                componentMap.putString("label", component.getLabel());
-                componentMap.putString("labelRes", resToString(context, component.getLabelRes()));
+                componentMap.putString("key", component.getKey());
+                componentMap.putString("label", component.getLabelValue());
+                componentMap.putString("labelRes", resToString(context, component.getLabel()));
                 componentMap.putArray("items", items);
 
                 componentsArray.pushMap(componentMap);
@@ -312,6 +329,62 @@ public class Mapper {
         shakeTheme.setElevationValue(Converter.convertDpToPixels(context, elevation));
 
         return shakeTheme;
+    }
+
+    public ArrayList<ShakeHomeAction> mapArrayToHomeActions(ReadableArray array) {
+        if (array == null) return null;
+
+        ArrayList<ShakeHomeAction> homeActions = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            ReadableMap actionMap = array.getMap(i);
+
+            String type = actionMap.getString("type");
+            if (type == null) continue;
+
+            String title;
+            String subtitle;
+            String icon;
+
+            switch (type) {
+                case "chat":
+                    title = actionMap.getString("title");
+                    subtitle = actionMap.getString("subtitle");
+                    icon = actionMap.getString("icon");
+
+                    ShakeHomeChatAction chatAction = new ShakeHomeChatAction(title, subtitle, convertBase64ToDrawable(context, icon));
+                    chatAction.setTitle(stringToRes(context, actionMap.getString("titleRes"), "string"));
+                    chatAction.setSubtitle(stringToRes(context, actionMap.getString("subtitleRes"), "string"));
+                    chatAction.setIcon(stringToRes(context, actionMap.getString("iconRes"), "drawable"));
+
+                    homeActions.add(chatAction);
+                    break;
+                case "submit":
+                    title = actionMap.getString("title");
+                    subtitle = actionMap.getString("subtitle");
+                    icon = actionMap.getString("icon");
+
+                    ShakeHomeSubmitAction submitAction = new ShakeHomeSubmitAction(title, subtitle, convertBase64ToDrawable(context, icon));
+                    submitAction.setTitle(stringToRes(context, actionMap.getString("titleRes"), "string"));
+                    submitAction.setSubtitle(stringToRes(context, actionMap.getString("subtitleRes"), "string"));
+                    submitAction.setIcon(stringToRes(context, actionMap.getString("iconRes"), "drawable"));
+
+                    homeActions.add(submitAction);
+                    break;
+                case "default":
+                    title = actionMap.getString("title");
+                    subtitle = actionMap.getString("subtitle");
+                    icon = actionMap.getString("icon");
+
+                    ShakeHomeAction homeAction = new ShakeHomeAction(title, subtitle, convertBase64ToDrawable(context, icon), null);
+                    homeAction.setTitle(stringToRes(context, actionMap.getString("titleRes"), "string"));
+                    homeAction.setSubtitle(stringToRes(context, actionMap.getString("subtitleRes"), "string"));
+                    homeAction.setIcon(stringToRes(context, actionMap.getString("iconRes"), "drawable"));
+
+                    homeActions.add(homeAction);
+                    break;
+            }
+        }
+        return homeActions;
     }
 
     public NetworkRequest mapToNetworkRequest(ReadableMap object) {

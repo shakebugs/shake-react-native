@@ -1,5 +1,5 @@
 import NotificationEvent from "../models/NotificationEvent";
-import { registerNotificationListener, unregisterNotificationListener } from "../utils/Events";
+import {registerNotificationListener, unregisterNotificationListener} from "../utils/Events";
 import NotificationEventBuilder from "../builders/NotificationEventBuilder";
 
 /**
@@ -17,28 +17,12 @@ class NotificationTracker {
     }
 
     /**
-     * Checks if notification tracker is enabled.
-     * @returns {*} true if enabled, otherwise false
-     */
-    isEnabled = () => {
-        return this.enabled;
-    };
-
-    /**
      * Enables or disables notification tracker.
      * @param enabled true to enable, otherwise false
      */
     setEnabled = (enabled) => {
         this.enabled = enabled;
         this._onConfigChanged();
-    };
-
-    /**
-     * Gets notification events filter.
-     * @returns {*} filter function
-     */
-    getFilter = () => {
-        return this.filter;
     };
 
     /**

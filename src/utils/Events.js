@@ -1,4 +1,4 @@
-import { NativeEventEmitter, NativeModules } from "react-native";
+import {NativeEventEmitter, NativeModules} from "react-native";
 
 const eventEmitter = new NativeEventEmitter(NativeModules.RNShake);
 
@@ -31,3 +31,19 @@ export const unregisterUnreadMessagesListener = () => {
   unreadMessagesListenerSub.remove();
   unreadMessagesListenerSub = null;
 };
+
+const EVENT_HOME_ACTION_TAP = "HomeActionTap";
+let homeActionTapListenerSub = null;
+
+export const registerHomeActionTapListener = (listener) => {
+  homeActionTapListenerSub = eventEmitter.addListener(
+      EVENT_HOME_ACTION_TAP,
+      listener
+  );
+};
+
+export const unregisterHomeActionTapListener = () => {
+  homeActionTapListenerSub.remove();
+  homeActionTapListenerSub = null;
+};
+

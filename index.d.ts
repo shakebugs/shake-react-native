@@ -41,6 +41,8 @@ declare module "react-native-shake" {
 
     export function setHomeSubtitle(subtitle: String): void;
 
+    export function setHomeActions(actions: Array<ShakeBaseAction>): void;
+
     export function getShowIntroMessage(): Promise<boolean>;
 
     export function setShowIntroMessage(showIntroMessage: boolean): void;
@@ -194,6 +196,7 @@ declare module "react-native-shake" {
     export class ShakeScreen {
         static HOME: ShakeScreen;
         static NEW: ShakeScreen;
+        static CHAT: ShakeScreen;
         value: string;
     }
 
@@ -240,47 +243,53 @@ declare module "react-native-shake" {
     }
 
     export class ShakeTitle extends ShakeFormComponent {
-        label: string;
+        key: string;
+        label: string | null;
         labelRes: string | null;
         initialValue: string | null;
         required: boolean;
 
-        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
+        constructor(key: string, label: string, initialValue?: string | null, required?: boolean);
     }
 
     export class ShakeTextInput extends ShakeFormComponent {
-        label: string;
+        key: string;
+        label: string | null;
         labelRes: string | null;
         initialValue: string | null;
         required: boolean;
 
-        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
+        constructor(key: string, label: string, initialValue?: string | null, required?: boolean);
     }
 
     export class ShakeEmail extends ShakeFormComponent {
-        label: string;
+        key: string;
+        label: string | null;
         labelRes: string | null;
         initialValue: string | null;
         required: boolean;
 
-        constructor(label: string, labelRes?: string | null, initialValue?: string | null, required?: boolean);
+        constructor(key: string, label: string, initialValue?: string | null, required?: boolean);
     }
 
     export class ShakePicker extends ShakeFormComponent {
-        label: string;
+        key: string;
+        label: string | null;
         labelRes: string | null;
         items: Array<ShakePickerItem>;
 
-        constructor(label: string, items: Array<ShakePickerItem>, labelRes?: string | null);
+        constructor(key: string, label: string, items: Array<ShakePickerItem>);
     }
 
     export class ShakePickerItem {
-        text: string;
+        key: string;
+        text: string | null;
         textRes: string | null;
         icon: string | null;
+        iconRes: string | null;
         tag: string | null;
 
-        constructor(text: string, textRes?: string | null, icon?: string | null, tag?: string | null);
+        constructor(key: string, text: string, icon?: string | null, tag?: string | null);
     }
 
     export class ShakeAttachments extends ShakeFormComponent {
@@ -289,5 +298,31 @@ declare module "react-native-shake" {
 
     export class ShakeInspectButton extends ShakeFormComponent{
         constructor();
+    }
+
+    export class ShakeBaseAction {
+        type: string;
+
+        constructor(type: string)
+    }
+
+    export class ShakeHomeAction extends ShakeBaseAction {
+        title: string | null;
+        titleRes: string | null;
+        subtitle: string | null;
+        subtitleRes: string | null;
+        icon: string | null;
+        iconRes: string | null;
+        handler: ()=>void | null;
+
+        constructor(title: string, subtitle?: string | null, icon?: string | null, handler?: ()=>void | null);
+    }
+
+    export class ShakeChatAction extends ShakeBaseAction {
+        constructor(title?: string | null, subtitle?: string | null, icon?: string | null);
+    }
+
+    export class ShakeSubmitAction extends ShakeBaseAction {
+        constructor(title?: string | null, subtitle?: string | null, icon?: string | null);
     }
 }
