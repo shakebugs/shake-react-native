@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
@@ -33,8 +34,11 @@ import com.shakebugs.shake.internal.domain.models.NetworkRequest;
 import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
 import com.shakebugs.shake.privacy.NotificationEventsFilter;
+import com.shakebugs.shake.report.ShakeDismissListener;
 import com.shakebugs.shake.report.ShakeFile;
+import com.shakebugs.shake.report.ShakeOpenListener;
 import com.shakebugs.shake.report.ShakeReportData;
+import com.shakebugs.shake.report.ShakeSubmitListener;
 import com.shakebugs.shake.theme.ShakeTheme;
 
 import java.util.ArrayList;
@@ -75,6 +79,8 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
                 ShakeReflection.setShakeInfo(shakeInfo);
                 ShakeReflection.start(activity, clientId, clientSecret);
+
+                startShakeCallbacksEmitter();
             }
         });
     }
@@ -536,6 +542,42 @@ public class ShakeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Shake.setUnreadChatMessagesListener(null);
+            }
+        });
+    }
+
+    @ReactMethod
+    private void startShakeCallbacksEmitter() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.getReportConfiguration().setShakeOpenListener(new ShakeOpenListener() {
+                    @Override
+                    public void onShakeOpen() {
+                        emitter.sendEvent(Emitter.EVENT_SHAKE_OPEN, "open");
+                    }
+                });
+                Shake.getReportConfiguration().setShakeDismissListener(new ShakeDismissListener() {
+                    @Override
+                    public void onShakeDismiss() {
+                        emitter.sendEvent(Emitter.EVENT_SHAKE_DISMISS, "dismiss");
+                    }
+                });
+                Shake.getReportConfiguration().setShakeSubmitListener(new ShakeSubmitListener() {
+                    @Override
+                    public void onShakeSubmit(@NonNull String type, @NonNull Map<String, String> customFields) {
+                        WritableMap fields = new WritableNativeMap();
+                        for (Map.Entry<String, String> entry : customFields.entrySet()) {
+                            fields.putString(entry.getKey(), entry.getValue());
+                        }
+
+                        WritableMap eventData = new WritableNativeMap();
+                        eventData.putString("type", type);
+                        eventData.putMap("fields", fields);
+
+                        emitter.sendEvent(Emitter.EVENT_SHAKE_SUBMIT, eventData);
+                    }
+                });
             }
         });
     }

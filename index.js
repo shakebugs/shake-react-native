@@ -29,6 +29,7 @@ import ChatNotification from "./src/models/ChatNotification";
 
 import {mapToShakeScreen} from "./src/utils/Mappers";
 import HomeActionsTracker from "./src/modules/HomeActionsTracker";
+import ShakeCallbacks from "./src/modules/ShakeCallbacks";
 
 // Export models
 export { ShakeReportConfiguration };
@@ -67,6 +68,7 @@ class Shake {
   static notificationTracker = new NotificationTracker(this.shake);
   static messagesTracker = new MessagesTracker(this.shake);
   static homeActionsTracker = new HomeActionsTracker();
+  static shakeCallbacks = new ShakeCallbacks();
 
   /**
    * Starts Shake SDK.
@@ -78,6 +80,7 @@ class Shake {
     this.shake.start(clientId, clientSecret);
     this.notificationTracker.setEnabled(true);
     this.homeActionsTracker.setEnabled(true);
+    this.shakeCallbacks.startListening();
   }
 
   /**
@@ -548,6 +551,33 @@ class Shake {
   */
   static setUnreadMessagesListener(listener) {
     this.messagesTracker.setUnreadMessagesListener(listener);
+  }
+
+  /**
+   * Sets Shake open event listener.
+   * <br><br>
+   * Set null if you want to remove listener.
+   */
+  static setShakeOpenListener(listener) {
+    this.shakeCallbacks.setShakeOpenListener(listener);
+  }
+
+  /**
+   * Sets Shake dismiss event listener.
+   * <br><br>
+   * Set null if you want to remove listener.
+   */
+  static setShakeDismissListener(listener) {
+    this.shakeCallbacks.setShakeDismissListener(listener);
+  }
+
+  /**
+   * Sets Shake submit event listener.
+   * <br><br>
+   * Set null if you want to remove listener.
+   */
+  static setShakeSubmitListener(listener) {
+    this.shakeCallbacks.setShakeSubmitListener(listener);
   }
 
   /**

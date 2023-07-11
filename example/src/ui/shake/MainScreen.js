@@ -131,8 +131,8 @@ const MainScreen = props => {
   };
 
   const setCustomForm = async () => {
-    // const oldForm = await Shake.getShakeForm();
-    // oldForm.components = oldForm.components.filter(c => c.type !== 'inspect');
+    const oldForm = await Shake.getShakeForm();
+    oldForm.components = oldForm.components.filter(c => c.type !== 'inspect');
 
     const pickerItems = [
       new ShakePickerItem('Mouse', 'Mouse', null, 'mouse'),
@@ -149,7 +149,7 @@ const MainScreen = props => {
       new ShakeAttachments(),
     ]);
 
-    Shake.setShakeForm(shakeForm);
+    Shake.setShakeForm(oldForm);
   };
 
   const setCustomTheme = () => {

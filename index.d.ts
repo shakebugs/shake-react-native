@@ -75,6 +75,18 @@ declare module "react-native-shake" {
         listener?: (count: number) => void
     ): void;
 
+    export function setShakeOpenListener(
+        listener?: () => void
+    ): void;
+
+    export function setShakeDismissListener(
+        listener?: () => void
+    ): void;
+
+    export function setShakeSubmitListener(
+        listener?: (type: string, fields: { [key: string]: string; } ) => void
+    ): void;
+
     export function setShakeReportData(files: Array<ShakeFile>): void;
 
     export function isSensitiveDataRedactionEnabled(): Promise<boolean>;

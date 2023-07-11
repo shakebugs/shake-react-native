@@ -21,8 +21,18 @@ const initShake = () => {
   Shake.setSensitiveDataRedactionEnabled(true);
   Shake.setHomeSubtitle('React Native Shake Example');
 
+  Shake.setShakeOpenListener(() => {
+    console.log('Shake opened!');
+  });
+  Shake.setShakeDismissListener(() => {
+    console.log('Shake dismissed!');
+  });
+  Shake.setShakeSubmitListener((type, fields) => {
+    console.log('Shake submitted!');
+  });
+
   Shake.start(CLIENT_ID, CLIENT_SECRET);
-  Shake.registerUser('pero');
+  Shake.registerUser('test_user');
 };
 
 const requestNotificationPermission = () => {

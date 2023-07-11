@@ -33,7 +33,7 @@
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-  return @[@"EventNotification", @"UnreadMessages", @"HomeActionTap"];
+  return @[@"EventNotification", @"UnreadMessages", @"HomeActionTap", @"OnShakeOpen", @"OnShakeDismiss", @"OnShakeSubmit"];
 }
 
 // React Native
@@ -43,6 +43,21 @@ RCT_EXPORT_MODULE()
 RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret)
 {
     [SHKShake startWithClientId:clientId clientSecret:clientSecret];
+
+    /// Forward Shake callbacks to the RN
+    SHKShake.configuration.shakeOpenListener = ^() {
+        [self sendEventWithName:@"OnShakeOpen" body:nil];
+    };
+    SHKShake.configuration.shakeDismissListener = ^() {
+        [self sendEventWithName:@"OnShakeDismiss" body:nil];
+    };
+    SHKShake.configuration.shakeSubmitListener = ^(NSString* type, NSDictionary* fields) {
+        NSDictionary *data = @{
+            @"type": type,
+            @"fields": fields
+        };
+        [self sendEventWithName:@"OnShakeSubmit" body:data];
+    };
 }
 
 RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
@@ -499,7 +514,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *title = [actionDic objectForKey:@"title"];
             NSString *subtitle = [actionDic objectForKey:@"subtitle"];
             NSString *icon = [actionDic objectForKey:@"icon"];
-            
+
             // NSNull causes crash
             if (title && [title isEqual:[NSNull null]]) title=nil;
             if (subtitle && [subtitle isEqual:[NSNull null]]) subtitle=nil;
@@ -512,7 +527,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *title = [actionDic objectForKey:@"title"];
             NSString *subtitle = [actionDic objectForKey:@"subtitle"];
             NSString *icon = [actionDic objectForKey:@"icon"];
-            
+
             // NSNull causes crash
             if (title && [title isEqual:[NSNull null]]) title=nil;
             if (subtitle && [subtitle isEqual:[NSNull null]]) subtitle=nil;
@@ -525,7 +540,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *title = [actionDic objectForKey:@"title"];
             NSString *subtitle = [actionDic objectForKey:@"subtitle"];
             NSString *icon = [actionDic objectForKey:@"icon"];
-            
+
             // NSNull causes crash
             if (title && [title isEqual:[NSNull null]]) title=nil;
             if (subtitle && [subtitle isEqual:[NSNull null]]) subtitle=nil;
@@ -556,7 +571,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *label = [component objectForKey:@"label"];
             NSString *initialValue = [component objectForKey:@"initialValue"];
             BOOL required = [[component objectForKey:@"required"] boolValue];
-                
+
             // NSNull causes crash
             if (key && [key isEqual:[NSNull null]]) key=@"";
             if (label && [label isEqual:[NSNull null]]) label=@"";
@@ -569,7 +584,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *label = [component objectForKey:@"label"];
             NSString *initialValue = [component objectForKey:@"initialValue"];
             BOOL required = [[component objectForKey:@"required"] boolValue];
-            
+
             // NSNull causes crash
             if (key && [key isEqual:[NSNull null]]) key=@"";
             if (label && [label isEqual:[NSNull null]]) label=@"";
@@ -582,7 +597,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *label = [component objectForKey:@"label"];
             NSString *initialValue = [component objectForKey:@"initialValue"];
             BOOL required = [[component objectForKey:@"required"] boolValue];
-            
+
             // NSNull causes crash
             if (key && [key isEqual:[NSNull null]]) key=@"";
             if (label && [label isEqual:[NSNull null]]) label=@"";
@@ -594,7 +609,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             NSString *key = [component objectForKey:@"key"];
             NSString *label = [component objectForKey:@"label"];
             NSArray *itemsArray = [component objectForKey:@"items"];
-            
+
             // NSNull causes crash
             if (key && [key isEqual:[NSNull null]]) key=@"";
             if (label && [label isEqual:[NSNull null]]) label=@"";
@@ -607,7 +622,7 @@ RCT_EXPORT_METHOD(unregisterUser)
                 NSString *text = [arrayItem objectForKey:@"text"];
                 NSString *icon = [arrayItem objectForKey:@"icon"];
                 NSString *tag = [arrayItem objectForKey:@"tag"];
-                
+
                 // NSNull causes crash
                 if (key && [key isEqual:[NSNull null]]) key=@"";
                 if (text && [text isEqual:[NSNull null]]) text=@"";
@@ -811,7 +826,7 @@ RCT_EXPORT_METHOD(unregisterUser)
 
 - (UIImage*)base64ToUIImage:(NSString *)base64 {
     if (base64 == nil) return nil;
-    
+
     NSUInteger paddedLength = base64.length + (4 - (base64.length % 4));
     NSString* correctBase64String = [base64 stringByPaddingToLength:paddedLength withString:@"=" startingAtIndex:0];
     NSData* data = [[NSData alloc]initWithBase64EncodedString:correctBase64String options:NSDataBase64DecodingIgnoreUnknownCharacters];

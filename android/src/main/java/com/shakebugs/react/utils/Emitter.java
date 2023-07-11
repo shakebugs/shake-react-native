@@ -8,6 +8,9 @@ public class Emitter {
     public static final String EVENT_NOTIFICATION = "EventNotification";
     public static final String EVENT_UNREAD_MESSAGES = "UnreadMessages";
     public static final String EVENT_HOME_ACTION_TAP = "HomeActionTap";
+    public static final String EVENT_SHAKE_OPEN = "OnShakeOpen";
+    public static final String EVENT_SHAKE_DISMISS = "OnShakeDismiss";
+    public static final String EVENT_SHAKE_SUBMIT = "OnShakeSubmit";
     private final ReactContext reactContext;
 
     public Emitter(ReactContext reactContext) {
