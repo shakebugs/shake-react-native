@@ -2,6 +2,10 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/images/logo.png",
+      "sha1": "b5021884e75e457fd5bc7e329d68d266463ed0dc"
+    },
+    {
       "path": "src/assets/fonts/HKGrotesk-Regular.otf",
       "sha1": "d16193c24d1d33bfed581fbf575ecbbb47645690"
     },

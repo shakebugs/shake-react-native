@@ -31,6 +31,7 @@ import AxiosNetworkTester from '../network/AxiosNetworkTester';
 import Private from '../core/Private';
 import PushNotification from 'react-native-push-notification';
 import {createTempFile} from '../../utils/Files';
+import sampleImage from '../../assets/sampleImage';
 
 const MainScreen = props => {
   let path = RNFS.DocumentDirectoryPath + '/file.txt';
@@ -176,7 +177,7 @@ const MainScreen = props => {
       new ShakeHomeAction(
         'A custom home action',
         'This is a test subtitle',
-        null,
+        sampleImage,
         () => {
           console.log('Whoopppyy!');
         },

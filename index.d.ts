@@ -319,10 +319,10 @@ declare module "react-native-shake" {
     }
 
     export class ShakeChatAction extends ShakeBaseAction {
-        constructor(title?: string, subtitle?: string, icon?: string | null);
+        constructor(title?: string | null, subtitle?: string | null, icon?: string | null);
     }
 
     export class ShakeSubmitAction extends ShakeBaseAction {
-        constructor(title?: string, subtitle?: string, icon?: string | null);
+        constructor(title?: string | null, subtitle?: string | null, icon?: string | null);
     }
 }

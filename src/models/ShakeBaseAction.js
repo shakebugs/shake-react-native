@@ -40,7 +40,7 @@ class ShakeBaseAction {
 
     /**
      * Function executed on the item press.
-     * @type {function} function
+     * @type {function | null} function
      */
     handler = null;
 

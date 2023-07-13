@@ -19,6 +19,7 @@
 		EA306CE92705E55F00C98857 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA306CE82705E55F00C98857 /* File.swift */; };
 		EA3611B026FCCF3B009EA50C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA3611AF26FCCF3B009EA50C /* LaunchScreen.storyboard */; };
 		EA8DD76329C8A3B600FE097A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8DD76229C8A3B600FE097A /* AppDelegate.m */; };
+		62BFB3F66EC744CDBB8E0DA5 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B6A04BA951D946F7ACA994D3 /* logo.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		F2987F8743127E81EABF28A8 /* Pods-example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-example-tvOS/Pods-example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		F5F629FF2CBD28588D4C4186 /* Pods-example-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-example-tvOSTests/Pods-example-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FB47DBD0C2CC2084FC820CC1 /* Pods-example-exampleTests.productionrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-exampleTests.productionrelease.xcconfig"; path = "Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests.productionrelease.xcconfig"; sourceTree = "<group>"; };
+		B6A04BA951D946F7ACA994D3 /* logo.png */ = {isa = PBXFileReference; name = "logo.png"; path = "../src/assets/images/logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 				0AAF37C588304245AE30F947 /* HKGrotesk-SemiBold.otf */,
 				05528CF2BD0B4BA79169B8F7 /* Lexend-Bold.ttf */,
 				0173DB1313AA428C92BB9ECC /* Lexend-Regular.ttf */,
+				B6A04BA951D946F7ACA994D3 /* logo.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				98B32628B0EB41388DA43CC1 /* HKGrotesk-SemiBold.otf in Resources */,
 				C2E47B6FE9154CDFB4D3D672 /* Lexend-Bold.ttf in Resources */,
 				51953D6D049E463E93C9668B /* Lexend-Regular.ttf in Resources */,
+				62BFB3F66EC744CDBB8E0DA5 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,6 +575,8 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -683,6 +689,8 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -795,6 +803,8 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -915,6 +925,8 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -1027,6 +1039,8 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -1131,6 +1145,8 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

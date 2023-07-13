@@ -133,7 +133,6 @@ public class Mapper {
                 boolean required = componentMap.getBoolean("required");
 
                 if (key == null) key = "";
-                if (label == null) label = "";
                 if (initialValue == null) initialValue = "";
 
                 ShakeTitle comp = new ShakeTitle(key, label, initialValue, required);
@@ -147,7 +146,6 @@ public class Mapper {
                 boolean required = componentMap.getBoolean("required");
 
                 if (key == null) key = "";
-                if (label == null) label = "";
                 if (initialValue == null) initialValue = "";
 
                 ShakeTextInput comp = new ShakeTextInput(key, label, initialValue, required);
@@ -161,7 +159,6 @@ public class Mapper {
                 boolean required = componentMap.getBoolean("required");
 
                 if (key == null) key = "";
-                if (label == null) label = "";
                 if (initialValue == null) initialValue = "";
 
                 ShakeEmail comp = new ShakeEmail(key, label, initialValue, required);
@@ -174,7 +171,6 @@ public class Mapper {
                 ReadableArray itemsArray = componentMap.getArray("items");
 
                 if (key == null) key = "";
-                if (label == null) label = "";
 
                 List<ShakePickerItem> items = new ArrayList<>();
                 if (itemsArray != null) {
@@ -186,7 +182,6 @@ public class Mapper {
                         String tag = itemMap.getString("tag");
 
                         if (itemKey == null) itemKey = "";
-                        if (text == null) text = "";
 
                         ShakePickerItem item = new ShakePickerItem(itemKey, text, convertBase64ToDrawable(context, icon), tag);
                         item.setText(stringToRes(context, itemMap.getString("textRes"), "string"));

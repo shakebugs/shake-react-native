@@ -6173,7 +6173,7 @@
 
 "react-native-shake@file:../":
   "resolved" "file:.."
-  "version" "16.0.0"
+  "version" "16.2.0"
 
 "react-native-tab-view@^3.5.1":
   "integrity" "sha512-qdrS5t+AEhfuKQyuCXkwHu4IVppkuTvzWWlkSZKrPaSkjjIa32xrsGxt1UW9YDdro2w4AMw5hKn1hFmg/5mvzA=="
