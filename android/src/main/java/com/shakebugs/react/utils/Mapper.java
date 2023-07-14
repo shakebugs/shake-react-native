@@ -21,6 +21,7 @@ import com.shakebugs.shake.ShakeScreen;
 import com.shakebugs.shake.actions.ShakeHomeAction;
 import com.shakebugs.shake.actions.ShakeHomeChatAction;
 import com.shakebugs.shake.actions.ShakeHomeSubmitAction;
+import com.shakebugs.shake.chat.ChatNotification;
 import com.shakebugs.shake.form.ShakeAttachments;
 import com.shakebugs.shake.form.ShakeEmail;
 import com.shakebugs.shake.form.ShakeForm;
@@ -448,6 +449,24 @@ public class Mapper {
         }
 
         return stringMap;
+    }
+
+    public ChatNotification mapToChatNotification(ReadableMap notificationData) {
+        ChatNotification chatNotification = null;
+
+        try {
+            String id = notificationData.getString("id");
+            String userId = notificationData.getString("userId");
+            String title = notificationData.getString("title");
+            String message = notificationData.getString("message");
+
+            if (id != null && userId != null && title != null && message != null) {
+                chatNotification = new ChatNotification(id, userId, title, message);
+            }
+        } catch (Exception ignore) {
+        }
+
+        return chatNotification;
     }
 
     private Map<String, Object> toMap(ReadableMap readableMap) {

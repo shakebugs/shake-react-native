@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import TestScreen from './ui/test/TestScreen';
@@ -20,60 +20,60 @@ const options = {
   headerTitleAlign: 'center',
 };
 
-export default class App extends Component {
-  render() {
-    return (
-      <DarkModeObserver>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              options={options}
-              name="MainScreen"
-              component={MainScreen}
-            />
-            <Stack.Screen
-              options={options}
-              name="TestScreen"
-              component={TestScreen}
-            />
-            <Stack.Screen
-              options={options}
-              name="TouchScreen"
-              component={TouchScreen}
-            />
-            <Stack.Screen
-              options={options}
-              name="ScrollScreen"
-              component={ScrollScreen}
-            />
-            <Stack.Screen
-              options={options}
-              name="RefreshScreen"
-              component={RefreshScreen}
-            />
-            <Stack.Screen
-              options={{title: 'List'}}
-              name="ListScreen"
-              component={ListScreen}
-            />
-            <Stack.Screen
-              options={options}
-              name="ModalScreen"
-              component={ModalScreen}
-            />
-            <Stack.Screen
-              options={options}
-              name="DrawerScreen"
-              component={DrawerScreen}
-            />
-            <Stack.Screen
-              options={options}
-              name="TabScreen"
-              component={TabScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </DarkModeObserver>
-    );
-  }
-}
+const App = () => {
+  return (
+    <DarkModeObserver>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            options={options}
+            name="MainScreen"
+            component={MainScreen}
+          />
+          <Stack.Screen
+            options={options}
+            name="TestScreen"
+            component={TestScreen}
+          />
+          <Stack.Screen
+            options={options}
+            name="TouchScreen"
+            component={TouchScreen}
+          />
+          <Stack.Screen
+            options={options}
+            name="ScrollScreen"
+            component={ScrollScreen}
+          />
+          <Stack.Screen
+            options={options}
+            name="RefreshScreen"
+            component={RefreshScreen}
+          />
+          <Stack.Screen
+            options={{title: 'List'}}
+            name="ListScreen"
+            component={ListScreen}
+          />
+          <Stack.Screen
+            options={options}
+            name="ModalScreen"
+            component={ModalScreen}
+          />
+          <Stack.Screen
+            options={options}
+            name="DrawerScreen"
+            component={DrawerScreen}
+          />
+          <Stack.Screen
+            options={options}
+            name="TabScreen"
+            component={TabScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </DarkModeObserver>
+  );
+};
+
+export default App;

@@ -1,4 +1,4 @@
-import {findNodeHandle, NativeModules} from "react-native";
+import {findNodeHandle, NativeModules, Platform} from "react-native";
 
 import ShakeReportConfiguration from "./src/models/ShakeReportConfiguration";
 import ShakeFile from "./src/models/ShakeFile";
@@ -25,6 +25,7 @@ import ShakeBaseAction from "./src/models/ShakeBaseAction";
 import ShakeHomeAction from "./src/models/ShakeHomeAction";
 import ShakeSubmitAction from "./src/models/ShakeSubmitAction";
 import ShakeChatAction from "./src/models/ShakeChatAction";
+import ChatNotification from "./src/models/ChatNotification";
 
 import {mapToShakeScreen} from "./src/utils/Mappers";
 import HomeActionsTracker from "./src/modules/HomeActionsTracker";
@@ -53,6 +54,7 @@ export { ShakeBaseAction};
 export { ShakeHomeAction };
 export { ShakeChatAction };
 export { ShakeSubmitAction };
+export { ChatNotification };
 
 /**
  * Interface for native methods.
@@ -497,11 +499,12 @@ class Shake {
   }
 
   /**
-   * Shows notifications settings screen.
-   * This is used just for Android os.
+   * Shows notifications settings screen (Only Android).
    */
   static showNotificationsSettings() {
-    this.shake.showNotificationsSettings();
+    if (Platform.OS === 'android') {
+      this.shake.showNotificationsSettings();
+    }
   }
 
   /**
@@ -545,6 +548,28 @@ class Shake {
   */
   static setUnreadMessagesListener(listener) {
     this.messagesTracker.setUnreadMessagesListener(listener);
+  }
+
+  /**
+   * Sets token used to send push notifications (Only Android).
+   * <br><br>
+   * Set null if you want to remove token.
+   */
+  static setPushNotificationsToken(token) {
+    if (Platform.OS === 'android') {
+      this.shake.setPushNotificationsToken(token);
+    }
+  }
+
+  /**
+   * Shows Firebase chat notification (Only Android).
+   */
+  static showChatNotification(data) {
+    if (Platform.OS === 'android') {
+      const chatNotification = new ChatNotification(
+          data['ticket_id'], data['user_id'],  data['ticket_title'],  data['message']);
+      this.shake.showChatNotification(chatNotification);
+    }
   }
 }
 

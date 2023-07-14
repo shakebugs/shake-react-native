@@ -26,6 +26,7 @@ import com.shakebugs.shake.ShakeInfo;
 import com.shakebugs.shake.ShakeReportConfiguration;
 import com.shakebugs.shake.ShakeScreen;
 import com.shakebugs.shake.actions.ShakeHomeAction;
+import com.shakebugs.shake.chat.ChatNotification;
 import com.shakebugs.shake.chat.UnreadChatMessagesListener;
 import com.shakebugs.shake.form.ShakeForm;
 import com.shakebugs.shake.internal.domain.models.NetworkRequest;
@@ -591,6 +592,22 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                 Shake.unregisterUser();
             }
         });
+    }
+
+    @ReactMethod
+    public void setPushNotificationsToken(final String token) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Shake.setPushNotificationsToken(token);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void showChatNotification(final ReadableMap notificationData) {
+        ChatNotification chatNotification = mapper.mapToChatNotification(notificationData);
+        Shake.showChatNotification(chatNotification);
     }
 
     @ReactMethod

@@ -117,6 +117,10 @@ declare module "react-native-shake" {
 
     export function unregisterUser(): void;
 
+    export function setPushNotificationsToken(token: string): void;
+
+    export function showChatNotification(data: { [key: string]: string }): void;
+
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
         activityHistoryData: boolean;
