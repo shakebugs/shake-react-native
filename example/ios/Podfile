@@ -37,6 +37,9 @@ target 'example' do
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
 
+  use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
+
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -54,7 +57,7 @@ target 'example' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => FlipperConfiguration.enabled(['DevelopmentDebug', 'StagingDebug', 'ProductionDebug']),
+    #:flipper_configuration => FlipperConfiguration.enabled(['DevelopmentDebug', 'StagingDebug', 'ProductionDebug']),
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
