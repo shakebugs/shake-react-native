@@ -139,7 +139,6 @@ android {
             dimension "environment"
             applicationIdSuffix ".pr"
         }
-
         staging {
             dimension "environment"
             applicationIdSuffix ".rc"

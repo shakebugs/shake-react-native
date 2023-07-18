@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>517188204861-nbqrjdf5m27am70dbk82ucd2lhp9se5i.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.517188204861-nbqrjdf5m27am70dbk82ucd2lhp9se5i</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAqM267KXwpEuW9qL1S48Zny6vBurtCA80</string>
+	<key>GCM_SENDER_ID</key>
+	<string>517188204861</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.shakebugs.rn.example.pr</string>
+	<key>PROJECT_ID</key>
+	<string>shake-bugs</string>
+	<key>STORAGE_BUCKET</key>
+	<string>shake-bugs.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:517188204861:ios:d810c0968538549d04ad54</string>
+	<key>DATABASE_URL</key>
+	<string>https://shake-bugs.firebaseio.com</string>
+</dict>
+</plist>
