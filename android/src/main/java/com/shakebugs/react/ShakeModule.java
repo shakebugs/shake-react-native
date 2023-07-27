@@ -1,6 +1,8 @@
 package com.shakebugs.react;
 
+
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.view.View;
 
@@ -13,6 +15,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
@@ -33,14 +36,23 @@ import com.shakebugs.shake.internal.domain.models.NetworkRequest;
 import com.shakebugs.shake.internal.domain.models.NotificationEvent;
 import com.shakebugs.shake.privacy.NotificationEventEditor;
 import com.shakebugs.shake.privacy.NotificationEventsFilter;
+import com.shakebugs.shake.report.ShakeDismissListener;
 import com.shakebugs.shake.report.ShakeFile;
+import com.shakebugs.shake.report.ShakeOpenListener;
 import com.shakebugs.shake.report.ShakeReportData;
+import com.shakebugs.shake.report.ShakeSubmitListener;
 import com.shakebugs.shake.theme.ShakeTheme;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+
+/**
+ * Shake SDK native bridge.
+ */
 public class ShakeModule extends ReactContextBaseJavaModule {
     private final Mapper mapper;
     private final Emitter emitter;
@@ -57,31 +69,45 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         return "RNShake";
     }
 
+    /**
+     * Passed to the native SDK to distinguish native and React Native apps.
+     *
+     * @return platform info
+     */
+    private ShakeInfo buildShakePlatformInfo() {
+        ShakeInfo platformInfo = new ShakeInfo();
+        platformInfo.setPlatform(Constants.PLATFORM);
+        platformInfo.setVersionCode(Constants.VERSION_CODE);
+        platformInfo.setVersionName(Constants.VERSION_NAME);
+
+        return platformInfo;
+    }
+
     @ReactMethod
-    public void start(final String clientId, final String clientSecret) {
-        runOnUiThread(new Runnable() {
+    public void start(final String clientId, final String clientSecret, final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
+                ShakeReflection.setShakeInfo(buildShakePlatformInfo());
+
                 Activity activity = getCurrentActivity();
-                if (activity == null) {
-                    Logger.e("Activity not initialized.");
-                    return;
+                if (activity != null) {
+                    ShakeReflection.start(activity, clientId, clientSecret);
+                } else {
+                    Application app = (Application) getReactApplicationContext().getApplicationContext();
+                    Shake.start(app, clientId, clientSecret);
                 }
 
-                ShakeInfo shakeInfo = new ShakeInfo();
-                shakeInfo.setPlatform(Constants.PLATFORM);
-                shakeInfo.setVersionCode(Constants.VERSION_CODE);
-                shakeInfo.setVersionName(Constants.VERSION_NAME);
+                startShakeCallbacksEmitter();
 
-                ShakeReflection.setShakeInfo(shakeInfo);
-                ShakeReflection.start(activity, clientId, clientSecret);
+                promise.resolve(null);
             }
         });
     }
 
     @ReactMethod
     public void show() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.show();
@@ -91,7 +117,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void show(final ReadableMap shakeScreenMap) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 ShakeScreen shakeScreen = mapper.mapToShakeScreen(shakeScreenMap);
@@ -101,15 +127,20 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getShakeForm(Promise promise) {
-        ShakeForm shakeForm = Shake.getReportConfiguration().getShakeForm();
-        WritableMap shakeFormMap = mapper.mapShakeFormToMap(shakeForm);
-        promise.resolve(shakeFormMap);
+    public void getShakeForm(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                ShakeForm shakeForm = Shake.getReportConfiguration().getShakeForm();
+                WritableMap shakeFormMap = mapper.mapShakeFormToMap(shakeForm);
+                promise.resolve(shakeFormMap);
+            }
+        });
     }
 
     @ReactMethod
     public void setShakeForm(final ReadableMap shakeFormMap) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 ShakeForm shakeForm = mapper.mapMapToShakeForm(shakeFormMap);
@@ -120,7 +151,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setShakeTheme(final ReadableMap shakeThemeMap) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 ShakeTheme shakeTheme = mapper.mapMapToShakeTheme(shakeThemeMap);
@@ -131,7 +162,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setHomeSubtitle(final String subtitle) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setHomeSubtitleValue(subtitle);
@@ -141,14 +172,17 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setHomeActions(final ReadableArray array) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 ArrayList<ShakeHomeAction> actions = mapper.mapArrayToHomeActions(array);
-                for (ShakeHomeAction action : actions) {
-                    action.setHandler(() -> {
-                        emitter.sendEvent(Emitter.EVENT_HOME_ACTION_TAP, action.getTitleValue());
-                        return null;
+                for (final ShakeHomeAction action : actions) {
+                    action.setHandler(new Function0<Unit>() {
+                        @Override
+                        public Unit invoke() {
+                            emitter.sendEvent(Emitter.EVENT_HOME_ACTION_TAP, action.getTitleValue());
+                            return null;
+                        }
                     });
                 }
                 Shake.getReportConfiguration().setHomeActions(actions);
@@ -157,13 +191,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isUserFeedbackEnabled(Promise promise) {
-        promise.resolve(Shake.isUserFeedbackEnabled());
+    public void isUserFeedbackEnabled(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.isUserFeedbackEnabled());
+            }
+        });
     }
 
     @ReactMethod
     public void setUserFeedbackEnabled(final boolean enabled) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setUserFeedbackEnabled(enabled);
@@ -172,13 +211,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isEnableBlackBox(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableBlackBox());
+    public void isEnableBlackBox(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isEnableBlackBox());
+            }
+        });
     }
 
     @ReactMethod
     public void setEnableBlackBox(final boolean enableBlackBox) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setEnableBlackBox(enableBlackBox);
@@ -187,13 +231,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isEnableActivityHistory(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isEnableActivityHistory());
+    public void isEnableActivityHistory(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isEnableActivityHistory());
+            }
+        });
     }
 
     @ReactMethod
     public void setEnableActivityHistory(final boolean enableActivityHistory) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setEnableActivityHistory(enableActivityHistory);
@@ -202,13 +251,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isShowFloatingReportButton(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isShowFloatingReportButton());
+    public void isShowFloatingReportButton(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isShowFloatingReportButton());
+            }
+        });
     }
 
     @ReactMethod
     public void setShowFloatingReportButton(final boolean showFloatingReportButton) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setShowFloatingReportButton(showFloatingReportButton);
@@ -217,13 +271,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isInvokeShakeOnShakeDeviceEvent(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent());
+    public void isInvokeShakeOnShakeDeviceEvent(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent());
+            }
+        });
     }
 
     @ReactMethod
     public void setInvokeShakeOnShakeDeviceEvent(final boolean invokeOnShake) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setInvokeShakeOnShakeDeviceEvent(invokeOnShake);
@@ -232,13 +291,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isInvokeShakeOnScreenshot(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnScreenshot());
+    public void isInvokeShakeOnScreenshot(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isInvokeShakeOnScreenshot());
+            }
+        });
     }
 
     @ReactMethod
     public void setInvokeShakeOnScreenshot(final boolean invokeOnScreenshot) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setInvokeShakeOnScreenshot(invokeOnScreenshot);
@@ -247,16 +311,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getDefaultScreen(Promise promise) {
-        ShakeScreen shakeScreen = Shake.getReportConfiguration().getDefaultScreen();
-        String shakeScreenStr = shakeScreen.toString();
-
-        promise.resolve(shakeScreenStr);
+    public void getDefaultScreen(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().getDefaultScreen().toString());
+            }
+        });
     }
 
     @ReactMethod
     public void setDefaultScreen(final ReadableMap shakeScreenMap) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 ShakeScreen shakeScreen = mapper.mapToShakeScreen(shakeScreenMap);
@@ -266,13 +332,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isScreenshotIncluded(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isScreenshotIncluded());
+    public void isScreenshotIncluded(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isScreenshotIncluded());
+            }
+        });
     }
 
     @ReactMethod
     public void setScreenshotIncluded(final boolean isScreenshotIncluded) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setScreenshotIncluded(isScreenshotIncluded);
@@ -281,13 +352,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getShakingThreshold(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().getShakingThreshold());
+    public void getShakingThreshold(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().getShakingThreshold());
+            }
+        });
     }
 
     @ReactMethod
     public void setShakingThreshold(final int shakingThreshold) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setShakingThreshold(shakingThreshold);
@@ -296,13 +372,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getShowIntroMessage(Promise promise) {
-        promise.resolve(Shake.getShowIntroMessage());
+    public void getShowIntroMessage(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getShowIntroMessage());
+            }
+        });
     }
 
     @ReactMethod
     public void setShowIntroMessage(final boolean showIntroMessage) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setShowIntroMessage(showIntroMessage);
@@ -311,13 +392,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isAutoVideoRecording(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isAutoVideoRecording());
+    public void isAutoVideoRecording(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isAutoVideoRecording());
+            }
+        });
     }
 
     @ReactMethod
     public void setAutoVideoRecording(final boolean videoRecordingEnabled) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setAutoVideoRecording(videoRecordingEnabled);
@@ -326,13 +412,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isConsoleLogsEnabled(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isConsoleLogsEnabled());
+    public void isConsoleLogsEnabled(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isConsoleLogsEnabled());
+            }
+        });
     }
 
     @ReactMethod
     public void setConsoleLogsEnabled(final boolean consoleLogsEnabled) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setConsoleLogsEnabled(consoleLogsEnabled);
@@ -342,19 +433,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void log(final ReadableMap logLevelMap, final String message) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 LogLevel logLevel = mapper.mapToLogLevel(logLevelMap);
                 Shake.log(logLevel, message);
-
             }
         });
     }
 
     @ReactMethod
     public void setMetadata(final String key, final String value) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setMetadata(key, value);
@@ -364,7 +454,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void clearMetadata() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.clearMetadata();
@@ -374,7 +464,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setShakeReportData(final ReadableArray filesArray) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.onPrepareData(new ShakeReportData() {
@@ -389,7 +479,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void silentReport(final String description, final ReadableArray filesArray, final ReadableMap configurationMap) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 ShakeReportConfiguration configuration = mapper.mapToConfiguration(configurationMap);
@@ -407,14 +497,24 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void insertNetworkRequest(final ReadableMap data) {
-        NetworkRequest networkRequest = mapper.mapToNetworkRequest(data);
-        ShakeReflection.insertNetworkRequest(networkRequest);
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkRequest networkRequest = mapper.mapToNetworkRequest(data);
+                ShakeReflection.insertNetworkRequest(networkRequest);
+            }
+        });
     }
 
     @ReactMethod
     public void insertNotificationEvent(final ReadableMap data) {
-        NotificationEvent notificationEvent = mapper.mapToNotificationEvent(data);
-        ShakeReflection.insertNotificationEvent(notificationEvent);
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                NotificationEvent notificationEvent = mapper.mapToNotificationEvent(data);
+                ShakeReflection.insertNotificationEvent(notificationEvent);
+            }
+        });
     }
 
     @ReactMethod
@@ -426,7 +526,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                     @Override
                     public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
                         final View view = nativeViewHierarchyManager.resolveView((int) id);
-                        runOnUiThread(new Runnable() {
+                        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
                             @Override
                             public void run() {
                                 Shake.addPrivateView(view);
@@ -449,7 +549,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
                     @Override
                     public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
                         final View view = nativeViewHierarchyManager.resolveView((int) id);
-                        runOnUiThread(new Runnable() {
+                        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
                             @Override
                             public void run() {
                                 Shake.removePrivateView(view);
@@ -465,7 +565,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void clearPrivateViews() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.clearPrivateViews();
@@ -474,13 +574,18 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isSensitiveDataRedactionEnabled(Promise promise) {
-        promise.resolve(Shake.getReportConfiguration().isSensitiveDataRedactionEnabled());
+    public void isSensitiveDataRedactionEnabled(final Promise promise) {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                promise.resolve(Shake.getReportConfiguration().isSensitiveDataRedactionEnabled());
+            }
+        });
     }
 
     @ReactMethod
     public void setSensitiveDataRedactionEnabled(final boolean sensitiveDataRedactionEnabled) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.getReportConfiguration().setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled);
@@ -490,7 +595,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void startNotificationsEmitter() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setNotificationEventsFilter(new NotificationEventsFilter() {
@@ -507,7 +612,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void stopNotificationsEmitter() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setNotificationEventsFilter(null);
@@ -517,7 +622,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void startUnreadChatMessagesEmitter() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setUnreadChatMessagesListener(new UnreadChatMessagesListener() {
@@ -532,7 +637,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void stopUnreadChatMessagesEmitter() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setUnreadChatMessagesListener(null);
@@ -542,7 +647,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void showNotificationsSettings() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Activity activity = getCurrentActivity();
@@ -555,7 +660,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void registerUser(final String id) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.registerUser(id);
@@ -565,7 +670,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void updateUserId(final String id) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.updateUserId(id);
@@ -575,7 +680,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void updateUserMetadata(final ReadableMap metadataMap) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Map<String, String> metadata = mapper.mapToUserMetadata(metadataMap);
@@ -586,7 +691,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void unregisterUser() {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.unregisterUser();
@@ -596,7 +701,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setPushNotificationsToken(final String token) {
-        runOnUiThread(new Runnable() {
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
                 Shake.setPushNotificationsToken(token);
@@ -606,24 +711,56 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void showChatNotification(final ReadableMap notificationData) {
-        ChatNotification chatNotification = mapper.mapToChatNotification(notificationData);
-        Shake.showChatNotification(chatNotification);
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                ChatNotification chatNotification = mapper.mapToChatNotification(notificationData);
+                Shake.showChatNotification(chatNotification);
+            }
+        });
     }
 
+    /*
+     * Callbacks starters.
+     */
+    private void startShakeCallbacksEmitter() {
+        Shake.getReportConfiguration().setShakeOpenListener(new ShakeOpenListener() {
+            @Override
+            public void onShakeOpen() {
+                emitter.sendEvent(Emitter.EVENT_SHAKE_OPEN, "open");
+            }
+        });
+        Shake.getReportConfiguration().setShakeDismissListener(new ShakeDismissListener() {
+            @Override
+            public void onShakeDismiss() {
+                emitter.sendEvent(Emitter.EVENT_SHAKE_DISMISS, "dismiss");
+            }
+        });
+        Shake.getReportConfiguration().setShakeSubmitListener(new ShakeSubmitListener() {
+            @Override
+            public void onShakeSubmit(@NonNull String type, @NonNull Map<String, String> fields) {
+                WritableMap fieldsMap = new WritableNativeMap();
+                for (Map.Entry<String, String> entry : fields.entrySet()) {
+                    fieldsMap.putString(entry.getKey(), entry.getValue());
+                }
+
+                WritableMap eventData = new WritableNativeMap();
+                eventData.putString("type", type);
+                eventData.putMap("fields", fieldsMap);
+
+                emitter.sendEvent(Emitter.EVENT_SHAKE_SUBMIT, eventData);
+            }
+        });
+    }
+
+    /*
+     * Ignored. Required for RN built in Event emitter Calls.
+     */
     @ReactMethod
     public void addListener(String eventName) {
-        // Keep: Required for RN built in Event Emitter Calls.
     }
 
     @ReactMethod
     public void removeListeners(Integer count) {
-        // Keep: Required for RN built in Event Emitter Calls.
-    }
-
-    private void runOnUiThread(Runnable runnable) {
-        Activity activity = getCurrentActivity();
-        if (activity != null) {
-            activity.runOnUiThread(runnable);
-        }
     }
 }

@@ -1,5 +1,5 @@
 declare module "react-native-shake" {
-    export function start(clientId: string, clientSecret: string): void;
+    export function start(clientId: string, clientSecret: string): Promise<void>;
 
     export function show(): void;
 
@@ -73,6 +73,18 @@ declare module "react-native-shake" {
 
     export function setUnreadMessagesListener(
         listener?: (count: number) => void
+    ): void;
+
+    export function setShakeOpenListener(
+        listener?: () => void
+    ): void;
+
+    export function setShakeDismissListener(
+        listener?: () => void
+    ): void;
+
+    export function setShakeSubmitListener(
+        listener?: (type: string, fields: { [key: string]: string; } ) => void
     ): void;
 
     export function setShakeReportData(files: Array<ShakeFile>): void;
