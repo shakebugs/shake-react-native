@@ -76,8 +76,8 @@ class Shake {
    * @param clientId client id
    * @param clientSecret client secret
    */
-  static start(clientId, clientSecret) {
-    this.shake.start(clientId, clientSecret);
+  static async start(clientId, clientSecret) {
+    await this.shake.start(clientId, clientSecret);
     this.notificationTracker.setEnabled(true);
     this.homeActionsTracker.setEnabled(true);
     this.shakeCallbacks.startListening();

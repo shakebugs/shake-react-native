@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import TestScreen from './ui/test/TestScreen';
@@ -12,6 +12,8 @@ import DrawerScreen from './ui/test/DrawerScreen';
 import TabScreen from './ui/test/TabScreen';
 import Header from './ui/core/Header';
 import DarkModeObserver from './DarkModeObserver';
+import {PermissionsAndroid, Platform} from 'react-native';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +23,10 @@ const options = {
 };
 
 const App = () => {
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
+
   return (
     <DarkModeObserver>
       <NavigationContainer>
@@ -74,6 +80,16 @@ const App = () => {
       </NavigationContainer>
     </DarkModeObserver>
   );
+};
+
+const requestNotificationPermission = () => {
+  if (Platform.OS === 'android') {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
+  } else {
+    PushNotificationIOS.requestPermissions();
+  }
 };
 
 export default App;

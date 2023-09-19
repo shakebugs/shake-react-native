@@ -40,7 +40,8 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret)
+RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret startResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     [SHKShake startWithClientId:clientId clientSecret:clientSecret];
 
@@ -58,6 +59,8 @@ RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)cli
         };
         [self sendEventWithName:@"OnShakeSubmit" body:data];
     };
+
+    resolve(nil);
 }
 
 RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
@@ -711,7 +714,7 @@ RCT_EXPORT_METHOD(unregisterUser)
                 pickerItemDict = @{
                     @"key": component.key,
                     @"text": pickerItem.text,
-                    @"icon": pickerItem.icon ?: [NSNull null],
+                    @"icon": [self UIImageToBase64:pickerItem.icon] ?: [NSNull null],
                     @"tag": pickerItem.tag ?: [NSNull null],
                 };
 
@@ -831,6 +834,14 @@ RCT_EXPORT_METHOD(unregisterUser)
     NSString* correctBase64String = [base64 stringByPaddingToLength:paddedLength withString:@"=" startingAtIndex:0];
     NSData* data = [[NSData alloc]initWithBase64EncodedString:correctBase64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
     return [UIImage imageWithData:data];
+}
+
+- (NSString *)UIImageToBase64:(UIImage *)image {
+    if (image == nil) return nil;
+
+    NSData *data = UIImagePNGRepresentation(image);
+    NSString *base64String = [data base64EncodedStringWithOptions:0];
+    return base64String;
 }
 
 // Private

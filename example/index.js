@@ -1,12 +1,11 @@
-import {AppRegistry, PermissionsAndroid, Platform} from 'react-native';
+import {AppRegistry, Platform} from 'react-native';
 import App from './src/App';
 import {name as appName} from './app.json';
 import Shake from 'react-native-shake';
 
 import messaging from '@react-native-firebase/messaging';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
-const initShake = () => {
+const startShake = async () => {
   const CLIENT_ID = 'HtTFUmUziF5Qjk1XLraAJXtVB1cL62yHWWqsDnrG';
   const CLIENT_SECRET =
     'IPRqEI2iSQhmUP6NGQcPNKCs7JQCJrpFUG0qDmLx4Yx2spd3caXnC3o';
@@ -31,18 +30,8 @@ const initShake = () => {
     console.log('Shake submitted!');
   });
 
-  Shake.start(CLIENT_ID, CLIENT_SECRET);
+  await Shake.start(CLIENT_ID, CLIENT_SECRET);
   Shake.registerUser('test_user');
-};
-
-const requestNotificationPermission = () => {
-  if (Platform.OS === 'android') {
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    );
-  } else {
-    PushNotificationIOS.requestPermissions();
-  }
 };
 
 const setupFirebaseNotifications = async () => {
@@ -50,6 +39,7 @@ const setupFirebaseNotifications = async () => {
     // Firebase push notifications background handler
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
+      await startShake();
       Shake.showChatNotification(remoteMessage.data);
     });
     // Firebase push notifications foreground handler
@@ -65,8 +55,7 @@ const setupFirebaseNotifications = async () => {
   }
 };
 
-requestNotificationPermission();
 setupFirebaseNotifications();
-initShake();
+startShake();
 
 AppRegistry.registerComponent(appName, () => App);
