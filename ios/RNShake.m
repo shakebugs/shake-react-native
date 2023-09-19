@@ -4,6 +4,10 @@
 #import <Shake/SHKShakeConfiguration.h>
 #import <Shake/SHKTheme.h>
 #import <Shake/SHKShakeFile.h>
+#import <Shake/SHKHomeAction.h>
+#import <Shake/SHKHomeSubmitAction.h>
+#import <Shake/SHKHomeChatAction.h>
+#import <Shake/SHKHomeActionProtocol.h>
 #import <Shake/SHKShakeReportConfiguration.h>
 #import <Shake/SHKFormItemProtocol.h>
 
@@ -29,16 +33,34 @@
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-  return @[@"EventNotification", @"UnreadMessages"];
+  return @[@"EventNotification", @"UnreadMessages", @"HomeActionTap", @"OnShakeOpen", @"OnShakeDismiss", @"OnShakeSubmit"];
 }
 
 // React Native
 
 RCT_EXPORT_MODULE()
 
-RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret)
+RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret startResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     [SHKShake startWithClientId:clientId clientSecret:clientSecret];
+
+    /// Forward Shake callbacks to the RN
+    SHKShake.configuration.shakeOpenListener = ^() {
+        [self sendEventWithName:@"OnShakeOpen" body:nil];
+    };
+    SHKShake.configuration.shakeDismissListener = ^() {
+        [self sendEventWithName:@"OnShakeDismiss" body:nil];
+    };
+    SHKShake.configuration.shakeSubmitListener = ^(NSString* type, NSDictionary* fields) {
+        NSDictionary *data = @{
+            @"type": type,
+            @"fields": fields
+        };
+        [self sendEventWithName:@"OnShakeSubmit" body:data];
+    };
+    
+    resolve(nil);
 }
 
 RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
@@ -66,9 +88,21 @@ RCT_EXPORT_METHOD(setShakeTheme:(NSDictionary *)shakeThemeDict)
     SHKShake.configuration.theme = shakeTheme;
 }
 
-RCT_EXPORT_METHOD(setHomeSubtitle:(NSString *)subtitle)
+RCT_EXPORT_METHOD(setHomeSubtitle:(NSString*)subtitle)
 {
     SHKShake.configuration.homeSubtitle = subtitle;
+}
+
+RCT_EXPORT_METHOD(setHomeActions:(NSArray*)actionsArray)
+{
+    NSArray<id<SHKHomeActionProtocol>> *homeActions = [self mapArrayToShakeActions:actionsArray];
+    for(int i = 0; i < [homeActions count]; i++) {
+        id<SHKHomeActionProtocol> action = [homeActions objectAtIndex:i];
+        action.handler = ^{
+            [self sendEventWithName:@"HomeActionTap" body:action.title];
+        };
+    }
+    SHKShake.configuration.homeActions = homeActions;
 }
 
 RCT_EXPORT_METHOD(setUserFeedbackEnabled:(BOOL)enabled)
@@ -415,86 +449,6 @@ RCT_EXPORT_METHOD(unregisterUser)
     return shakeFiles;
 }
 
-- (SHKForm *)mapDicToShakeForm:(NSDictionary *)shakeFormDic
-{
-    if (shakeFormDic == nil) return nil;
-    
-    NSMutableArray *dictComponents = [shakeFormDic objectForKey:@"components"];
-    if (dictComponents == nil) dictComponents = [NSMutableArray array];
-
-    NSMutableArray<id<SHKFormItemProtocol>>* formComponents = [NSMutableArray array];
-    
-    for(int i = 0; i < [dictComponents count]; i++) {
-        NSDictionary *component = [dictComponents objectAtIndex:i];
-
-        NSString *type = [component objectForKey:@"type"];
-        if ([type isEqualToString:@"title"]) {
-            NSString *label = [component objectForKey:@"label"];
-            NSString *labelRes = [component objectForKey:@"labelRes"] ?: nil;
-            NSString *initialValue = [component objectForKey:@"initialValue"];
-            BOOL required = [[component objectForKey:@"required"] boolValue];
-            
-            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
-            [formComponents addObject:[[SHKTitle alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
-        }
-        if ([type isEqualToString:@"text_input"]) {
-            NSString *label = [component objectForKey:@"label"];
-            NSString *labelRes = [component objectForKey:@"labelRes"];
-            NSString *initialValue = [component objectForKey:@"initialValue"];
-            BOOL required = [[component objectForKey:@"required"] boolValue];
-            
-            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
-            [formComponents addObject:[[SHKTextInput alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
-        }
-        if ([type isEqualToString:@"email"]) {
-            NSString *label = [component objectForKey:@"label"];
-            NSString *labelRes = [component objectForKey:@"labelRes"];
-            NSString *initialValue = [component objectForKey:@"initialValue"];
-            BOOL required = [[component objectForKey:@"required"] boolValue];
-            
-            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
-            [formComponents addObject:[[SHKEmail alloc] initWithLabel:label required:required labelRes:labelRes initialValue:initialValue]];
-        }
-        if ([type isEqualToString:@"picker"]) {
-            NSString *label = [component objectForKey:@"label"];
-            NSString *labelRes = [component objectForKey:@"labelRes"];
-            NSArray *itemsArray = [component objectForKey:@"items"];
-
-            NSMutableArray<SHKPickerItem*>* items = [NSMutableArray array];
-            for(int j = 0; j < [itemsArray count]; j++) {
-                NSDictionary *arrayItem = [itemsArray objectAtIndex:j];
-                
-                NSString *icon = [arrayItem objectForKey:@"icon"];
-                NSString *text = [arrayItem objectForKey:@"text"];
-                NSString *textRes = [arrayItem objectForKey:@"textRes"];
-                NSString *tag = [arrayItem objectForKey:@"tag"];
-                
-                if (icon && [icon isEqual:[NSNull null]]) icon=nil; // NSNull causes
-                if (textRes && [textRes isEqual:[NSNull null]]) textRes=nil; // NSNull causes crash
-                
-                SHKPickerItem* item = [[SHKPickerItem alloc] initWithIconName:icon text:text textRes:textRes tag:tag];
-                [items addObject:item];
-            }
-            
-            if (labelRes && [labelRes isEqual:[NSNull null]]) labelRes=nil; // NSNull causes crash
-            
-            [formComponents addObject:[[SHKPicker alloc] initWithLabel:label items:items labelRes:labelRes]];
-        }
-        if ([type isEqualToString:@"attachments"]) {
-            [formComponents addObject:SHKAttachments.new];
-        }
-        
-        if ([type isEqualToString:@"inspect"]) {
-            [formComponents addObject:SHKInspectButton.new];
-        
-        }
-    }
-    return [[SHKForm alloc] initWithItems:formComponents];
-}
-
 - (SHKTheme*)mapDictToShakeTheme:(NSDictionary*)themeDict
 {
     if (themeDict == nil) return nil;
@@ -518,7 +472,7 @@ RCT_EXPORT_METHOD(unregisterUser)
         shadowOffsetWidth = shadowOffset[@"width"];
         shadowOffsetHeight = shadowOffset[@"height"];
     }
-    
+
     NSString *fontFamilyBoldValue = !fontFamilyBold ? nil : fontFamilyBold;
     NSString *fontFamilyMediumValue = !fontFamilyMedium ? nil : fontFamilyMedium;
     UIColor *backgroundColorValue = !backgroundColor ? nil : [self colorFromHexString:backgroundColor];
@@ -533,7 +487,7 @@ RCT_EXPORT_METHOD(unregisterUser)
     CGFloat shadowOpacityValue = !shadowOpacity ? 0 : [shadowOpacity floatValue];
     CGFloat shadowOffsetWidthValue = !shadowOffsetWidth ? 0 : [shadowOffsetWidth floatValue];
     CGFloat shadowOffsetHeightValue = !shadowOffsetHeight ? 0 : [shadowOffsetHeight floatValue];
-    
+
     return [[SHKTheme alloc] initWithFontFamilyMedium:fontFamilyMediumValue
                       fontFamilyBold:fontFamilyBoldValue
                       background:backgroundColorValue
@@ -550,87 +504,232 @@ RCT_EXPORT_METHOD(unregisterUser)
                       color:UIColor.blackColor]];
 }
 
+- (NSMutableArray<id<SHKHomeActionProtocol>>*)mapArrayToShakeActions:(NSArray*)actionsArray
+{
+    if (actionsArray == nil) return nil;
+
+    NSMutableArray<id<SHKHomeActionProtocol>>* homeActions = [NSMutableArray array];
+    for(int i = 0; i < [actionsArray count]; i++) {
+        NSDictionary *actionDic = [actionsArray objectAtIndex:i];
+
+        NSString *type = [actionDic objectForKey:@"type"];
+        if ([type isEqualToString:@"chat"]) {
+            NSString *title = [actionDic objectForKey:@"title"];
+            NSString *subtitle = [actionDic objectForKey:@"subtitle"];
+            NSString *icon = [actionDic objectForKey:@"icon"];
+
+            // NSNull causes crash
+            if (title && [title isEqual:[NSNull null]]) title=nil;
+            if (subtitle && [subtitle isEqual:[NSNull null]]) subtitle=nil;
+            if (icon && [icon isEqual:[NSNull null]]) icon=nil;
+
+            SHKHomeChatAction *action = [[SHKHomeChatAction alloc] initWithTitle:title subtitle:subtitle icon:[self base64ToUIImage:icon]];
+            [homeActions addObject:action];
+        }
+        if ([type isEqualToString:@"submit"]) {
+            NSString *title = [actionDic objectForKey:@"title"];
+            NSString *subtitle = [actionDic objectForKey:@"subtitle"];
+            NSString *icon = [actionDic objectForKey:@"icon"];
+
+            // NSNull causes crash
+            if (title && [title isEqual:[NSNull null]]) title=nil;
+            if (subtitle && [subtitle isEqual:[NSNull null]]) subtitle=nil;
+            if (icon && [icon isEqual:[NSNull null]]) icon=nil;
+
+            SHKHomeSubmitAction *action = [[SHKHomeSubmitAction alloc] initWithTitle:title subtitle:subtitle icon:[self base64ToUIImage:icon]];
+            [homeActions addObject:action];
+        }
+        if ([type isEqualToString:@"default"]) {
+            NSString *title = [actionDic objectForKey:@"title"];
+            NSString *subtitle = [actionDic objectForKey:@"subtitle"];
+            NSString *icon = [actionDic objectForKey:@"icon"];
+
+            // NSNull causes crash
+            if (title && [title isEqual:[NSNull null]]) title=nil;
+            if (subtitle && [subtitle isEqual:[NSNull null]]) subtitle=nil;
+            if (icon && [icon isEqual:[NSNull null]]) icon=nil;
+
+            SHKHomeAction *action = [[SHKHomeAction alloc] initWithTitle:title subtitle:subtitle icon:[self base64ToUIImage:icon] handler:nil];
+            [homeActions addObject:action];
+        }
+    }
+    return homeActions;
+}
+
+- (SHKForm *)mapDicToShakeForm:(NSDictionary *)shakeFormDic
+{
+    if (shakeFormDic == nil) return nil;
+
+    NSMutableArray *dictComponents = [shakeFormDic objectForKey:@"components"];
+    if (dictComponents == nil) dictComponents = [NSMutableArray array];
+
+    NSMutableArray<id<SHKFormItemProtocol>>* formComponents = [NSMutableArray array];
+
+    for(int i = 0; i < [dictComponents count]; i++) {
+        NSDictionary *component = [dictComponents objectAtIndex:i];
+
+        NSString *type = [component objectForKey:@"type"];
+        if ([type isEqualToString:@"title"]) {
+            NSString *key = [component objectForKey:@"key"];
+            NSString *label = [component objectForKey:@"label"];
+            NSString *initialValue = [component objectForKey:@"initialValue"];
+            BOOL required = [[component objectForKey:@"required"] boolValue];
+
+            // NSNull causes crash
+            if (key && [key isEqual:[NSNull null]]) key=@"";
+            if (label && [label isEqual:[NSNull null]]) label=@"";
+            if (initialValue && [initialValue isEqual:[NSNull null]]) initialValue=nil;
+
+            [formComponents addObject:[[SHKTitle alloc] initWithKey:key label:label required:required initialValue:initialValue]];
+        }
+        if ([type isEqualToString:@"text_input"]) {
+            NSString *key = [component objectForKey:@"key"];
+            NSString *label = [component objectForKey:@"label"];
+            NSString *initialValue = [component objectForKey:@"initialValue"];
+            BOOL required = [[component objectForKey:@"required"] boolValue];
+
+            // NSNull causes crash
+            if (key && [key isEqual:[NSNull null]]) key=@"";
+            if (label && [label isEqual:[NSNull null]]) label=@"";
+            if (initialValue && [initialValue isEqual:[NSNull null]]) initialValue=nil;
+
+            [formComponents addObject:[[SHKTextInput alloc] initWithKey:key label:label required:required initialValue:initialValue]];
+        }
+        if ([type isEqualToString:@"email"]) {
+            NSString *key = [component objectForKey:@"key"];
+            NSString *label = [component objectForKey:@"label"];
+            NSString *initialValue = [component objectForKey:@"initialValue"];
+            BOOL required = [[component objectForKey:@"required"] boolValue];
+
+            // NSNull causes crash
+            if (key && [key isEqual:[NSNull null]]) key=@"";
+            if (label && [label isEqual:[NSNull null]]) label=@"";
+            if (initialValue && [initialValue isEqual:[NSNull null]]) initialValue=nil;
+
+            [formComponents addObject:[[SHKEmail alloc] initWithKey:key label:label required:required initialValue:initialValue]];
+        }
+        if ([type isEqualToString:@"picker"]) {
+            NSString *key = [component objectForKey:@"key"];
+            NSString *label = [component objectForKey:@"label"];
+            NSArray *itemsArray = [component objectForKey:@"items"];
+
+            // NSNull causes crash
+            if (key && [key isEqual:[NSNull null]]) key=@"";
+            if (label && [label isEqual:[NSNull null]]) label=@"";
+
+            NSMutableArray<SHKPickerItem*>* items = [NSMutableArray array];
+            for(int j = 0; j < [itemsArray count]; j++) {
+                NSDictionary *arrayItem = [itemsArray objectAtIndex:j];
+
+                NSString *key = [component objectForKey:@"key"];
+                NSString *text = [arrayItem objectForKey:@"text"];
+                NSString *icon = [arrayItem objectForKey:@"icon"];
+                NSString *tag = [arrayItem objectForKey:@"tag"];
+
+                // NSNull causes crash
+                if (key && [key isEqual:[NSNull null]]) key=@"";
+                if (text && [text isEqual:[NSNull null]]) text=@"";
+                if (icon && [icon isEqual:[NSNull null]]) icon=nil;
+                if (tag && [tag isEqual:[NSNull null]]) tag=nil;
+
+                SHKPickerItem *pickerItem = [[SHKPickerItem alloc] initWithKey:key text:text icon:[self base64ToUIImage:icon] tag:tag];
+                [items addObject:pickerItem];
+            }
+
+            [formComponents addObject:[[SHKPicker alloc] initWithKey:key label:label items:items]];
+        }
+        if ([type isEqualToString:@"attachments"]) {
+            [formComponents addObject:SHKAttachments.new];
+        }
+
+        if ([type isEqualToString:@"inspect"]) {
+            [formComponents addObject:SHKInspectButton.new];
+
+        }
+    }
+    return [[SHKForm alloc] initWithItems:formComponents];
+}
 
 - (NSDictionary*)mapShakeFormToDict:(SHKForm*)shakeForm
 {
     if (shakeForm == nil) return nil;
 
     NSMutableArray<NSDictionary*>* componentsArray = [NSMutableArray array];
-    
+
     for(int i = 0; i < [shakeForm.items count]; i++) {
         id<SHKFormItemProtocol> item = [shakeForm.items objectAtIndex:i];
-        
+
         if ([item isKindOfClass:[SHKTitle class]]) {
             SHKTitle *component = item;
-            
+
             NSDictionary *dict = [[NSDictionary alloc] init];
             dict = @{
                 @"type": @"title",
+                @"key": component.key,
                 @"label": component.label,
-                @"labelRes": component.labelRes ?: [NSNull null],
                 @"initialValue": component.initialValue ?: @"",
                 @"required": [NSNumber numberWithBool:component.required]
             };
-            
+
             [componentsArray addObject:dict];
         }
         if ([item isKindOfClass:[SHKTextInput class]]) {
             SHKTextInput *component = item;
-            
+
             NSDictionary *dict = [[NSDictionary alloc] init];
             dict = @{
                 @"type": @"text_input",
+                @"key": component.key,
                 @"label": component.label,
-                @"labelRes": component.labelRes ?: [NSNull null],
                 @"initialValue": component.initialValue ?: @"",
                 @"required": [NSNumber numberWithBool:component.required]
             };
-            
+
             [componentsArray addObject:dict];
         }
 
         if ([item isKindOfClass:[SHKEmail class]]) {
             SHKEmail *component = item;
-            
+
             NSDictionary *dict = [[NSDictionary alloc] init];
             dict = @{
                 @"type": @"email",
+                @"key": component.key,
                 @"label": component.label,
-                @"labelRes": component.labelRes ?: [NSNull null],
                 @"initialValue": component.initialValue ?: @"",
                 @"required": [NSNumber numberWithBool:component.required]
             };
-            
+
             [componentsArray addObject:dict];
         }
 
         if ([item isKindOfClass:[SHKPicker class]]) {
             SHKPicker *component = item;
-            
+
             NSMutableArray<NSDictionary*>* pickerItemsArray = [NSMutableArray array];
             for(int j = 0; j < [component.items count]; j++) {
                 SHKPickerItem *pickerItem = [component.items objectAtIndex:j];
-                
+
                 NSDictionary *pickerItemDict = [[NSDictionary alloc] init];
                 pickerItemDict = @{
-                    @"icon": pickerItem.iconName ?: [NSNull null],
+                    @"key": component.key,
                     @"text": pickerItem.text,
-                    @"textRes": pickerItem.textRes ?: [NSNull null],
+                    @"icon": [self UIImageToBase64:pickerItem.icon] ?: [NSNull null],
                     @"tag": pickerItem.tag ?: [NSNull null],
                 };
-                
+
                 [pickerItemsArray addObject:pickerItemDict];
             }
-            
+
 
             NSDictionary *componentDict = [[NSDictionary alloc] init];
             componentDict = @{
                 @"type": @"picker",
+                @"key": component.key,
                 @"label": component.label,
-                @"labelRes": component.labelRes ?: [NSNull null],
                 @"items": pickerItemsArray
             };
-            
+
             [componentsArray addObject:componentDict];
         }
 
@@ -639,7 +738,7 @@ RCT_EXPORT_METHOD(unregisterUser)
             dict = @{
                 @"type": @"attachments",
             };
-            
+
             [componentsArray addObject:dict];
         }
         if ([item isKindOfClass:[SHKInspectButton class]]) {
@@ -647,14 +746,14 @@ RCT_EXPORT_METHOD(unregisterUser)
             dict = @{
                 @"type": @"inspect",
             };
-            
+
             [componentsArray addObject:dict];
         }
     }
-    
+
     NSDictionary *shakeFormDict = [[NSDictionary alloc] init];
     shakeFormDict = @{@"components": componentsArray};
-    
+
     return shakeFormDict;
 }
 
@@ -720,12 +819,29 @@ RCT_EXPORT_METHOD(unregisterUser)
 
 - (UIColor *)colorFromHexString:(NSString *)hexString {
     if (hexString == nil) return nil;
-    
+
     unsigned rgbValue = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     [scanner setScanLocation:1]; // bypass '#' character
     [scanner scanHexInt:&rgbValue];
     return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+- (UIImage*)base64ToUIImage:(NSString *)base64 {
+    if (base64 == nil) return nil;
+
+    NSUInteger paddedLength = base64.length + (4 - (base64.length % 4));
+    NSString* correctBase64String = [base64 stringByPaddingToLength:paddedLength withString:@"=" startingAtIndex:0];
+    NSData* data = [[NSData alloc]initWithBase64EncodedString:correctBase64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [UIImage imageWithData:data];
+}
+
+- (NSString *)UIImageToBase64:(UIImage *)image {
+    if (image == nil) return nil;
+
+    NSData *data = UIImagePNGRepresentation(image);
+    NSString *base64String = [data base64EncodedStringWithOptions:0];
+    return base64String;
 }
 
 // Private
@@ -734,7 +850,7 @@ RCT_EXPORT_METHOD(unregisterUser)
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"16.1.0"
+        @"sdkVersion": @"16.2.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
 }

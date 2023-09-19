@@ -1,7 +1,7 @@
 {
   "name": "react-native-shake",
   "title": "React Native Shake SDK",
-  "version": "16.1.0",
+  "version": "16.2.0",
   "description": "Shake SDK wrapper",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "shake",
     "sdk",
     "bug",
+    "crash",
     "report",
     "android",
     "ios",
@@ -24,7 +25,7 @@
   ],
   "author": {
     "name": "Shake",
-    "email": "support@shakebugs.com"
+    "email": "friends@shakebugs.com"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",

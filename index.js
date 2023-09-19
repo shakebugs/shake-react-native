@@ -1,4 +1,4 @@
-import {findNodeHandle, NativeModules} from "react-native";
+import {findNodeHandle, NativeModules, Platform} from "react-native";
 
 import ShakeReportConfiguration from "./src/models/ShakeReportConfiguration";
 import ShakeFile from "./src/models/ShakeFile";
@@ -21,8 +21,15 @@ import ShakePickerItem from "./src/models/ShakePickerItem";
 import ShakeAttachments from "./src/models/ShakeAttachments";
 import ShakeInspectButton from "./src/models/ShakeInspectButton";
 import ShakeTheme from "./src/models/ShakeTheme";
+import ShakeBaseAction from "./src/models/ShakeBaseAction";
+import ShakeHomeAction from "./src/models/ShakeHomeAction";
+import ShakeSubmitAction from "./src/models/ShakeSubmitAction";
+import ShakeChatAction from "./src/models/ShakeChatAction";
+import ChatNotification from "./src/models/ChatNotification";
 
 import {mapToShakeScreen} from "./src/utils/Mappers";
+import HomeActionsTracker from "./src/modules/HomeActionsTracker";
+import ShakeCallbacks from "./src/modules/ShakeCallbacks";
 
 // Export models
 export { ShakeReportConfiguration };
@@ -44,6 +51,11 @@ export { ShakePickerItem };
 export { ShakeAttachments };
 export { ShakeInspectButton };
 export { ShakeTheme };
+export { ShakeBaseAction};
+export { ShakeHomeAction };
+export { ShakeChatAction };
+export { ShakeSubmitAction };
+export { ChatNotification };
 
 /**
  * Interface for native methods.
@@ -55,6 +67,8 @@ class Shake {
   static networkTracker = new NetworkTracker(this.shake);
   static notificationTracker = new NotificationTracker(this.shake);
   static messagesTracker = new MessagesTracker(this.shake);
+  static homeActionsTracker = new HomeActionsTracker();
+  static shakeCallbacks = new ShakeCallbacks();
 
   /**
    * Starts Shake SDK.
@@ -62,15 +76,17 @@ class Shake {
    * @param clientId client id
    * @param clientSecret client secret
    */
-  static start(clientId, clientSecret) {
-    this.shake.start(clientId, clientSecret);
+  static async start(clientId, clientSecret) {
+    await this.shake.start(clientId, clientSecret);
     this.notificationTracker.setEnabled(true);
+    this.homeActionsTracker.setEnabled(true);
+    this.shakeCallbacks.startListening();
   }
 
   /**
    * Shows shake screen.
    *
-   * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW
+   * @param shakeScreen ShakeScreen.HOME or ShakeScreen.NEW.
    */
   static show(shakeScreen = ShakeScreen.NEW) {
     this.shake.show(shakeScreen);
@@ -296,6 +312,16 @@ class Shake {
   }
 
   /**
+   * Sets action buttons for Home screen.
+   *
+   * @param actions list of actions
+   */
+  static setHomeActions(actions) {
+    this.homeActionsTracker.homeActions = actions;
+    this.shake.setHomeActions(actions);
+  }
+
+  /**
    * Checks if intro message will be shown on the first app run.
    *
    * @returns {Promise<*|boolean>} true if yes, otherwise false
@@ -476,11 +502,12 @@ class Shake {
   }
 
   /**
-   * Shows notifications settings screen.
-   * This is used just for Android os.
+   * Shows notifications settings screen (Only Android).
    */
   static showNotificationsSettings() {
-    this.shake.showNotificationsSettings();
+    if (Platform.OS === 'android') {
+      this.shake.showNotificationsSettings();
+    }
   }
 
   /**
@@ -524,6 +551,55 @@ class Shake {
   */
   static setUnreadMessagesListener(listener) {
     this.messagesTracker.setUnreadMessagesListener(listener);
+  }
+
+  /**
+   * Sets Shake open event listener.
+   * <br><br>
+   * Set null if you want to remove listener.
+   */
+  static setShakeOpenListener(listener) {
+    this.shakeCallbacks.setShakeOpenListener(listener);
+  }
+
+  /**
+   * Sets Shake dismiss event listener.
+   * <br><br>
+   * Set null if you want to remove listener.
+   */
+  static setShakeDismissListener(listener) {
+    this.shakeCallbacks.setShakeDismissListener(listener);
+  }
+
+  /**
+   * Sets Shake submit event listener.
+   * <br><br>
+   * Set null if you want to remove listener.
+   */
+  static setShakeSubmitListener(listener) {
+    this.shakeCallbacks.setShakeSubmitListener(listener);
+  }
+
+  /**
+   * Sets token used to send push notifications (Only Android).
+   * <br><br>
+   * Set null if you want to remove token.
+   */
+  static setPushNotificationsToken(token) {
+    if (Platform.OS === 'android') {
+      this.shake.setPushNotificationsToken(token);
+    }
+  }
+
+  /**
+   * Shows Firebase chat notification (Only Android).
+   */
+  static showChatNotification(data) {
+    if (Platform.OS === 'android') {
+      const chatNotification = new ChatNotification(
+          data['ticket_id'], data['user_id'],  data['ticket_title'],  data['message']);
+      this.shake.showChatNotification(chatNotification);
+    }
   }
 }
 
