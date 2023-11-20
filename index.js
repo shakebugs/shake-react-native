@@ -601,6 +601,15 @@ class Shake {
       this.shake.showChatNotification(chatNotification);
     }
   }
+
+  /**
+   * Sets ticket tags.
+   *
+   * @param tags string array
+   */
+  static setTags(tags) {
+    this.shake.setTags(tags);
+  }
 }
 
 export default Shake;

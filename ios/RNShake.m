@@ -381,6 +381,12 @@ RCT_EXPORT_METHOD(unregisterUser)
     [SHKShake unregisterUser];
 }
 
+RCT_EXPORT_METHOD(setTags:(NSArray*)tags)
+{
+    SHKShake.configuration.tags = tags;
+}
+
+
 // Mappers
 
 - (LogLevel)mapToLogLevel:(NSDictionary*)logLevelDic

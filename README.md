@@ -34,44 +34,6 @@ Install pods from the project root directory:
 cd ios && pod install && cd ..
 ```
 
-### Set compileSdkVersion version in the build.gradle file
-
-Since Shake requires `compileSdkVersion` 29 or greater, verify that `compileSdkVersion` is correctly set in the *build.gradle* file:
-
-```groovy title="android/build.gradle"
-buildscript {
-    ext {
-        buildToolsVersion = "30.0.2"
-        minSdkVersion = 21
-        compileSdkVersion = 30
-        targetSdkVersion = 30
-        ndkVersion = "20.1.5948944"
-    }
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:4.2.1")
-    }
-}
-```
-
-### Set multidexEnabled flag in the build.gradle file
-
-If you do not have *multiDexEnabled* flag set, update app-level *build.gradle* like below:
-
-```groovy title="app/build.gradle"
-defaultConfig {
-    applicationId "com.shakebugs.react.example"
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 1
-    versionName "1.0.0"
-    multiDexEnabled true
-}
-```
-
 ### Start Shake
 
 Call `Shake.start()` method in the *index.js* file.
@@ -88,6 +50,27 @@ Shake.start('client-id', 'client-secret');
 ```
 
 Replace `client-id` and `client-secret` with the actual values you have in [your workspace settings](https://app.shakebugs.com/settings/workspace#general).
+
+## Troubleshooting
+
+If you get the following error during the build time:
+
+```
+Execution failed for task ':app:mergeDexDebug'.
+```
+
+You should set *multiDexEnabled* flag in app-level *build.gradle* like below:
+
+```groovy title="app/build.gradle"
+defaultConfig {
+    applicationId "com.shakebugs.react.example"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 1
+    versionName "1.0.0"
+    multiDexEnabled true
+}
+```
 
 ## Resources
 

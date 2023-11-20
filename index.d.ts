@@ -133,6 +133,8 @@ declare module "react-native-shake" {
 
     export function showChatNotification(data: { [key: string]: string }): void;
 
+    export function setTags(tags: Array<String>): void;
+
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
         activityHistoryData: boolean;

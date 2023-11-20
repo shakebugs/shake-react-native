@@ -720,6 +720,11 @@ public class ShakeModule extends ReactContextBaseJavaModule {
         });
     }
 
+    @ReactMethod
+    public void setTags(final ReadableArray tagsArray) {
+        Shake.getReportConfiguration().setTags(mapper.mapToTagsList(tagsArray));
+    }
+
     /*
      * Callbacks starters.
      */
