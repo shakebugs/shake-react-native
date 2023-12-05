@@ -4,38 +4,30 @@
   "private": true,
   "config": {
     "android": {
-      "dev": "com.shakebugs:shake-staging",
       "stg": "com.shakebugs:shake-staging",
       "prd": "com.shakebugs:shake"
     },
     "ios": {
-      "dev": "Shake-Staging",
       "stg": "Shake-Staging",
       "prd": "Shake"
     }
   },
   "scripts": {
-    "android": "npm run android:dev",
-    "android:dev": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_dev \"npm run android:run:dev\"",
+    "android": "npm run android:stg",
     "android:stg": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_stg \"npm run android:run:stg\"",
     "android:prd": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_prd \"npm run android:run:prd\"",
-    "android:run:dev": "react-native run-android --mode=developmentDebug --appIdSuffix=pr",
     "android:run:stg": "react-native run-android --mode=stagingDebug --appIdSuffix=rc",
     "android:run:prd": "react-native run-android --mode=productionDebug",
-    "build:android": "npm run build:android:dev",
-    "build:android:dev": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_dev \"npm run bundle:android && cd android && ./gradlew assembleDevelopmentRelease\"",
+    "build:android": "npm run build:android:stg",
     "build:android:stg": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_stg \"npm run bundle:android && cd android && ./gradlew assembleStagingRelease\"",
     "build:android:prd": "cross-env-shell ANDROID_DEPENDENCY=$npm_package_config_android_prd \"npm run bundle:android && cd android && ./gradlew assembleProductionRelease\"",
     "clean:android": "cross-env-shell \"cd android && ./gradlew clean && cd ..\"",
-    "ios": "npm run ios:dev",
-    "ios:dev": "export IOS_DEPENDENCY=$npm_package_config_ios_dev && npm run ios:run:dev",
+    "ios": "npm run ios:stg",
     "ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run ios:run:stg",
     "ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd  && npm run ios:run:prd",
-    "ios:run:dev": "react-native run-ios --scheme=Development --mode=DevelopmentDebug",
     "ios:run:stg": "react-native run-ios --scheme=Staging --mode=StagingDebug",
     "ios:run:prd": "react-native run-ios --scheme=Production --mode=ProductionDebug",
-    "build:ios": "npm run build:ios:dev",
-    "build:ios:dev": "export IOS_DEPENDENCY=$npm_package_config_ios_dev && npm run clean:ios && npm run bundle:ios && cd ios && xcodebuild archive -workspace example.xcworkspace -scheme Development -configuration DevelopmentRelease 'COMPILER_INDEX_STORE_ENABLE=NO' -archivePath example.xcarchive && xcodebuild -exportArchive -archivePath example.xcarchive -exportPath ./ -exportOptionsPlist ../export_options.plist",
+    "build:ios": "npm run build:ios:stg",
     "build:ios:stg": "export IOS_DEPENDENCY=$npm_package_config_ios_stg && npm run clean:ios && npm run bundle:ios && cd ios && xcodebuild archive -workspace example.xcworkspace -scheme Staging -configuration StagingRelease 'COMPILER_INDEX_STORE_ENABLE=NO' -archivePath example.xcarchive && xcodebuild -exportArchive -archivePath example.xcarchive -exportPath ./ -exportOptionsPlist ../export_options.plist",
     "build:ios:prd": "export IOS_DEPENDENCY=$npm_package_config_ios_prd && npm run clean:ios && npm run bundle:ios && cd ios && xcodebuild archive -workspace example.xcworkspace -scheme Production -configuration ProductionRelease 'COMPILER_INDEX_STORE_ENABLE=NO' -archivePath example.xcarchive && xcodebuild -exportArchive -archivePath example.xcarchive -exportPath ./ -exportOptionsPlist ../export_options.plist",
     "clean:ios": "rm -rf ios/Pods ios/Podfile.lock; cd ios && pod install && cd ..",

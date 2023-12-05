@@ -35,7 +35,7 @@ declare module "react-native-shake" {
 
     export function getShakeForm(): Promise<ShakeForm>;
 
-    export function setShakeForm(shakeForm: ShakeForm): void;
+    export function setShakeForm(shakeForm?: ShakeForm): void;
 
     export function setShakeTheme(shakeTheme: ShakeTheme): void;
 
