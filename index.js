@@ -436,7 +436,7 @@ class Shake {
    * @param message log message
    */
   static log(logLevel, message) {
-    this.shake.log(logLevel, message);
+    this.shake.log(logLevel, String(message));
   }
 
   /**
@@ -446,7 +446,7 @@ class Shake {
    * @param value metadata value
    */
   static setMetadata(key, value) {
-    this.shake.setMetadata(key, value);
+    this.shake.setMetadata(String(key), String(value));
   }
 
   /**
