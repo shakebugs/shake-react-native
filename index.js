@@ -436,7 +436,7 @@ class Shake {
    * @param message log message
    */
   static log(logLevel, message) {
-    this.shake.log(logLevel, message);
+    this.shake.log(logLevel, String(message));
   }
 
   /**
@@ -446,7 +446,7 @@ class Shake {
    * @param value metadata value
    */
   static setMetadata(key, value) {
-    this.shake.setMetadata(key, value);
+    this.shake.setMetadata(String(key), String(value));
   }
 
   /**
@@ -600,6 +600,15 @@ class Shake {
           data['ticket_id'], data['user_id'],  data['ticket_title'],  data['message']);
       this.shake.showChatNotification(chatNotification);
     }
+  }
+
+  /**
+   * Sets ticket tags.
+   *
+   * @param tags string array
+   */
+  static setTags(tags) {
+    this.shake.setTags(tags);
   }
 }
 

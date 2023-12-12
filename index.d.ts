@@ -35,7 +35,7 @@ declare module "react-native-shake" {
 
     export function getShakeForm(): Promise<ShakeForm>;
 
-    export function setShakeForm(shakeForm: ShakeForm): void;
+    export function setShakeForm(shakeForm?: ShakeForm): void;
 
     export function setShakeTheme(shakeTheme: ShakeTheme): void;
 
@@ -133,6 +133,8 @@ declare module "react-native-shake" {
 
     export function showChatNotification(data: { [key: string]: string }): void;
 
+    export function setTags(tags: Array<String>): void;
+
     export class ShakeReportConfiguration {
         blackBoxData: boolean;
         activityHistoryData: boolean;
@@ -178,10 +180,10 @@ declare module "react-native-shake" {
         setRequestBody: (requestBody: string) => NetworkRequestBuilder;
         getResponseBody: () => string;
         setResponseBody: (responseBody: string) => NetworkRequestBuilder;
-        getRequestHeaders: () => object;
-        setRequestHeaders: (requestHeaders: object) => NetworkRequestBuilder;
-        getResponseHeaders: () => object;
-        setResponseHeaders: (responseHeaders: object) => NetworkRequestBuilder;
+        getRequestHeaders: () => { [key: string]: string };
+        setRequestHeaders: (requestHeaders: { [key: string]: string }) => NetworkRequestBuilder;
+        getResponseHeaders: () => { [key: string]: string };
+        setResponseHeaders: (responseHeaders: { [key: string]: string }) => NetworkRequestBuilder;
         getStatusCode: () => string;
         setStatusCode: (statusCode: string) => NetworkRequestBuilder;
         getDuration: () => string;

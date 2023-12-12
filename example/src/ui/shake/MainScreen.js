@@ -189,6 +189,10 @@ const MainScreen = props => {
     Shake.setHomeActions(actions);
   };
 
+  const setTags = () => {
+    Shake.setTags(['test-tag']);
+  };
+
   const postNotification = () => {
     PushNotification.createChannel({
       channelId: 'shake-rn',
@@ -283,6 +287,7 @@ const MainScreen = props => {
         <Button text="Set custom form" onPress={setCustomForm} />
         <Button text="Set custom theme" onPress={setCustomTheme} />
         <Button text="Set custom actions" onPress={setCustomActions} />
+        <Button text="Set tags" onPress={setTags} />
         <Title style={styles.title} text="Invoking" />
         <Option
           enabled={shakeInvokingEnabled}

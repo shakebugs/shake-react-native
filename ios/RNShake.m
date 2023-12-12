@@ -59,7 +59,7 @@ RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)cli
         };
         [self sendEventWithName:@"OnShakeSubmit" body:data];
     };
-    
+
     resolve(nil);
 }
 
@@ -72,6 +72,7 @@ RCT_REMAP_METHOD(show, shakeScreen:(NSDictionary*)showOptionDic)
 RCT_EXPORT_METHOD(setShakeForm:(NSDictionary *)shakeFormDic)
 {
     SHKForm* shakeForm = [self mapDicToShakeForm:shakeFormDic];
+    if (shakeForm == nil) shakeForm = SHKForm.defaultForm;
     SHKShake.configuration.form = shakeForm;
 }
 
@@ -381,6 +382,12 @@ RCT_EXPORT_METHOD(unregisterUser)
     [SHKShake unregisterUser];
 }
 
+RCT_EXPORT_METHOD(setTags:(NSArray*)tags)
+{
+    SHKShake.configuration.tags = tags;
+}
+
+
 // Mappers
 
 - (LogLevel)mapToLogLevel:(NSDictionary*)logLevelDic
@@ -558,7 +565,7 @@ RCT_EXPORT_METHOD(unregisterUser)
 
 - (SHKForm *)mapDicToShakeForm:(NSDictionary *)shakeFormDic
 {
-    if (shakeFormDic == nil) return nil;
+    if (shakeFormDic == nil || [shakeFormDic isEqual:[NSNull null]]) return nil;
 
     NSMutableArray *dictComponents = [shakeFormDic objectForKey:@"components"];
     if (dictComponents == nil) dictComponents = [NSMutableArray array];

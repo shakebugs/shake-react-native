@@ -469,6 +469,16 @@ public class Mapper {
         return chatNotification;
     }
 
+    public List<String> mapToTagsList(ReadableArray tagsArray) {
+        if (tagsArray == null) return null;
+
+        ArrayList<String> tags = new ArrayList<>();
+        for (int i = 0; i < tagsArray.size(); i++) {
+            tags.add(tagsArray.getString(i));
+        }
+        return tags;
+    }
+
     private Map<String, Object> toMap(ReadableMap readableMap) {
 
         Map<String, Object> map = new HashMap<>();

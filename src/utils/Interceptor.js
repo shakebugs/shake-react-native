@@ -9,28 +9,24 @@ let onDoneCallback;
 let isInterceptorEnabled = false;
 let networkRequest;
 
-const _resetNetworkRequest = () => {
-    networkRequest = {
-        url: "",
-        method: "",
-        requestBody: "",
-        responseBody: "",
-        requestHeaders: {},
-        responseHeaders: {},
-        statusCode: "",
-        duration: 0,
-        timestamp: "",
-        start: 0,
-    };
-};
-
 const Interceptor = {
     setOnDoneCallback(callback) {
         onDoneCallback = callback;
     },
     enableInterception() {
         XMLHttpRequest.prototype.open = function (method, url) {
-            _resetNetworkRequest();
+            networkRequest = {
+                url: "",
+                method: "",
+                requestBody: "",
+                responseBody: "",
+                requestHeaders: {},
+                responseHeaders: {},
+                statusCode: "",
+                duration: 0,
+                timestamp: "",
+                start: 0,
+            };
 
             networkRequest.url = url;
             networkRequest.method = method;
@@ -42,7 +38,7 @@ const Interceptor = {
             if (networkRequest.requestHeaders === "") {
                 networkRequest.requestHeaders = {};
             }
-            networkRequest.requestHeaders[header] = value;
+            networkRequest.requestHeaders[header] = String(value);
 
             originalXHRSetRequestHeader.apply(this, arguments);
         };
@@ -80,14 +76,7 @@ const Interceptor = {
 
                         if (this.readyState === this.HEADERS_RECEIVED) {
                             if (this.getAllResponseHeaders()) {
-                                const responseHeaders = this.getAllResponseHeaders().split("\r\n");
-                                const responseHeadersDictionary = {};
-                                responseHeaders.forEach((element) => {
-                                    const key = element.split(/:(.+)/)[0];
-                                    const value = element.split(/:(.+)/)[1];
-                                    responseHeadersDictionary[key] = value;
-                                });
-                                cloneNetwork.responseHeaders = responseHeadersDictionary;
+                                cloneNetwork.responseHeaders =  parseResponseHeaders(this.getAllResponseHeaders());
                             }
                         }
                     },
@@ -184,5 +173,22 @@ const Interceptor = {
         XMLHttpRequest.prototype.setRequestHeader = originalXHRSetRequestHeader;
     },
 };
+
+const parseResponseHeaders = (responseHeaders) => {
+    const result = {};
+    try {
+        if (responseHeaders) {
+            responseHeaders = responseHeaders.split("\r\n");
+            responseHeaders.forEach((element) => {
+                const parts = element.split(/:(.+)/);
+                const key = String(parts?.[0]);
+                result[key] = String(parts?.[1]);
+            });
+        }
+    } catch (e) {
+        // no-op
+    }
+    return result;
+}
 
 export default Interceptor;
