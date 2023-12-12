@@ -180,10 +180,10 @@ declare module "react-native-shake" {
         setRequestBody: (requestBody: string) => NetworkRequestBuilder;
         getResponseBody: () => string;
         setResponseBody: (responseBody: string) => NetworkRequestBuilder;
-        getRequestHeaders: () => object;
-        setRequestHeaders: (requestHeaders: object) => NetworkRequestBuilder;
-        getResponseHeaders: () => object;
-        setResponseHeaders: (responseHeaders: object) => NetworkRequestBuilder;
+        getRequestHeaders: () => { [key: string]: string };
+        setRequestHeaders: (requestHeaders: { [key: string]: string }) => NetworkRequestBuilder;
+        getResponseHeaders: () => { [key: string]: string };
+        setResponseHeaders: (responseHeaders: { [key: string]: string }) => NetworkRequestBuilder;
         getStatusCode: () => string;
         setStatusCode: (statusCode: string) => NetworkRequestBuilder;
         getDuration: () => string;
