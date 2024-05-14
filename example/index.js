@@ -6,9 +6,10 @@ import Shake from 'react-native-shake';
 import messaging from '@react-native-firebase/messaging';
 
 const startShake = async () => {
-  const CLIENT_ID = 'HtTFUmUziF5Qjk1XLraAJXtVB1cL62yHWWqsDnrG';
-  const CLIENT_SECRET =
-    'IPRqEI2iSQhmUP6NGQcPNKCs7JQCJrpFUG0qDmLx4Yx2spd3caXnC3o';
+  const API_KEY =
+    Platform.OS === 'ios'
+      ? 'HtTFUmUziF5Qjk1XLraAJXtVB1cL62yHWWqsDnrG'
+      : 'HtTFUmUziF5Qjk1XLraAJXtVB1cL62yHWWqsDnrG';
 
   Shake.setInvokeShakeOnScreenshot(true);
   Shake.setInvokeShakeOnShakeDeviceEvent(true);
@@ -30,7 +31,7 @@ const startShake = async () => {
     console.log('Shake submitted!');
   });
 
-  await Shake.start(CLIENT_ID, CLIENT_SECRET);
+  await Shake.start(API_KEY);
   Shake.registerUser('test_user');
 };
 

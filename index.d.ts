@@ -1,5 +1,5 @@
 declare module "react-native-shake" {
-    export function start(clientId: string, clientSecret: string): Promise<void>;
+    export function start(apiKey: string): Promise<void>;
 
     export function show(): void;
 

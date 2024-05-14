@@ -84,7 +84,7 @@ public class ShakeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void start(final String clientId, final String clientSecret, final Promise promise) {
+    public void start(final String apiKey, final Promise promise) {
         getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
             public void run() {
@@ -92,10 +92,10 @@ public class ShakeModule extends ReactContextBaseJavaModule {
 
                 Activity activity = getCurrentActivity();
                 if (activity != null) {
-                    ShakeReflection.start(activity, clientId, clientSecret);
+                    ShakeReflection.start(activity, apiKey);
                 } else {
                     Application app = (Application) getReactApplicationContext().getApplicationContext();
-                    Shake.start(app, clientId, clientSecret);
+                    Shake.start(app, apiKey);
                 }
 
                 startShakeCallbacksEmitter();

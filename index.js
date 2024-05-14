@@ -58,7 +58,7 @@ export { ShakeSubmitAction };
 export { ChatNotification };
 
 /**
- * Interface for native methods.
+ * Shake SDK interface.
  */
 class Shake {
   static shake = NativeModules.RNShake;
@@ -73,11 +73,10 @@ class Shake {
   /**
    * Starts Shake SDK.
    *
-   * @param clientId client id
-   * @param clientSecret client secret
+   * @param apiKey api key
    */
-  static async start(clientId, clientSecret) {
-    await this.shake.start(clientId, clientSecret);
+  static async start(apiKey) {
+    await this.shake.start(apiKey);
     this.notificationTracker.setEnabled(true);
     this.homeActionsTracker.setEnabled(true);
     this.shakeCallbacks.startListening();
