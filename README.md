@@ -39,17 +39,18 @@ cd ios && pod install && cd ..
 Call `Shake.start()` method in the *index.js* file.
 
 ```javascript title="index.js"
-import {AppRegistry} from 'react-native';
+import {AppRegistry, Platform} from 'react-native';
 import App from './src/App';
 import {name as appName} from './app.json';
 import Shake from '@shakebugs/react-native-shake';
 
 AppRegistry.registerComponent(appName, () => App);
 
-Shake.start('client-id', 'client-secret');
+const apiKey = Platform.OS === 'ios' ? 'ios-app-api-key' : 'android-app-api-key';
+Shake.start(apiKey);
 ```
 
-Replace `client-id` and `client-secret` with the actual values you have in [your workspace settings](https://app.shakebugs.com/settings/workspace#general).
+Replace `ios-app-api-key` and `android-app-api-key` with the actual values you have in your app settings.
 
 ## Troubleshooting
 

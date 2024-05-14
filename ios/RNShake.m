@@ -40,10 +40,9 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_REMAP_METHOD(start, clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret startResolver:(RCTPromiseResolveBlock)resolve
-                 rejecter:(RCTPromiseRejectBlock)reject)
+RCT_REMAP_METHOD(start, apiKey:(NSString*)apiKey startResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [SHKShake startWithClientId:clientId clientSecret:clientSecret];
+    [SHKShake startWithApiKey:apiKey];
 
     /// Forward Shake callbacks to the RN
     SHKShake.configuration.shakeOpenListener = ^() {
@@ -857,7 +856,7 @@ RCT_EXPORT_METHOD(setTags:(NSArray*)tags)
 {
     NSDictionary *shakeInfo = @{
         @"platform": @"ReactNative",
-        @"sdkVersion": @"16.2.0"
+        @"sdkVersion": @"17.0.0"
     };
     [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
 }

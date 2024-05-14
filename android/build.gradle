@@ -76,5 +76,5 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    api "$System.env.ANDROID_DEPENDENCY:16.2.+"
+    api "$System.env.ANDROID_DEPENDENCY:17.0.+"
 }
