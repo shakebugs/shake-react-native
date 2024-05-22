@@ -52,27 +52,6 @@ Shake.start(apiKey);
 
 Replace `ios-app-api-key` and `android-app-api-key` with the actual values you have in your app settings.
 
-## Troubleshooting
-
-If you get the following error during the build time:
-
-```
-Execution failed for task ':app:mergeDexDebug'.
-```
-
-You should set *multiDexEnabled* flag in app-level *build.gradle* like below:
-
-```groovy title="app/build.gradle"
-defaultConfig {
-    applicationId "com.shakebugs.react.example"
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 1
-    versionName "1.0.0"
-    multiDexEnabled true
-}
-```
-
 ## Resources
 
 - [Official docs](https://www.shakebugs.com/docs/)
