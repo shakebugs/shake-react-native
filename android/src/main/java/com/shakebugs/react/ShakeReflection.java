@@ -15,7 +15,7 @@ public class ShakeReflection {
 
     public static void start(Activity activity, String apiKey) {
         try {
-            Method method = Reflection.getMethod(Class.forName(CLASS_NAME), "startFromWrapper", Activity.class, String.class, String.class);
+            Method method = Reflection.getMethod(Class.forName(CLASS_NAME), "startFromWrapper", Activity.class, String.class);
             //noinspection ConstantConditions
             method.invoke(null, activity, apiKey);
         } catch (Exception e) {
