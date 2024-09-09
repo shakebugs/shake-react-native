@@ -39,7 +39,7 @@ class ShakePickerItem {
     tag = null;
 
     constructor(key = "", text = "", icon = null, tag = null) {
-        this.key = text;
+        this.key = key;
         this.text = text;
         this.icon = icon;
         this.tag = tag;
