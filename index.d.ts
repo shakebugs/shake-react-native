@@ -109,7 +109,7 @@ declare module "react-native-shake" {
 
     export function log(logLevel: LogLevel, message: string): void;
 
-    export function setMetadata(key: string, value: string): void;
+    export function setMetadata(key: string, value: string | null | undefined): void;
 
     export function clearMetadata(): void;
 

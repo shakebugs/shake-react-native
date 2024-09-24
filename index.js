@@ -445,7 +445,11 @@ class Shake {
    * @param value metadata value
    */
   static setMetadata(key, value) {
-    this.shake.setMetadata(String(key), String(value));
+    if (!key) return;
+    let metadataKey = String(key);
+    let metadataValue = String(value);
+
+    this.shake.setMetadata(metadataKey, metadataValue);
   }
 
   /**
