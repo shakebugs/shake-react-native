@@ -1,5 +1,4 @@
 import { StyleSheet, Switch, View } from 'react-native';
-import React from 'react';
 import Title from './Title';
 import {
   disabledPrimaryColor,
@@ -8,7 +7,13 @@ import {
   secondaryColor,
 } from '../../utils/Colors';
 
-const Option = (props) => {
+interface OptionProps {
+  title: string;
+  enabled: boolean;
+  onValueChanged: (v: boolean) => void;
+}
+
+const Option = (props: OptionProps) => {
   return (
     <View style={styles.row}>
       <Title style={styles.stretch} text={props.title} />

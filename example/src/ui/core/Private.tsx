@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
 
-const Private = (props) => {
+interface PrivateProps {
+  customRef: (ref: View | null) => void;
+}
+
+const Private = (props: PrivateProps) => {
   return (
     <View
       style={styles.root}

@@ -604,15 +604,17 @@ class Shake {
    *
    * @param {{ [key: string]: string | object } | undefined} data user metadata to update
    */
-  static showChatNotification(data?: { [key: string]: string | object }) {
+  static showChatNotification(
+    data: { [key: string]: string | object } | undefined
+  ) {
     if (!data) return;
 
     if (Platform.OS === 'android') {
       const chatNotification = new ChatNotification(
-        data.ticket_id.toString() ?? '',
-        data.user_id.toString() ?? '',
-        data.ticket_title.toString() ?? '',
-        data.message.toString() ?? ''
+        (data.ticket_id as string) ?? '',
+        (data.user_id as string) ?? '',
+        (data.ticket_title as string) ?? '',
+        (data.message as string) ?? ''
       );
       shake.showChatNotification(chatNotification);
     }

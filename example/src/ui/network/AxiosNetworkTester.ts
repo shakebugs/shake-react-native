@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import ApiConstants from './ApiConstants';
 
 class AxiosNetworkTester {

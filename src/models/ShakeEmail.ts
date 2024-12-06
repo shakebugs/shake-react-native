@@ -34,7 +34,12 @@ class ShakeEmail extends ShakeFormComponent {
    */
   required: boolean = false;
 
-  constructor(key = '', label = '', initialValue = '', required = false) {
+  constructor(
+    key: string = '',
+    label: string = '',
+    initialValue: string = '',
+    required: boolean = false
+  ) {
     super('email');
     this.key = key;
     this.label = label;

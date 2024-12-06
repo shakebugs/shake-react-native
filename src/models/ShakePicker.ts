@@ -29,7 +29,11 @@ class ShakePicker extends ShakeFormComponent {
    */
   items: Array<ShakePickerItem> = [];
 
-  constructor(key = '', label = '', items = []) {
+  constructor(
+    key: string = '',
+    label: string = '',
+    items: Array<ShakePickerItem> = []
+  ) {
     super('picker');
     this.key = key;
     this.label = label;

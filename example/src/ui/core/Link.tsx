@@ -1,7 +1,11 @@
 import { Linking, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
 
-const Link = (props) => {
+interface LinkProps {
+  link: string;
+  text: string;
+}
+
+const Link = (props: LinkProps) => {
   return (
     <TouchableOpacity
       onPress={() => {
