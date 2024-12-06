@@ -39,6 +39,6 @@ Pod::Spec.new do |s|
     end
   end
 
-  s.dependency "#{ENV['IOS_DEPENDENCY']}", "~> 17.0.0-rc"
+  s.dependency "#{ENV['IOS_DEPENDENCY']}", "~> 17.1.0-rc"
 end
 

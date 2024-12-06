@@ -20,6 +20,9 @@ React Native plugin for [bug reporting](https://www.shakebugs.com).
 | Android      |   5.0   |
 | iOS          |   12.0  |
 
+*Since 17.1.0 version, Shake RN SDK is using RN new architecture.
+If your app is running on old architecture you should use Shake RN SDK 17.0.x.
+
 ## How to use
 
 ### Install Shake

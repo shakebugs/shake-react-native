@@ -36,7 +36,7 @@ class ShakeFile {
       obj.root = '/';
     }
     if (obj.base !== undefined) {
-      tmp = obj.base.replace(/^[\.]+/, '');
+      tmp = obj.base.replace(/^[.]+/, '');
       if (/\./.test(tmp)) {
         obj.ext = tmp.match(/\.[^.]*$/)[0];
         obj.name = obj.base.slice(0, -obj.ext.length);
