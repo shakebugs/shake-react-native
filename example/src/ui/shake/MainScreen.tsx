@@ -106,11 +106,11 @@ const MainScreen = () => {
   };
 
   const addPrivateViewFun = () => {
-    Shake.addPrivateView(privateView);
+    Shake.addPrivateView(privateView.current);
   };
 
   const removePrivateViewFun = () => {
-    Shake.removePrivateView(privateView);
+    Shake.removePrivateView(privateView.current);
   };
 
   const clearPrivateViews = () => {
@@ -442,11 +442,7 @@ const MainScreen = () => {
         <Button text="Add private view" onPress={addPrivateViewFun} />
         <Button text="Remove private view" onPress={removePrivateViewFun} />
         <Button text="Clear private views" onPress={clearPrivateViews} />
-        <Private
-          customRef={(ref: View | null) => {
-            privateView.current = ref;
-          }}
-        />
+        <Private customRef={privateView} />
         <Title style={styles.title} text="Network" />
         <Button text="Send GET request" onPress={sendGetNetworkRequest} />
         <Button text="Send POST request" onPress={sendPostNetworkRequest} />

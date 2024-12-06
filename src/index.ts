@@ -28,6 +28,7 @@ import ChatNotification from './models/ChatNotification';
 import { mapToShakeScreen } from './utils/Mappers';
 import HomeActionsTracker from './modules/HomeActionsTracker';
 import ShakeCallbacks from './modules/ShakeCallbacks';
+import type * as React from 'react';
 
 const shake = require('./NativeShake').default;
 
@@ -453,9 +454,15 @@ class Shake {
    *
    * @param {React.MutableRefObject} viewRef view reference
    */
-  static addPrivateView(viewRef: any) {
+  static addPrivateView(
+    viewRef:
+      | null
+      | number
+      | React.Component<any, any>
+      | React.ComponentClass<any>
+  ) {
     const nativeTag: null | number = findNodeHandle(viewRef);
-    if (nativeTag) {
+    if (nativeTag != null) {
       shake.addPrivateView(nativeTag);
     }
   }
@@ -465,9 +472,15 @@ class Shake {
    *
    * @param {React.MutableRefObject} viewRef view reference
    */
-  static removePrivateView(viewRef: any) {
+  static removePrivateView(
+    viewRef:
+      | null
+      | number
+      | React.Component<any, any>
+      | React.ComponentClass<any>
+  ) {
     const nativeTag: null | number = findNodeHandle(viewRef);
-    if (nativeTag) {
+    if (nativeTag != null) {
       shake.removePrivateView(nativeTag);
     }
   }
