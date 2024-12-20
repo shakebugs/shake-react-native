@@ -1,7 +1,12 @@
-import { TurboModuleRegistry, NativeEventEmitter } from 'react-native';
+import {
+  TurboModuleRegistry,
+  NativeEventEmitter,
+  type TurboModule,
+  type NativeModule,
+} from 'react-native';
 
-const shake = TurboModuleRegistry.get('Shake');
-const eventEmitter = new NativeEventEmitter(shake);
+const shake: TurboModule | null = TurboModuleRegistry.get('Shake');
+const eventEmitter = new NativeEventEmitter(shake as NativeModule);
 
 // Events constants
 const EVENT_UNREAD_MESSAGES: string = 'UnreadMessages';
@@ -13,7 +18,7 @@ const EVENT_SHAKE_SUBMIT: string = 'OnShakeSubmit';
 /**
  * Notifications
  */
-let notificationListenerSub = null;
+let notificationListenerSub: any = null;
 
 export const registerNotificationListener = (
   listener: (event: any) => void
@@ -32,7 +37,7 @@ export const unregisterNotificationListener = () => {
 /**
  * Unread messages
  */
-let unreadMessagesListenerSub = null;
+let unreadMessagesListenerSub: any = null;
 
 export const registerUnreadMessagesListener = (
   listener: (event: any) => void
@@ -51,7 +56,7 @@ export const unregisterUnreadMessagesListener = () => {
 /**
  * Home action tap
  */
-let homeActionTapListenerSub = null;
+let homeActionTapListenerSub: any = null;
 
 export const registerHomeActionTapListener = (
   listener: (event: any) => void
@@ -70,7 +75,7 @@ export const unregisterHomeActionTapListener = () => {
 /**
  * Shake callbacks
  */
-let shakeOpenListenerSub = null;
+let shakeOpenListenerSub: any = null;
 
 export const registerShakeOpenListener = (listener: (event: any) => void) => {
   shakeOpenListenerSub = eventEmitter.addListener(EVENT_SHAKE_OPEN, listener);
@@ -82,7 +87,7 @@ export const unregisterShakeOpenListener = () => {
 };
 
 const EVENT_SHAKE_DISMISS: string = 'OnShakeDismiss';
-let shakeDismissListenerSub = null;
+let shakeDismissListenerSub: any = null;
 
 export const registerShakeDismissListener = (
   listener: (event: any) => void
@@ -98,7 +103,7 @@ export const unregisterShakeDismissListener = () => {
   shakeDismissListenerSub = null;
 };
 
-let shakeSubmitListenerSub = null;
+let shakeSubmitListenerSub: any = null;
 
 export const registerShakeSubmitListener = (listener: (event: any) => void) => {
   shakeSubmitListenerSub = eventEmitter.addListener(

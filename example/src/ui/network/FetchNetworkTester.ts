@@ -5,11 +5,11 @@ class FetchNetworkTester {
     fetch(ApiConstants.GET_URL, {
       method: 'GET',
     })
-      .then(res => {
-        alert('Request sent.');
+      .then(() => {
+        alertMsg('Request sent.');
       })
-      .catch(error => {
-        alert('Request error.');
+      .catch(() => {
+        alertMsg('Request error.');
       });
   }
 
@@ -17,7 +17,7 @@ class FetchNetworkTester {
     fetch(ApiConstants.POST_URL, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -25,11 +25,11 @@ class FetchNetworkTester {
         secondParam: 'secondParam',
       }),
     })
-      .then(res => {
-        alert('Request sent.');
+      .then(() => {
+        alertMsg('Request sent.');
       })
-      .catch(error => {
-        alert('Request error.');
+      .catch(() => {
+        alertMsg('Request error.');
       });
   }
 
@@ -37,16 +37,16 @@ class FetchNetworkTester {
     fetch(ApiConstants.ERROR_URL, {
       method: 'GET',
     })
-      .then(res => {
-        alert('Request sent.');
+      .then(() => {
+        alertMsg('Request sent.');
       })
-      .catch(error => {
-        alert('Request error.');
+      .catch(() => {
+        alertMsg('Request error.');
       });
   }
 
   sendTimeoutRequest() {
-    alert('Not supported for test.');
+    alertMsg('Not supported for test.');
   }
 
   postFileRequest() {
@@ -58,16 +58,16 @@ class FetchNetworkTester {
       body: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
       method: 'POST',
     })
-      .then(res => {
-        alert('Request sent.');
+      .then(() => {
+        alertMsg('Request sent.');
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
-        alert('Request error.');
+        alertMsg('Request error.');
       });
   }
 
@@ -75,13 +75,18 @@ class FetchNetworkTester {
     fetch(ApiConstants.IMAGE_URL, {
       method: 'GET',
     })
-      .then(res => {
-        alert('Request sent.');
+      .then(() => {
+        alertMsg('Request sent.');
       })
-      .catch(error => {
-        alert('Request error.');
+      .catch(() => {
+        alertMsg('Request error.');
       });
   }
 }
+
+const alertMsg = (message: string) => {
+  // eslint-disable-next-line no-alert
+  alert(message);
+};
 
 export default FetchNetworkTester;

@@ -1,7 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
 
-const Button = (props) => {
+const Button = (props: any) => {
   const color = props.color ? props.color : '#ffffff';
   return (
     <TouchableOpacity

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Shake, {
   LogLevel,
@@ -51,7 +51,7 @@ const MainScreen = () => {
     useState(false);
   const [screenshotIncluded, setScreenshotIncluded] = useState(false);
 
-  let privateView = useRef(null);
+  let privateView = useRef<View | null>(null);
 
   //const networkTester = new FetchNetworkTester();
   const networkTester = new AxiosNetworkTester();
@@ -106,11 +106,11 @@ const MainScreen = () => {
   };
 
   const addPrivateViewFun = () => {
-    Shake.addPrivateView(privateView);
+    Shake.addPrivateView(privateView.current);
   };
 
   const removePrivateViewFun = () => {
-    Shake.removePrivateView(privateView);
+    Shake.removePrivateView(privateView.current);
   };
 
   const clearPrivateViews = () => {
@@ -131,13 +131,13 @@ const MainScreen = () => {
     // const oldForm = Shake.getShakeForm();
     // oldForm.components = oldForm.components.filter(c => c.type !== 'inspect');
 
-    const pickerItems = [
+    const pickerItems: Array<ShakePickerItem> = [
       new ShakePickerItem('Mouse', 'Mouse', null, 'mouse'),
       new ShakePickerItem('Keyboard', 'Keyboard', null, 'keyboard'),
       new ShakePickerItem('Display', 'Display', null, 'display'),
     ];
 
-    const shakeForm = new ShakeForm([
+    const shakeForm: ShakeForm = new ShakeForm([
       new ShakePicker('Category', 'Category', pickerItems),
       new ShakeTitle('Short title', 'Short title', '', true),
       new ShakeTextInput('Repro steps', 'Repro steps', ''),
@@ -442,11 +442,7 @@ const MainScreen = () => {
         <Button text="Add private view" onPress={addPrivateViewFun} />
         <Button text="Remove private view" onPress={removePrivateViewFun} />
         <Button text="Clear private views" onPress={clearPrivateViews} />
-        <Private
-          customRef={(ref) => {
-            privateView = ref;
-          }}
-        />
+        <Private customRef={privateView} />
         <Title style={styles.title} text="Network" />
         <Button text="Send GET request" onPress={sendGetNetworkRequest} />
         <Button text="Send POST request" onPress={sendPostNetworkRequest} />

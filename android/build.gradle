@@ -117,7 +117,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api "com.shakebugs:shake:17.0.+"
+  api "$System.env.ANDROID_DEPENDENCY:17.1.+"
 }
 
 if (isNewArchitectureEnabled()) {

@@ -341,15 +341,15 @@ class Mapper(private val context: Context) {
 
             val type: String = actionMap.getString("type") ?: continue
 
-            var title: String
-            var subtitle: String
-            var icon: String
+            var title: String?
+            var subtitle: String?
+            var icon: String?
 
             when (type) {
                 "chat" -> {
-                    title = actionMap.getString("title") ?: ""
-                    subtitle = actionMap.getString("subtitle") ?: ""
-                    icon = actionMap.getString("icon") ?: ""
+                    title = actionMap.getString("title")
+                    subtitle = actionMap.getString("subtitle")
+                    icon = actionMap.getString("icon")
 
                     val chatAction =
                         ShakeHomeChatAction(title, subtitle, convertBase64ToDrawable(context, icon))
@@ -376,9 +376,9 @@ class Mapper(private val context: Context) {
                 }
 
                 "submit" -> {
-                    title = actionMap.getString("title") ?: ""
-                    subtitle = actionMap.getString("subtitle") ?: ""
-                    icon = actionMap.getString("icon") ?: ""
+                    title = actionMap.getString("title")
+                    subtitle = actionMap.getString("subtitle")
+                    icon = actionMap.getString("icon")
 
                     val submitAction = ShakeHomeSubmitAction(
                         title,
@@ -408,9 +408,9 @@ class Mapper(private val context: Context) {
                 }
 
                 "default" -> {
-                    title = actionMap.getString("title") ?: ""
-                    subtitle = actionMap.getString("subtitle") ?: ""
-                    icon = actionMap.getString("icon") ?: ""
+                    title = actionMap.getString("title")
+                    subtitle = actionMap.getString("subtitle")
+                    icon = actionMap.getString("icon")
 
                     val homeAction = ShakeHomeAction(
                         title,

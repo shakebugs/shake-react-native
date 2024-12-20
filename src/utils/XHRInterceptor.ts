@@ -11,7 +11,9 @@ let isInterceptorEnabled: boolean = false;
 let networkRequest: NetworkRequest = defaultNetworkRequest();
 
 const XHRInterceptor = {
-  setOnRequestDone(callback: (networkRequest: NetworkRequest) => void) {
+  setOnRequestDone(
+    callback: ((networkRequest: NetworkRequest) => void) | null
+  ) {
     onRequestDone = callback;
   },
   enableInterception() {
@@ -23,7 +25,7 @@ const XHRInterceptor = {
       networkRequest.url = url.toString();
       networkRequest.method = method;
 
-      originalXHROpen.apply(this, arguments);
+      originalXHROpen.apply(this, arguments as any);
     };
 
     XMLHttpRequest.prototype.setRequestHeader = function (
@@ -31,7 +33,7 @@ const XHRInterceptor = {
       value: string
     ) {
       networkRequest.requestHeaders[header] = String(value);
-      originalXHRSetRequestHeader.apply(this, arguments);
+      originalXHRSetRequestHeader.apply(this, arguments as any);
     };
 
     XMLHttpRequest.prototype.send = function (
@@ -129,7 +131,7 @@ const XHRInterceptor = {
         if (onRequestDone) onRequestDone(networkReq);
       };
 
-      originalXHRSend.apply(this, arguments);
+      originalXHRSend.apply(this, arguments as any);
     };
 
     isInterceptorEnabled = true;

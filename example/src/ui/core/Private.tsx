@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import type { MutableRefObject } from 'react';
 
-const Private = (props) => {
+interface PrivateProps {
+  customRef: MutableRefObject<View | null>;
+}
+
+const Private = (props: PrivateProps) => {
   return (
-    <View
-      style={styles.root}
-      ref={(ref) => {
-        props.customRef(ref);
-      }}
-    >
+    <View style={styles.root} ref={props.customRef}>
       <Text style={styles.text}>Sample view</Text>
     </View>
   );

@@ -1,6 +1,6 @@
 import RNFS from 'react-native-fs';
 
-export const createTempFile = (path) => {
+export const createTempFile = (path: string) => {
   RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
     .then(() => {
       console.log('File written');

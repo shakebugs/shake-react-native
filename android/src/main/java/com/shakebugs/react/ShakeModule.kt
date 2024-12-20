@@ -12,10 +12,8 @@ import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
-import com.facebook.react.uimanager.UIManagerModule
 import com.shakebugs.react.utils.Constants
 import com.shakebugs.react.utils.Emitter
-import com.shakebugs.react.utils.Logger
 import com.shakebugs.react.utils.Mapper
 import com.shakebugs.shake.LogLevel
 import com.shakebugs.shake.Shake
@@ -296,37 +294,17 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
     }
 
     override fun addPrivateView(id: Double) {
-      try {
-        reactContext.getNativeModule(
-          UIManagerModule::class.java
-        )?.prependUIBlock { nativeViewHierarchyManager ->
-          val view: View = nativeViewHierarchyManager.resolveView(id.toInt())
-          reactContext.runOnUiQueueThread {
-            Shake.addPrivateView(view)
-          }
-        }
-      } catch (e: Exception) {
-        Logger.d("Failed to add private view.", e)
-      }
+      val view: View? = currentActivity?.findViewById(id.toInt())
+      if (view != null) Shake.addPrivateView(view)
     }
 
     override fun removePrivateView(id: Double) {
-      try {
-        reactContext.getNativeModule(
-          UIManagerModule::class.java
-        )?.prependUIBlock { nativeViewHierarchyManager ->
-          val view: View = nativeViewHierarchyManager.resolveView(id.toInt())
-          reactContext.runOnUiQueueThread {
-            Shake.removePrivateView(view)
-          }
-        }
-      } catch (e: Exception) {
-        Logger.d("Failed to remove private view.", e)
-      }
+      val view: View? = currentActivity?.findViewById(id.toInt())
+      if (view != null) Shake.removePrivateView(view)
     }
 
     override fun clearPrivateViews() {
-        reactContext.runOnUiQueueThread { Shake.clearPrivateViews() }
+      Shake.clearPrivateViews()
     }
 
     override fun isSensitiveDataRedactionEnabled(): Boolean {
@@ -342,14 +320,12 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun startNotificationsEmitter() {
         reactContext.runOnUiQueueThread {
-          Shake.setNotificationEventsFilter(object : NotificationEventsFilter {
-            override fun filter(notificationEventEditor: NotificationEventEditor): NotificationEventEditor? {
-              val map: WritableMap =
-                mapper.notificationEventToMap(notificationEventEditor.build())
-              emitter.sendEvent(Emitter.EVENT_NOTIFICATION, map)
-              return null
-            }
-          })
+          Shake.setNotificationEventsFilter { notificationEventEditor ->
+            val map: WritableMap =
+              mapper.notificationEventToMap(notificationEventEditor.build())
+            emitter.sendEvent(Emitter.EVENT_NOTIFICATION, map)
+            null
+          }
         }
     }
 
