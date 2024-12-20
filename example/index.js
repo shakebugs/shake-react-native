@@ -1,6 +1,6 @@
-import {AppRegistry, Platform} from 'react-native';
+import { AppRegistry, Platform } from 'react-native';
 import App from './src/App';
-import {name as appName} from './app.json';
+import { name as appName } from './app.json';
 import Shake from 'react-native-shake';
 
 import messaging from '@react-native-firebase/messaging';
@@ -28,7 +28,7 @@ const startShake = async () => {
 
   const apiKey =
     Platform.OS === 'ios'
-      ? 'Ny6x1eMCwSTNltepD8vLQ6iiYXqatEp2nWM7cFGM01opctfQfC802wf'
+      ? 'T8iGZK4gJGRiYcqtx7oAwKiJOVol9c70bD18yo76N7ojlkPsc5eUuGu'
       : 'K9CeeyYp8aWIIWrKnT63c9StRXQa05pWzP1rYruYsIvmg1q0brwuvGM';
   await Shake.start(apiKey);
 
@@ -38,13 +38,13 @@ const startShake = async () => {
 const setupFirebaseNotifications = async () => {
   if (Platform.OS === 'android') {
     // Firebase push notifications background handler
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log('Message handled in the background!', remoteMessage);
       await startShake();
       Shake.showChatNotification(remoteMessage.data);
     });
     // Firebase push notifications foreground handler
-    messaging().onMessage(async remoteMessage => {
+    messaging().onMessage(async (remoteMessage) => {
       console.log('Message handled in the foreground!', remoteMessage);
       Shake.showChatNotification(remoteMessage.data);
     });
