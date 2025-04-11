@@ -27,6 +27,8 @@ If your app is running on old architecture you should use Shake RN SDK 17.0.x.
 
 ### Install Shake
 
+#### React Native CLI
+
 Execute the npm install command in your terminal:
 ```bash
 npm install @shakebugs/react-native-shake
@@ -36,6 +38,17 @@ Install pods from the project root directory:
 ```bash
 cd ios && pod install && cd ..
 ```
+
+#### Expo
+
+If you are using Expo, recommended way to install packages is by using `expo install` command:
+
+```bash
+npm install @shakebugs/react-native-shake
+```
+
+Shake is not supported in Expo Go, you need to set up [development builds](https://docs.expo.dev/develop/development-builds/create-a-build/)
+in order to use Shake with Expo.
 
 ### Start Shake
 
