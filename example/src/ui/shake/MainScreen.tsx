@@ -19,7 +19,7 @@ import Shake, {
   ShakeTextInput,
   ShakeTheme,
   ShakeTitle,
-} from 'react-native-shake';
+} from '@shakebugs/react-native-shake';
 import RNFS from 'react-native-fs';
 import Button from '../core/Button';
 import Title from '../core/Title';

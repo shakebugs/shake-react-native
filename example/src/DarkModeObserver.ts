@@ -1,6 +1,6 @@
 import { useColorScheme } from 'react-native';
 import { useEffect } from 'react';
-import Shake, { ShakeTheme } from 'react-native-shake';
+import Shake, { ShakeTheme } from '@shakebugs/react-native-shake';
 
 const DarkModeObserver = (props: any) => {
   const colorScheme = useColorScheme();
