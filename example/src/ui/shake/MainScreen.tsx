@@ -131,7 +131,7 @@ const MainScreen = () => {
     // const oldForm = Shake.getShakeForm();
     // oldForm.components = oldForm.components.filter(c => c.type !== 'inspect');
 
-    const pickerItems: Array<ShakePickerItem> = [
+    const pickerItems: ShakePickerItem[] = [
       new ShakePickerItem('Mouse', 'Mouse', null, 'mouse'),
       new ShakePickerItem('Keyboard', 'Keyboard', null, 'keyboard'),
       new ShakePickerItem('Display', 'Display', null, 'display'),
@@ -206,22 +206,28 @@ const MainScreen = () => {
   };
 
   const setNotificationEventsFilter = () => {
-    Shake.setNotificationEventsFilter((notificationEvent) => {
-      notificationEvent.setDescription('data_redacted');
-      notificationEvent.setTitle('data_redacted');
+    Shake.setNotificationEventsFilter(
+      (
+        notificationEvent: NotificationEventBuilder
+      ): NotificationEventBuilder | null => {
+        notificationEvent.setDescription('data_redacted');
+        notificationEvent.setTitle('data_redacted');
 
-      return notificationEvent;
-    });
+        return notificationEvent;
+      }
+    );
   };
 
   const setNetworkRequestsFilter = () => {
-    Shake.setNetworkRequestsFilter((networkRequest) => {
-      networkRequest.setResponseBody('data_redacted');
-      networkRequest.setRequestBody('data_redacted');
-      networkRequest.setDate(new Date());
+    Shake.setNetworkRequestsFilter(
+      (networkRequest: NetworkRequestBuilder): NetworkRequestBuilder | null => {
+        networkRequest.setResponseBody('data_redacted');
+        networkRequest.setRequestBody('data_redacted');
+        networkRequest.setDate(new Date());
 
-      return networkRequest;
-    });
+        return networkRequest;
+      }
+    );
   };
 
   const showNotificationsSettings = () => {

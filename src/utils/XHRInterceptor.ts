@@ -86,7 +86,7 @@ const XHRInterceptor = {
           networkRequestClone.responseBody = responseText ? responseText : '';
           networkRequestClone.statusCode = this.status
             ? this.status.toString()
-            : 'n/a';
+            : '0';
 
           reportRequest(networkRequestClone);
         });
@@ -98,7 +98,7 @@ const XHRInterceptor = {
 
           networkRequestClone.duration = Date.now() - networkRequestClone.start;
           networkRequestClone.responseBody = 'Request error.';
-          networkRequestClone.statusCode = 'err';
+          networkRequestClone.statusCode = '500';
 
           reportRequest(networkRequestClone);
         });
@@ -108,7 +108,7 @@ const XHRInterceptor = {
 
           networkRequestClone.duration = Date.now() - networkRequestClone.start;
           networkRequestClone.responseBody = 'Request aborted.';
-          networkRequestClone.statusCode = 'err';
+          networkRequestClone.statusCode = '499';
 
           reportRequest(networkRequestClone);
         });
@@ -118,7 +118,7 @@ const XHRInterceptor = {
 
           networkRequestClone.duration = Date.now() - networkRequestClone.start;
           networkRequestClone.responseBody = 'Request timeout.';
-          networkRequestClone.statusCode = 't/o';
+          networkRequestClone.statusCode = '408';
 
           reportRequest(networkRequestClone);
         });

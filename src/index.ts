@@ -389,7 +389,9 @@ class Shake {
    * @param {((builder: NetworkRequestBuilder) => NetworkRequestBuilder) | null} filter function
    */
   static setNetworkRequestsFilter(
-    filter: ((builder: NetworkRequestBuilder) => NetworkRequestBuilder) | null
+    filter:
+      | ((builder: NetworkRequestBuilder) => NetworkRequestBuilder | null)
+      | null
   ) {
     this.networkTracker.setFilter(filter);
   }
@@ -412,7 +414,7 @@ class Shake {
    */
   static setNotificationEventsFilter(
     filter:
-      | ((builder: NotificationEventBuilder) => NotificationEventBuilder)
+      | ((builder: NotificationEventBuilder) => NotificationEventBuilder | null)
       | null
   ) {
     this.notificationTracker.setFilter(filter);
