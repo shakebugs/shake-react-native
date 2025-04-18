@@ -1,7 +1,7 @@
 import { AppRegistry, Platform } from 'react-native';
 import App from './src/App';
 import { name as appName } from './app.json';
-import Shake from 'react-native-shake';
+import Shake from '@shakebugs/react-native-shake';
 
 import messaging from '@react-native-firebase/messaging';
 

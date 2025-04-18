@@ -1,5 +1,5 @@
 {
-  "name": "react-native-shake",
+  "name": "@shakebugs/react-native-shake",
   "title": "React Native Shake SDK",
   "version": "17.0.0",
   "description": "Shake SDK wrapper",

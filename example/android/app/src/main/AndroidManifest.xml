@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
     <application
       android:name="com.shakebugs.react.example.MainApplication"
@@ -22,8 +23,5 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-      <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyAdw2aCW8-Dg7fOOWRNfT43iH1Xjj4_uqg" />
       </application>
 </manifest>

@@ -12,7 +12,9 @@ class NotificationTracker {
   shake: any;
   enabled: boolean;
   filter:
-    | ((requestBuilder: NotificationEventBuilder) => NotificationEventBuilder)
+    | ((
+        requestBuilder: NotificationEventBuilder
+      ) => NotificationEventBuilder | null)
     | null;
 
   constructor(shake: any) {
@@ -36,7 +38,9 @@ class NotificationTracker {
    */
   setFilter = (
     filter:
-      | ((requestBuilder: NotificationEventBuilder) => NotificationEventBuilder)
+      | ((
+          requestBuilder: NotificationEventBuilder
+        ) => NotificationEventBuilder | null)
       | null
   ) => {
     this.filter = filter;
@@ -50,10 +54,10 @@ class NotificationTracker {
     notificationEventBuilder: NotificationEventBuilder
   ) => {
     if (this.filter) {
-      notificationEventBuilder = this.filter(notificationEventBuilder);
-      if (notificationEventBuilder) {
-        this.shake.insertNotificationEvent(notificationEventBuilder.build());
-      }
+      const newBuilder: NotificationEventBuilder | null = this.filter(
+        notificationEventBuilder
+      );
+      if (newBuilder) this.shake.insertNotificationEvent(newBuilder.build());
     } else {
       this.shake.insertNotificationEvent(notificationEventBuilder.build());
     }

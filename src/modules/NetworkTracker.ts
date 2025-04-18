@@ -9,7 +9,7 @@ class NetworkTracker {
   shake: any;
   enabled: boolean = false;
   filter:
-    | ((requestBuilder: NetworkRequestBuilder) => NetworkRequestBuilder)
+    | ((requestBuilder: NetworkRequestBuilder) => NetworkRequestBuilder | null)
     | null = null;
 
   constructor(shake: any) {
@@ -41,7 +41,9 @@ class NetworkTracker {
    */
   setFilter = (
     filter:
-      | ((requestBuilder: NetworkRequestBuilder) => NetworkRequestBuilder)
+      | ((
+          requestBuilder: NetworkRequestBuilder
+        ) => NetworkRequestBuilder | null)
       | null
   ) => {
     this.filter = filter;
@@ -53,10 +55,10 @@ class NetworkTracker {
    */
   insertNetworkRequest = (networkRequestBuilder: NetworkRequestBuilder) => {
     if (this.filter) {
-      networkRequestBuilder = this.filter(networkRequestBuilder);
-      if (networkRequestBuilder) {
-        this.shake.insertNetworkRequest(networkRequestBuilder.build());
-      }
+      let newBuilder: NetworkRequestBuilder | null = this.filter(
+        networkRequestBuilder
+      );
+      if (newBuilder) this.shake.insertNetworkRequest(newBuilder.build());
     } else {
       this.shake.insertNetworkRequest(networkRequestBuilder.build());
     }

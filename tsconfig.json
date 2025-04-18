@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "react-native-shake": ["./src/index"]
+      "@shakebugs/react-native-shake": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

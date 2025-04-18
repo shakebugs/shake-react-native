@@ -719,18 +719,28 @@ RCT_EXPORT_MODULE()
     NSDictionary *networkRequest = [[NSDictionary alloc] init];
     NSString *requestBody = nativeNetworkRequest.requestBody() ?: @"";
     NSData *data = [requestBody dataUsingEncoding:NSUTF8StringEncoding];
+    NSNumber* statusCode = [self parseIntegerFromString:nativeNetworkRequest.statusCode()];
+
     networkRequest = @{
         @"url": nativeNetworkRequest.url() ?: @"",
         @"method": nativeNetworkRequest.method() ?: @"",
         @"responseBody": nativeNetworkRequest.responseBody() ?: @"",
-        @"statusCode": nativeNetworkRequest.statusCode() ?: @"",
+        @"statusCode": statusCode ?: 0,
         @"requestBody": data,
         @"requestHeaders": nativeNetworkRequest.requestHeaders() ?: @{},
         @"duration": [NSNumber numberWithDouble:nativeNetworkRequest.duration() ?: 0],
         @"responseHeaders": nativeNetworkRequest.responseHeaders() ?: @{},
         @"timestamp": nativeNetworkRequest.timestamp() ?: @""
     };
+
     return networkRequest;
+}
+
+- (NSNumber *)parseIntegerFromString:(NSString *)string {
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = NSNumberFormatterNoStyle;
+
+    return [formatter numberFromString:string];
 }
 
 - (NSDictionary*)mapToNotificationEvent:(JS::NativeShake::NotificationEvent &)nativeNotification
