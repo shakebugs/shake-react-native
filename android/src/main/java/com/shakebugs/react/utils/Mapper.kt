@@ -321,7 +321,7 @@ class Mapper(private val context: Context) {
         val shakeTheme = ShakeTheme()
         shakeTheme.fontFamilyBoldValue = findAssetPath(context, fontFamilyBold)
         shakeTheme.fontFamilyMediumValue = findAssetPath(context, fontFamilyMedium)
-        shakeTheme.secondaryBackgroundColorValue = stringToColor(backgroundColor)
+        shakeTheme.backgroundColorValue = stringToColor(backgroundColor)
         shakeTheme.secondaryBackgroundColorValue = stringToColor(secondaryBackgroundColor)
         shakeTheme.textColorValue = stringToColor(textColor)
         shakeTheme.secondaryTextColorValue = stringToColor(secondaryTextColor)
