@@ -18,4 +18,4 @@ Now, you can run the project on Android or iOS by using one of the following com
 `yarn run ios:stg` - run iOS staging build
 `yarn run ios:prd` - run iOS production build
 
-Note: you must use **Yarn** and Node 20+
+Note: you must use **Yarn** and Node 20.19.0+
