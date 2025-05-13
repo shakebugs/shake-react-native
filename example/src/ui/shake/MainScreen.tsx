@@ -20,7 +20,7 @@ import Shake, {
   ShakeTheme,
   ShakeTitle,
 } from '@shakebugs/react-native-shake';
-import RNFS from 'react-native-fs';
+// import RNFS from 'react-native-fs';
 import Button from '../core/Button';
 import Title from '../core/Title';
 import Option from '../core/Option';
@@ -34,7 +34,7 @@ import { createTempFile } from '../../utils/Files';
 import sampleImage from '../../assets/sampleImage';
 
 const MainScreen = () => {
-  let path = RNFS.DocumentDirectoryPath + '/file.txt';
+  // let path = RNFS.DocumentDirectoryPath + '/file.txt';
 
   const [shakeInvokingEnabled, setShakeInvokingEnabled] = useState(false);
   const [buttonInvokingEnabled, setButtonInvokingEnabled] = useState(false);
@@ -56,10 +56,14 @@ const MainScreen = () => {
   //const networkTester = new FetchNetworkTester();
   const networkTester = new AxiosNetworkTester();
 
-  useEffect(() => {
-    createTempFile(path);
-    initialize();
-  }, [path]);
+  // useEffect(() => {
+  //   createTempFile(path);
+  //   initialize();
+  // }, [path]);
+
+    useEffect(() => {
+        initialize();
+    }, []);
 
   const initialize = () => {
     setBlackBoxEnabled(Shake.isEnableBlackBox());
@@ -84,25 +88,25 @@ const MainScreen = () => {
   };
 
   const setReportData = () => {
-    Shake.setShakeReportData([
-      ShakeFile.create(path),
-      ShakeFile.create(path, 'customName'),
-    ]);
+    // Shake.setShakeReportData([
+    //   ShakeFile.create(path),
+    //   ShakeFile.create(path, 'customName'),
+    // ]);
   };
 
   const silentReport = () => {
-    const configuration = new ShakeReportConfiguration();
-    configuration.blackBoxData = true;
-    configuration.activityHistoryData = true;
-    configuration.video = true;
-    configuration.screenshot = true;
-    configuration.showReportSentMessage = false;
-
-    Shake.silentReport(
-      'Silent reports are working!',
-      [ShakeFile.create(path), ShakeFile.create(path, 'customName')],
-      configuration
-    );
+    // const configuration = new ShakeReportConfiguration();
+    // configuration.blackBoxData = true;
+    // configuration.activityHistoryData = true;
+    // configuration.video = true;
+    // configuration.screenshot = true;
+    // configuration.showReportSentMessage = false;
+    //
+    // Shake.silentReport(
+    //   'Silent reports are working!',
+    //   [ShakeFile.create(path), ShakeFile.create(path, 'customName')],
+    //   configuration
+    // );
   };
 
   const addPrivateViewFun = () => {
