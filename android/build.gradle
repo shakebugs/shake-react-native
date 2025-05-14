@@ -78,12 +78,6 @@ repositories {
   google()
 }
 
-rootProject.allprojects {
-    repositories {
-        mavenCentral()
-    }
-}
-
 def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
