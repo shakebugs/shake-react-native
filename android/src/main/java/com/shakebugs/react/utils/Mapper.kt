@@ -42,8 +42,8 @@ class Mapper(private val context: Context) {
         var logLevel: LogLevel = LogLevel.INFO
 
         try {
-          val value = logLevelMap.getString("value") ?: ""
-          logLevel = LogLevel.valueOf(value)
+            val value = logLevelMap.getString("value") ?: ""
+            logLevel = LogLevel.valueOf(value)
         } catch (e: Exception) {
             Logger.e("Failed to parse log level.", e)
         }
@@ -55,10 +55,8 @@ class Mapper(private val context: Context) {
         var shakeScreen: ShakeScreen = ShakeScreen.HOME
 
         try {
-            val value: String? = shakeScreenMap.getString("value")
-            if (value != null) {
-                shakeScreen = ShakeScreen.valueOf(value)
-            }
+            val value: String = shakeScreenMap.getString("value") ?: ""
+            shakeScreen = ShakeScreen.valueOf(value)
         } catch (e: Exception) {
             Logger.e("Failed to parse shake screen.", e)
         }
@@ -66,142 +64,178 @@ class Mapper(private val context: Context) {
         return shakeScreen
     }
 
-    fun mapToNativeShakeScreen(shakeScreen: ShakeScreen): WritableMap {
+    fun mapToShakeScreenMap(shakeScreen: ShakeScreen): WritableMap {
         val map: WritableMap = WritableNativeMap()
         map.putString("value", shakeScreen.name)
 
         return map
     }
 
-    fun mapToConfiguration(configurationMap: ReadableMap): ShakeReportConfiguration {
-        val blackBoxData: Boolean = configurationMap.getBoolean("blackBoxData")
-        val activityHistoryData: Boolean = configurationMap.getBoolean("activityHistoryData")
-        val screenshot: Boolean = configurationMap.getBoolean("screenshot")
-        val video: Boolean = configurationMap.getBoolean("video")
-        val showReportSentMessage: Boolean = configurationMap.getBoolean("showReportSentMessage")
-
+    fun mapToSilentReportConfiguration(configurationMap: ReadableMap): ShakeReportConfiguration {
         val configuration = ShakeReportConfiguration()
-        configuration.blackBoxData = blackBoxData
-        configuration.activityHistoryData = activityHistoryData
-        configuration.screenshot = screenshot
-        configuration.video = video
-        configuration.showReportSentMessage = showReportSentMessage
+
+        try {
+            val blackBoxData: Boolean = configurationMap.getBoolean("blackBoxData")
+            val activityHistoryData: Boolean = configurationMap.getBoolean("activityHistoryData")
+            val screenshot: Boolean = configurationMap.getBoolean("screenshot")
+            val video: Boolean = configurationMap.getBoolean("video")
+            val showReportSentMessage: Boolean =
+                configurationMap.getBoolean("showReportSentMessage")
+
+            configuration.blackBoxData = blackBoxData
+            configuration.activityHistoryData = activityHistoryData
+            configuration.screenshot = screenshot
+            configuration.video = video
+            configuration.showReportSentMessage = showReportSentMessage
+
+        } catch (e: Exception) {
+            Logger.e("Failed to parse silent report configuration.", e)
+        }
 
         return configuration
     }
 
     fun mapArrayToShakeFiles(filePaths: ReadableArray): List<ShakeFile> {
         val shakeFiles: MutableList<ShakeFile> = ArrayList()
-        for (i in 0 until filePaths.size()) {
-            val fileMap: ReadableMap = filePaths.getMap(i)
 
-            val filePath: String? = fileMap.getString("path")
-            var fileName: String? = fileMap.getString("name")
+        try {
+            for (i in 0 until filePaths.size()) {
+                val fileMap: ReadableMap? = filePaths.getMap(i)
+                if (fileMap != null) {
+                    val filePath: String? = fileMap.getString("path")
+                    var fileName: String? = fileMap.getString("name")
 
-            if (fileName != null && filePath != null) {
-              fileName = Files.removeExtension(fileName)
-              shakeFiles.add(ShakeFile(fileName, filePath))
+                    if (fileName != null && filePath != null) {
+                        fileName = Files.removeExtension(fileName)
+                        shakeFiles.add(ShakeFile(fileName, filePath))
+                    }
+                }
             }
+        } catch (e: Exception) {
+            Logger.e("Failed to parse shake files.", e)
         }
+
         return shakeFiles
     }
 
-    fun mapMapToShakeForm(shakeFormMap: ReadableMap): ShakeForm {
-        var formComponentsArray: ReadableArray? = shakeFormMap.getArray("components")
-        if (formComponentsArray == null) formComponentsArray = WritableNativeArray()
+    fun mapToShakeForm(shakeFormMap: ReadableMap): ShakeForm {
+        val shakeForm = ShakeForm(arrayListOf())
 
-        val formComponents: MutableList<ShakeFormComponent> = ArrayList()
+        try {
+            var formComponentsArray: ReadableArray? = shakeFormMap.getArray("components")
+            if (formComponentsArray == null) formComponentsArray = WritableNativeArray()
 
-        for (i in 0 until formComponentsArray.size()) {
-            val componentMap: ReadableMap = formComponentsArray.getMap(i)
+            val formComponents: MutableList<ShakeFormComponent> = ArrayList()
 
-            val type: String = componentMap.getString("type") ?: ""
-            if ("title" == type) {
-                var key: String? = componentMap.getString("key")
-                val label: String? = componentMap.getString("label")
-                var initialValue: String? = componentMap.getString("initialValue")
-                val required: Boolean = componentMap.getBoolean("required")
+            for (i in 0 until formComponentsArray.size()) {
+                val componentMap: ReadableMap? = formComponentsArray.getMap(i)
+                if (componentMap != null) {
+                    val type: String = componentMap.getString("type") ?: ""
+                    if ("title" == type) {
+                        var key: String? = componentMap.getString("key")
+                        val label: String? = componentMap.getString("label")
+                        var initialValue: String? = componentMap.getString("initialValue")
+                        val required: Boolean = componentMap.getBoolean("required")
 
-                if (key == null) key = ""
-                if (initialValue == null) initialValue = ""
+                        if (key == null) key = ""
+                        if (initialValue == null) initialValue = ""
 
-                val comp = ShakeTitle(key, label, initialValue, required)
-                comp.label = stringToRes(context, componentMap.getString("labelRes"), "string")
-                formComponents.add(comp)
-            }
-            if ("text_input" == type) {
-                var key: String? = componentMap.getString("key")
-                val label: String? = componentMap.getString("label")
-                var initialValue: String? = componentMap.getString("initialValue")
-                val required: Boolean = componentMap.getBoolean("required")
+                        val comp = ShakeTitle(key, label, initialValue, required)
+                        comp.label =
+                            stringToRes(context, componentMap.getString("labelRes"), "string")
+                        formComponents.add(comp)
+                    }
+                    if ("text_input" == type) {
+                        var key: String? = componentMap.getString("key")
+                        val label: String? = componentMap.getString("label")
+                        var initialValue: String? = componentMap.getString("initialValue")
+                        val required: Boolean = componentMap.getBoolean("required")
 
-                if (key == null) key = ""
-                if (initialValue == null) initialValue = ""
+                        if (key == null) key = ""
+                        if (initialValue == null) initialValue = ""
 
-                val comp = ShakeTextInput(key, label, initialValue, required)
-                comp.label = stringToRes(context, componentMap.getString("labelRes"), "string")
-                formComponents.add(comp)
-            }
-            if ("email" == type) {
-                var key: String? = componentMap.getString("key")
-                val label: String? = componentMap.getString("label")
-                var initialValue: String? = componentMap.getString("initialValue")
-                val required: Boolean = componentMap.getBoolean("required")
+                        val comp = ShakeTextInput(key, label, initialValue, required)
+                        comp.label =
+                            stringToRes(context, componentMap.getString("labelRes"), "string")
+                        formComponents.add(comp)
+                    }
+                    if ("email" == type) {
+                        var key: String? = componentMap.getString("key")
+                        val label: String? = componentMap.getString("label")
+                        var initialValue: String? = componentMap.getString("initialValue")
+                        val required: Boolean = componentMap.getBoolean("required")
 
-                if (key == null) key = ""
-                if (initialValue == null) initialValue = ""
+                        if (key == null) key = ""
+                        if (initialValue == null) initialValue = ""
 
-                val comp = ShakeEmail(key, label, initialValue, required)
-                comp.label = stringToRes(context, componentMap.getString("labelRes"), "string")
-                formComponents.add(comp)
-            }
-            if ("picker" == type) {
-                val itemsArray: ReadableArray? = componentMap.getArray("items")
+                        val comp = ShakeEmail(key, label, initialValue, required)
+                        comp.label =
+                            stringToRes(context, componentMap.getString("labelRes"), "string")
+                        formComponents.add(comp)
+                    }
+                    if ("picker" == type) {
+                        val itemsArray: ReadableArray? = componentMap.getArray("items")
 
-                val items: MutableList<ShakePickerItem> = ArrayList()
-                if (itemsArray != null) {
-                   for (j in 0 until itemsArray.size()) {
-                       val itemMap: ReadableMap = itemsArray.getMap(j)
-                       var itemKey: String? = itemMap.getString("key")
-                       val text: String? = itemMap.getString("text")
-                       val icon: String? = itemMap.getString("icon")
-                       val tag: String? = itemMap.getString("tag")
+                        val items: MutableList<ShakePickerItem> = ArrayList()
+                        if (itemsArray != null) {
+                            for (j in 0 until itemsArray.size()) {
+                                val itemMap: ReadableMap? = itemsArray.getMap(j)
+                                if (itemMap != null) {
+                                    var itemKey: String? = itemMap.getString("key")
+                                    val text: String? = itemMap.getString("text")
+                                    val icon: String? = itemMap.getString("icon")
+                                    val tag: String? = itemMap.getString("tag")
 
-                       if (itemKey == null) itemKey = ""
+                                    if (itemKey == null) itemKey = ""
 
-                       val item = ShakePickerItem(
-                         itemKey,
-                         text,
-                         convertBase64ToDrawable(context, icon),
-                         tag
-                       )
-                       item.text = stringToRes(context, itemMap.getString("textRes"), "string")
-                       item.icon = stringToRes(context, itemMap.getString("iconRes"), "drawable")
-                       items.add(item)
-                   }
+                                    val item = ShakePickerItem(
+                                        itemKey,
+                                        text,
+                                        convertBase64ToDrawable(context, icon),
+                                        tag
+                                    )
+                                    item.text =
+                                        stringToRes(context, itemMap.getString("textRes"), "string")
+                                    item.icon =
+                                        stringToRes(
+                                            context,
+                                            itemMap.getString("iconRes"),
+                                            "drawable"
+                                        )
+                                    items.add(item)
+                                }
+
+                            }
+                        }
+
+                        var key: String? = componentMap.getString("key")
+                        val label: String? = componentMap.getString("label")
+
+                        if (key == null) key = ""
+
+                        val comp = ShakePicker(key, label, items)
+                        comp.label =
+                            stringToRes(context, componentMap.getString("labelRes"), "string")
+                        formComponents.add(comp)
+                    }
+                    if ("attachments" == type) {
+                        formComponents.add(ShakeAttachments())
+                    }
+                    if ("inspect" == type) {
+                        formComponents.add(ShakeInspectButton())
+                    }
                 }
-
-                var key: String? = componentMap.getString("key")
-                val label: String? = componentMap.getString("label")
-
-                if (key == null) key = ""
-
-                val comp = ShakePicker(key, label, items)
-                comp.label = stringToRes(context, componentMap.getString("labelRes"), "string")
-                formComponents.add(comp)
             }
-            if ("attachments" == type) {
-                formComponents.add(ShakeAttachments())
-            }
-            if ("inspect" == type) {
-                formComponents.add(ShakeInspectButton())
-            }
+
+            shakeForm.components = formComponents
+        } catch (e: Exception) {
+            Logger.e("Failed to parse shake form.", e)
         }
 
-        return ShakeForm(formComponents)
+        return shakeForm
     }
 
-    fun mapShakeFormToMap(shakeForm: ShakeForm): WritableMap {
+    fun mapToShakeFormMap(shakeForm: ShakeForm): WritableMap {
         val componentsArray: WritableArray = WritableNativeArray()
 
         for (formComponent in shakeForm.components) {
@@ -294,193 +328,228 @@ class Mapper(private val context: Context) {
         return shakeFormMap
     }
 
-    fun mapMapToShakeTheme(shakeThemeMap: ReadableMap): ShakeTheme {
-        val fontFamilyBold: String? =
-            if (shakeThemeMap.hasKey("fontFamilyBold")) shakeThemeMap.getString("fontFamilyBold") else null
-        val fontFamilyMedium: String? =
-            if (shakeThemeMap.hasKey("fontFamilyMedium")) shakeThemeMap.getString("fontFamilyMedium") else null
-        val backgroundColor: String? =
-            if (shakeThemeMap.hasKey("backgroundColor")) shakeThemeMap.getString("backgroundColor") else null
-        val secondaryBackgroundColor: String? =
-            if (shakeThemeMap.hasKey("secondaryBackgroundColor")) shakeThemeMap.getString("secondaryBackgroundColor") else null
-        val textColor: String? =
-            if (shakeThemeMap.hasKey("textColor")) shakeThemeMap.getString("textColor") else null
-        val secondaryTextColor: String? =
-            if (shakeThemeMap.hasKey("secondaryTextColor")) shakeThemeMap.getString("secondaryTextColor") else null
-        val accentColor: String? =
-            if (shakeThemeMap.hasKey("accentColor")) shakeThemeMap.getString("accentColor") else null
-        val accentTextColor: String? =
-            if (shakeThemeMap.hasKey("accentTextColor")) shakeThemeMap.getString("accentTextColor") else null
-        val outlineColor: String? =
-            if (shakeThemeMap.hasKey("outlineColor")) shakeThemeMap.getString("outlineColor") else null
-        val borderRadius: Double? =
-            if (shakeThemeMap.hasKey("borderRadius") && !shakeThemeMap.isNull("borderRadius")) shakeThemeMap.getDouble("borderRadius") else null
-        val elevation: Double? =
-            if (shakeThemeMap.hasKey("elevation") && !shakeThemeMap.isNull("elevation")) shakeThemeMap.getDouble("elevation") else null
-
+    fun mapToShakeTheme(shakeThemeMap: ReadableMap): ShakeTheme {
         val shakeTheme = ShakeTheme()
-        shakeTheme.fontFamilyBoldValue = findAssetPath(context, fontFamilyBold)
-        shakeTheme.fontFamilyMediumValue = findAssetPath(context, fontFamilyMedium)
-        shakeTheme.secondaryBackgroundColorValue = stringToColor(backgroundColor)
-        shakeTheme.secondaryBackgroundColorValue = stringToColor(secondaryBackgroundColor)
-        shakeTheme.textColorValue = stringToColor(textColor)
-        shakeTheme.secondaryTextColorValue = stringToColor(secondaryTextColor)
-        shakeTheme.accentColorValue = stringToColor(accentColor)
-        shakeTheme.accentTextColorValue = stringToColor(accentTextColor)
-        shakeTheme.outlineColorValue = stringToColor(outlineColor)
-        shakeTheme.borderRadiusValue = convertDpToPixels(context, borderRadius)
-        shakeTheme.elevationValue = convertDpToPixels(context, elevation)
+
+        try {
+            val fontFamilyBold: String? =
+                if (shakeThemeMap.hasKey("fontFamilyBold")) shakeThemeMap.getString("fontFamilyBold") else null
+            val fontFamilyMedium: String? =
+                if (shakeThemeMap.hasKey("fontFamilyMedium")) shakeThemeMap.getString("fontFamilyMedium") else null
+            val backgroundColor: String? =
+                if (shakeThemeMap.hasKey("backgroundColor")) shakeThemeMap.getString("backgroundColor") else null
+            val secondaryBackgroundColor: String? =
+                if (shakeThemeMap.hasKey("secondaryBackgroundColor")) shakeThemeMap.getString("secondaryBackgroundColor") else null
+            val textColor: String? =
+                if (shakeThemeMap.hasKey("textColor")) shakeThemeMap.getString("textColor") else null
+            val secondaryTextColor: String? =
+                if (shakeThemeMap.hasKey("secondaryTextColor")) shakeThemeMap.getString("secondaryTextColor") else null
+            val accentColor: String? =
+                if (shakeThemeMap.hasKey("accentColor")) shakeThemeMap.getString("accentColor") else null
+            val accentTextColor: String? =
+                if (shakeThemeMap.hasKey("accentTextColor")) shakeThemeMap.getString("accentTextColor") else null
+            val outlineColor: String? =
+                if (shakeThemeMap.hasKey("outlineColor")) shakeThemeMap.getString("outlineColor") else null
+            val borderRadius: Double? =
+                if (shakeThemeMap.hasKey("borderRadius") && !shakeThemeMap.isNull("borderRadius")) shakeThemeMap.getDouble(
+                    "borderRadius"
+                ) else null
+            val elevation: Double? =
+                if (shakeThemeMap.hasKey("elevation") && !shakeThemeMap.isNull("elevation")) shakeThemeMap.getDouble(
+                    "elevation"
+                ) else null
+
+            shakeTheme.fontFamilyBoldValue = findAssetPath(context, fontFamilyBold)
+            shakeTheme.fontFamilyMediumValue = findAssetPath(context, fontFamilyMedium)
+            shakeTheme.backgroundColorValue = stringToColor(backgroundColor)
+            shakeTheme.secondaryBackgroundColorValue = stringToColor(secondaryBackgroundColor)
+            shakeTheme.textColorValue = stringToColor(textColor)
+            shakeTheme.secondaryTextColorValue = stringToColor(secondaryTextColor)
+            shakeTheme.accentColorValue = stringToColor(accentColor)
+            shakeTheme.accentTextColorValue = stringToColor(accentTextColor)
+            shakeTheme.outlineColorValue = stringToColor(outlineColor)
+            shakeTheme.borderRadiusValue = convertDpToPixels(context, borderRadius)
+            shakeTheme.elevationValue = convertDpToPixels(context, elevation)
+        } catch (e: Exception) {
+            Logger.e("Failed to parse shake theme.", e)
+        }
 
         return shakeTheme
     }
 
-    fun mapArrayToHomeActions(array: ReadableArray): ArrayList<ShakeHomeAction> {
+    fun mapToShakeHomeActions(array: ReadableArray): ArrayList<ShakeHomeAction> {
         val homeActions: ArrayList<ShakeHomeAction> = ArrayList()
-        for (i in 0 until array.size()) {
-            val actionMap: ReadableMap = array.getMap(i)
 
-            val type: String = actionMap.getString("type") ?: continue
+        try {
+            for (i in 0 until array.size()) {
+                val actionMap: ReadableMap? = array.getMap(i)
+                if (actionMap != null) {
 
-            var title: String?
-            var subtitle: String?
-            var icon: String?
+                    val type: String = actionMap.getString("type") ?: continue
 
-            when (type) {
-                "chat" -> {
-                    title = actionMap.getString("title")
-                    subtitle = actionMap.getString("subtitle")
-                    icon = actionMap.getString("icon")
+                    var title: String?
+                    var subtitle: String?
+                    var icon: String?
 
-                    val chatAction =
-                        ShakeHomeChatAction(title, subtitle, convertBase64ToDrawable(context, icon))
-                    chatAction.title =
-                        stringToRes(
-                            context,
-                            actionMap.getString("titleRes"),
-                            "string"
-                        )
-                    chatAction.subtitle =
-                        stringToRes(
-                            context,
-                            actionMap.getString("subtitleRes"),
-                            "string"
-                        )
-                    chatAction.icon =
-                        stringToRes(
-                            context,
-                            actionMap.getString("iconRes"),
-                            "drawable"
-                        )
+                    when (type) {
+                        "chat" -> {
+                            title = actionMap.getString("title")
+                            subtitle = actionMap.getString("subtitle")
+                            icon = actionMap.getString("icon")
 
-                    homeActions.add(chatAction)
-                }
+                            val chatAction =
+                                ShakeHomeChatAction(
+                                    title,
+                                    subtitle,
+                                    convertBase64ToDrawable(context, icon)
+                                )
+                            chatAction.title =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("titleRes"),
+                                    "string"
+                                )
+                            chatAction.subtitle =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("subtitleRes"),
+                                    "string"
+                                )
+                            chatAction.icon =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("iconRes"),
+                                    "drawable"
+                                )
 
-                "submit" -> {
-                    title = actionMap.getString("title")
-                    subtitle = actionMap.getString("subtitle")
-                    icon = actionMap.getString("icon")
+                            homeActions.add(chatAction)
+                        }
 
-                    val submitAction = ShakeHomeSubmitAction(
-                        title,
-                        subtitle,
-                        convertBase64ToDrawable(context, icon)
-                    )
-                    submitAction.title =
-                        stringToRes(
-                            context,
-                            actionMap.getString("titleRes"),
-                            "string"
-                        )
-                    submitAction.subtitle =
-                        stringToRes(
-                            context,
-                            actionMap.getString("subtitleRes"),
-                            "string"
-                        )
-                    submitAction.icon =
-                        stringToRes(
-                            context,
-                            actionMap.getString("iconRes"),
-                            "drawable"
-                        )
+                        "submit" -> {
+                            title = actionMap.getString("title")
+                            subtitle = actionMap.getString("subtitle")
+                            icon = actionMap.getString("icon")
 
-                    homeActions.add(submitAction)
-                }
+                            val submitAction = ShakeHomeSubmitAction(
+                                title,
+                                subtitle,
+                                convertBase64ToDrawable(context, icon)
+                            )
+                            submitAction.title =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("titleRes"),
+                                    "string"
+                                )
+                            submitAction.subtitle =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("subtitleRes"),
+                                    "string"
+                                )
+                            submitAction.icon =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("iconRes"),
+                                    "drawable"
+                                )
 
-                "default" -> {
-                    title = actionMap.getString("title")
-                    subtitle = actionMap.getString("subtitle")
-                    icon = actionMap.getString("icon")
+                            homeActions.add(submitAction)
+                        }
 
-                    val homeAction = ShakeHomeAction(
-                        title,
-                        subtitle,
-                        convertBase64ToDrawable(context, icon),
-                        null
-                    )
-                    homeAction.title =
-                        stringToRes(
-                            context,
-                            actionMap.getString("titleRes"),
-                            "string"
-                        )
-                    homeAction.subtitle =
-                        stringToRes(
-                            context,
-                            actionMap.getString("subtitleRes"),
-                            "string"
-                        )
-                    homeAction.icon =
-                        stringToRes(
-                            context,
-                            actionMap.getString("iconRes"),
-                            "drawable"
-                        )
+                        "default" -> {
+                            title = actionMap.getString("title")
+                            subtitle = actionMap.getString("subtitle")
+                            icon = actionMap.getString("icon")
 
-                    homeActions.add(homeAction)
+                            val homeAction = ShakeHomeAction(
+                                title,
+                                subtitle,
+                                convertBase64ToDrawable(context, icon),
+                                null
+                            )
+                            homeAction.title =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("titleRes"),
+                                    "string"
+                                )
+                            homeAction.subtitle =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("subtitleRes"),
+                                    "string"
+                                )
+                            homeAction.icon =
+                                stringToRes(
+                                    context,
+                                    actionMap.getString("iconRes"),
+                                    "drawable"
+                                )
+
+                            homeActions.add(homeAction)
+                        }
+                    }
                 }
             }
+        } catch (e: Exception) {
+            Logger.e("Failed to parse home actions.", e)
         }
+
         return homeActions
     }
 
-    fun mapToNetworkRequest(data: ReadableMap): NetworkRequest {
-        val requestHeaders = data.getMap("requestHeaders")
-        val responseHeaders = data.getMap("responseHeaders")
+    fun mapToNetworkRequest(data: ReadableMap): NetworkRequest? {
+        try {
+            val requestHeaders = data.getMap("requestHeaders")
+            val responseHeaders = data.getMap("responseHeaders")
 
-        val networkRequest = NetworkRequest()
-        networkRequest.url = data.getString("url") ?: ""
-        networkRequest.method = data.getString("method") ?: ""
-        networkRequest.requestBody = data.getString("requestBody") ?: ""
-        networkRequest.requestHeaders = if (requestHeaders != null) toStringMap(requestHeaders) else HashMap()
-        networkRequest.responseBody = data.getString("responseBody")
-        networkRequest.responseHeaders = if (responseHeaders != null) toStringMap(responseHeaders) else HashMap()
-        networkRequest.statusCode = data.getString("statusCode") ?: ""
-        networkRequest.timestamp = data.getString("timestamp") ?: ""
-        networkRequest.duration = (data.getDouble("duration")).toFloat()
+            val networkRequest = NetworkRequest()
+            networkRequest.url = data.getString("url") ?: ""
+            networkRequest.method = data.getString("method") ?: ""
+            networkRequest.requestBody = data.getString("requestBody") ?: ""
+            networkRequest.requestHeaders =
+                if (requestHeaders != null) toStringMap(requestHeaders) else HashMap()
+            networkRequest.responseBody = data.getString("responseBody")
+            networkRequest.responseHeaders =
+                if (responseHeaders != null) toStringMap(responseHeaders) else HashMap()
+            networkRequest.statusCode = data.getString("statusCode") ?: ""
+            networkRequest.timestamp = data.getString("timestamp") ?: ""
+            networkRequest.duration = (data.getDouble("duration")).toFloat()
 
-        return networkRequest
+            return networkRequest
+        } catch (e: Exception) {
+            Logger.e("Failed to parse network request.", e)
+        }
+
+        return null
     }
 
-    fun mapToNotificationEvent(data: ReadableMap): NotificationEvent {
-        val id: String? =
-            if (data.hasKey("id") && !data.isNull("id")) data.getString("id") else ""
-        val title: String? =
-            if (data.hasKey("title") && !data.isNull("title")) data.getString("title") else ""
-        val description: String? =
-            if (data.hasKey("description") && !data.isNull("description")) data.getString(
-                "description"
-            ) else ""
+    fun mapToNotificationEvent(data: ReadableMap): NotificationEvent? {
+        try {
+            val id: String? =
+                if (data.hasKey("id") && !data.isNull("id")) data.getString("id") else ""
+            val title: String? =
+                if (data.hasKey("title") && !data.isNull("title")) data.getString("title") else ""
+            val description: String? =
+                if (data.hasKey("description") && !data.isNull("description")) data.getString(
+                    "description"
+                ) else ""
 
-        val notificationEvent = NotificationEvent()
-        notificationEvent.id = Converter.stringToInt(id ?: "")
-        notificationEvent.title = title
-        notificationEvent.description = description
+            val notificationEvent = NotificationEvent()
+            notificationEvent.id = Converter.stringToInt(id ?: "")
+            notificationEvent.title = title
+            notificationEvent.description = description
 
-        return notificationEvent
+            return notificationEvent
+        } catch (e: Exception) {
+            Logger.e("Failed to parse network request.", e)
+        }
+
+        return null
     }
 
-    fun notificationEventToMap(notificationEvent: NotificationEvent): WritableMap {
+    fun mapToNotificationEventMap(notificationEvent: NotificationEvent): WritableMap {
         val id: Int = notificationEvent.id
         val title = if (notificationEvent.title == null) "" else notificationEvent.title
         val description =
@@ -495,15 +564,21 @@ class Mapper(private val context: Context) {
     }
 
     fun mapToUserMetadata(metadata: ReadableMap): Map<String, String?> {
-        val map = toMap(metadata)
-
         val stringMap: MutableMap<String, String?> = HashMap()
-        for ((key, value) in map) {
-            if (value == null) {
-                stringMap[key] = null
-            } else {
-                stringMap[key] = value.toString()
+
+        try {
+            val map: Map<String, Any?>? = toMap(metadata)
+            if (map != null) {
+                for ((key, value) in map) {
+                    if (value == null) {
+                        stringMap[key] = null
+                    } else {
+                        stringMap[key] = value.toString()
+                    }
+                }
             }
+        } catch (e: Exception) {
+            Logger.e("Failed to parse user metadata.", e)
         }
 
         return stringMap.toMap()
@@ -521,7 +596,8 @@ class Mapper(private val context: Context) {
             if (id != null && userId != null && title != null && message != null) {
                 chatNotification = ChatNotification(id, userId, title, message)
             }
-        } catch (ignore: Exception) {
+        } catch (e: Exception) {
+            Logger.e("Failed to parse chat notification.", e)
         }
 
         return chatNotification
@@ -529,16 +605,27 @@ class Mapper(private val context: Context) {
 
     fun mapToTagsList(tagsArray: ReadableArray): List<String> {
         val tags = ArrayList<String>()
-        for (i in 0 until tagsArray.size()) {
-            tags.add(tagsArray.getString(i))
+
+        try {
+            for (i in 0 until tagsArray.size()) {
+                val tag: String? = tagsArray.getString(i)
+                if (tag != null) tags.add(tag)
+            }
+        } catch (e: Exception) {
+            Logger.e("Failed to parse tags.", e)
         }
+
         return tags
     }
 
-    private fun toMap(readableMap: ReadableMap): Map<String, Any?> {
-        val map: MutableMap<String, Any?> = HashMap()
-        val iterator: ReadableMapKeySetIterator = readableMap.keySetIterator()
+    // Helpers
 
+    private fun toMap(readableMap: ReadableMap?): Map<String, Any?>? {
+        if (readableMap == null) return null
+
+        val map: MutableMap<String, Any?> = HashMap()
+
+        val iterator: ReadableMapKeySetIterator = readableMap.keySetIterator()
         while (iterator.hasNextKey()) {
             val key: String = iterator.nextKey()
             val type: ReadableType = readableMap.getType(key)
@@ -564,19 +651,23 @@ class Mapper(private val context: Context) {
     }
 
     private fun toStringMap(readableMap: ReadableMap): Map<String, String?> {
-        val map = toMap(readableMap)
-
         val stringMap: MutableMap<String, String?> = HashMap()
-        for ((key, value) in map) {
-            if (value is String) {
-                stringMap[key] = value as String?
+
+        val map: Map<String, Any?>? = toMap(readableMap)
+        if (map != null) {
+            for ((key, value) in map) {
+                if (value is String) {
+                    stringMap[key] = value as String?
+                }
             }
         }
 
         return stringMap
     }
 
-    private fun toArray(readableArray: ReadableArray): Array<Any?> {
+    private fun toArray(readableArray: ReadableArray?): Array<Any?>? {
+        if (readableArray == null) return null
+
         val array = arrayOfNulls<Any>(readableArray.size())
 
         for (i in 0 until readableArray.size()) {

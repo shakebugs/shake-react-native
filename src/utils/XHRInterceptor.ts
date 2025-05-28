@@ -40,14 +40,10 @@ const XHRInterceptor = {
       data: Document | XMLHttpRequestBodyInit | null
     ) {
       let requestBody;
-      if (typeof data !== 'string') {
-        if (!data) {
-          requestBody = '';
-        } else {
-          requestBody = JSON.stringify(data);
-        }
+      if (!data) {
+        requestBody = '';
       } else {
-        requestBody = data;
+        requestBody = JSON.stringify(data);
       }
 
       if (isBinaryData(requestBody)) {
