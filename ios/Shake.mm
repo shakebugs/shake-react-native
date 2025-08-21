@@ -737,10 +737,14 @@ RCT_EXPORT_MODULE()
 }
 
 - (NSNumber *)parseIntegerFromString:(NSString *)string {
+    if (string == nil || [string length] == 0)
+        return @0;
+
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     formatter.numberStyle = NSNumberFormatterNoStyle;
 
-    return [formatter numberFromString:string];
+    NSNumber *number = [formatter numberFromString:string];
+    return number ?: @0;
 }
 
 - (NSDictionary*)mapToNotificationEvent:(JS::NativeShake::NotificationEvent &)nativeNotification
