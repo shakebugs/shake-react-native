@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
 
   install_modules_dependencies(s)
 
-  s.dependency "#{ENV['IOS_DEPENDENCY']}", "~> 17.1.0-rc"
+  s.dependency "#{ENV['IOS_DEPENDENCY']}", "~> 17.2.0-rc"
 end
 

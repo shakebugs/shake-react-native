@@ -83,7 +83,7 @@ def kotlin_version = getExtOrDefault("kotlinVersion")
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api "$System.env.ANDROID_DEPENDENCY:17.1.+"
+  api "$System.env.ANDROID_DEPENDENCY:17.2.+"
 }
 
 react {
