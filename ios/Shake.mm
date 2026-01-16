@@ -204,7 +204,7 @@ RCT_EXPORT_MODULE()
 }
 
 - (void)log:(JS::NativeShake::LogLevel &)nativeLogLevel message:(NSString *)message {
-    LogLevel logLevel = [self mapToLogLevel:nativeLogLevel];
+    ShakeLogLevel logLevel = [self mapToLogLevel:nativeLogLevel];
     [SHKShake logWithLevel:logLevel message:message];
 }
 
@@ -330,11 +330,11 @@ RCT_EXPORT_MODULE()
 
 // Objc - JS models mappers
 
-- (LogLevel)mapToLogLevel:(JS::NativeShake::LogLevel &)nativeLogLevel
+- (ShakeLogLevel)mapToLogLevel:(JS::NativeShake::LogLevel &)nativeLogLevel
 {
     NSString *value = nativeLogLevel.value();
-
-    LogLevel logLevel = LogLevelInfo;
+    
+    ShakeLogLevel logLevel = LogLevelInfo;
 
     if ([value isEqualToString:@"VERBOSE"])
         logLevel = LogLevelVerbose;
