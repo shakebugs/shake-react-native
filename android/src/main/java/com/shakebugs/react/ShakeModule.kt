@@ -26,8 +26,6 @@ import com.shakebugs.shake.chat.UnreadChatMessagesListener
 import com.shakebugs.shake.form.ShakeForm
 import com.shakebugs.shake.internal.domain.models.NetworkRequest
 import com.shakebugs.shake.internal.domain.models.NotificationEvent
-import com.shakebugs.shake.privacy.NotificationEventEditor
-import com.shakebugs.shake.privacy.NotificationEventsFilter
 import com.shakebugs.shake.report.ShakeDismissListener
 import com.shakebugs.shake.report.ShakeOpenListener
 import com.shakebugs.shake.report.ShakeReportData
@@ -35,7 +33,8 @@ import com.shakebugs.shake.report.ShakeSubmitListener
 import com.shakebugs.shake.theme.ShakeTheme
 
 @ReactModule(name = ShakeModule.NAME)
-class ShakeModule(private val reactContext: ReactApplicationContext): NativeShakeSpec(reactContext) {
+class ShakeModule(private val reactContext: ReactApplicationContext) :
+    NativeShakeSpec(reactContext) {
 
     private val mapper: Mapper = Mapper(reactContext)
     private val emitter: Emitter = Emitter(reactContext)
@@ -63,62 +62,62 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun start(apiKey: String, promise: Promise) {
         reactContext.runOnUiQueueThread {
-          ShakeReflection.setShakeInfo(buildShakePlatformInfo())
-          val activity: Activity? = currentActivity
-          if (activity != null) {
-            ShakeReflection.start(activity, apiKey)
-          } else {
-            val app: Application =
-              reactContext.applicationContext as Application
-            Shake.start(app, apiKey)
-          }
-          startShakeCallbacksEmitter()
-          promise.resolve(null)
+            ShakeReflection.setShakeInfo(buildShakePlatformInfo())
+            val activity: Activity? = currentActivity
+            if (activity != null) {
+                ShakeReflection.start(activity, apiKey)
+            } else {
+                val app: Application =
+                    reactContext.applicationContext as Application
+                Shake.start(app, apiKey)
+            }
+            startShakeCallbacksEmitter()
+            promise.resolve(null)
         }
     }
 
     override fun show(shakeScreenMap: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val shakeScreen: ShakeScreen = mapper.mapToShakeScreen(shakeScreenMap)
-          Shake.show(shakeScreen)
+            val shakeScreen: ShakeScreen = mapper.mapToShakeScreen(shakeScreenMap)
+            Shake.show(shakeScreen)
         }
     }
 
     override fun getShakeForm(): WritableMap {
         val shakeForm: ShakeForm = Shake.getReportConfiguration().shakeForm
-        val shakeFormMap: WritableMap = mapper.mapShakeFormToMap(shakeForm)
+        val shakeFormMap: WritableMap = mapper.mapToShakeFormMap(shakeForm)
         return shakeFormMap
     }
 
     override fun setShakeForm(shakeFormMap: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val shakeForm: ShakeForm = mapper.mapMapToShakeForm(shakeFormMap)
-          Shake.getReportConfiguration().shakeForm = shakeForm
+            val shakeForm: ShakeForm = mapper.mapToShakeForm(shakeFormMap)
+            Shake.getReportConfiguration().shakeForm = shakeForm
         }
     }
 
     override fun setShakeTheme(shakeThemeMap: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val shakeTheme: ShakeTheme = mapper.mapMapToShakeTheme(shakeThemeMap)
-          Shake.getReportConfiguration().theme = shakeTheme
+            val shakeTheme: ShakeTheme = mapper.mapToShakeTheme(shakeThemeMap)
+            Shake.getReportConfiguration().theme = shakeTheme
         }
     }
 
     override fun setHomeSubtitle(subtitle: String) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().homeSubtitleValue = subtitle
+            Shake.getReportConfiguration().homeSubtitleValue = subtitle
         }
     }
 
     override fun setHomeActions(array: ReadableArray) {
         reactContext.runOnUiQueueThread {
-          val actions: ArrayList<ShakeHomeAction> = mapper.mapArrayToHomeActions(array)
-          for (action: ShakeHomeAction in actions) {
-            action.handler = {
-              emitter.sendEvent(Emitter.EVENT_HOME_ACTION_TAP, action.titleValue ?: "")
+            val actions: ArrayList<ShakeHomeAction> = mapper.mapToShakeHomeActions(array)
+            for (action: ShakeHomeAction in actions) {
+                action.handler = {
+                    emitter.sendEvent(Emitter.EVENT_HOME_ACTION_TAP, action.titleValue ?: "")
+                }
             }
-          }
-          Shake.getReportConfiguration().homeActions = actions
+            Shake.getReportConfiguration().homeActions = actions
         }
     }
 
@@ -128,7 +127,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setUserFeedbackEnabled(enabled: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.setUserFeedbackEnabled(enabled)
+            Shake.setUserFeedbackEnabled(enabled)
         }
     }
 
@@ -138,7 +137,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setEnableBlackBox(enableBlackBox: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isEnableBlackBox = enableBlackBox
+            Shake.getReportConfiguration().isEnableBlackBox = enableBlackBox
         }
     }
 
@@ -148,7 +147,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setEnableActivityHistory(enableActivityHistory: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isEnableActivityHistory = enableActivityHistory
+            Shake.getReportConfiguration().isEnableActivityHistory = enableActivityHistory
         }
     }
 
@@ -158,7 +157,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setShowFloatingReportButton(showFloatingReportButton: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isShowFloatingReportButton = showFloatingReportButton
+            Shake.getReportConfiguration().isShowFloatingReportButton = showFloatingReportButton
         }
     }
 
@@ -168,7 +167,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setInvokeShakeOnShakeDeviceEvent(invokeOnShake: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent = invokeOnShake
+            Shake.getReportConfiguration().isInvokeShakeOnShakeDeviceEvent = invokeOnShake
         }
     }
 
@@ -178,18 +177,18 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setInvokeShakeOnScreenshot(invokeOnScreenshot: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isInvokeShakeOnScreenshot = invokeOnScreenshot
+            Shake.getReportConfiguration().isInvokeShakeOnScreenshot = invokeOnScreenshot
         }
     }
 
     override fun getDefaultScreen(): WritableMap {
-        return mapper.mapToNativeShakeScreen(Shake.getReportConfiguration().defaultScreen)
+        return mapper.mapToShakeScreenMap(Shake.getReportConfiguration().defaultScreen)
     }
 
     override fun setDefaultScreen(shakeScreenMap: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val shakeScreen: ShakeScreen = mapper.mapToShakeScreen(shakeScreenMap)
-          Shake.getReportConfiguration().defaultScreen = shakeScreen
+            val shakeScreen: ShakeScreen = mapper.mapToShakeScreen(shakeScreenMap)
+            Shake.getReportConfiguration().defaultScreen = shakeScreen
         }
     }
 
@@ -199,7 +198,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setScreenshotIncluded(isScreenshotIncluded: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isScreenshotIncluded = isScreenshotIncluded
+            Shake.getReportConfiguration().isScreenshotIncluded = isScreenshotIncluded
         }
     }
 
@@ -209,7 +208,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setShakingThreshold(shakingThreshold: Double) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().shakingThreshold = shakingThreshold.toInt()
+            Shake.getReportConfiguration().shakingThreshold = shakingThreshold.toInt()
         }
     }
 
@@ -219,9 +218,9 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setShowIntroMessage(showIntroMessage: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.setShowIntroMessage(
-            showIntroMessage
-          )
+            Shake.setShowIntroMessage(
+                showIntroMessage
+            )
         }
     }
 
@@ -231,7 +230,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setAutoVideoRecording(videoRecordingEnabled: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isAutoVideoRecording = videoRecordingEnabled
+            Shake.getReportConfiguration().isAutoVideoRecording = videoRecordingEnabled
         }
     }
 
@@ -241,14 +240,14 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setConsoleLogsEnabled(consoleLogsEnabled: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isConsoleLogsEnabled = consoleLogsEnabled
+            Shake.getReportConfiguration().isConsoleLogsEnabled = consoleLogsEnabled
         }
     }
 
     override fun log(logLevelMap: ReadableMap, message: String) {
         reactContext.runOnUiQueueThread {
-          val logLevel: LogLevel = mapper.mapToLogLevel(logLevelMap)
-          Shake.log(logLevel, message)
+            val logLevel: LogLevel = mapper.mapToLogLevel(logLevelMap)
+            Shake.log(logLevel, message)
         }
     }
 
@@ -262,7 +261,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setShakeReportData(filesArray: ReadableArray) {
         reactContext.runOnUiQueueThread {
-          Shake.onPrepareData { mapper.mapArrayToShakeFiles(filesArray) }
+            Shake.onPrepareData { mapper.mapArrayToShakeFiles(filesArray) }
         }
     }
 
@@ -272,39 +271,39 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
         configurationMap: ReadableMap
     ) {
         reactContext.runOnUiQueueThread {
-          val configuration: ShakeReportConfiguration =
-            mapper.mapToConfiguration(configurationMap)
-          val shakeReportData = ShakeReportData { mapper.mapArrayToShakeFiles(filesArray) }
-          Shake.silentReport(description, shakeReportData, configuration)
+            val configuration: ShakeReportConfiguration =
+                mapper.mapToSilentReportConfiguration(configurationMap)
+            val shakeReportData = ShakeReportData { mapper.mapArrayToShakeFiles(filesArray) }
+            Shake.silentReport(description, shakeReportData, configuration)
         }
     }
 
     override fun insertNetworkRequest(data: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val networkRequest: NetworkRequest = mapper.mapToNetworkRequest(data)
-          ShakeReflection.insertNetworkRequest(networkRequest)
+            val networkRequest: NetworkRequest? = mapper.mapToNetworkRequest(data)
+            if (networkRequest != null) ShakeReflection.insertNetworkRequest(networkRequest)
         }
     }
 
     override fun insertNotificationEvent(data: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val notificationEvent: NotificationEvent = mapper.mapToNotificationEvent(data)
-          ShakeReflection.insertNotificationEvent(notificationEvent)
+            val notificationEvent: NotificationEvent? = mapper.mapToNotificationEvent(data)
+            if (notificationEvent != null) ShakeReflection.insertNotificationEvent(notificationEvent)
         }
     }
 
     override fun addPrivateView(id: Double) {
-      val view: View? = currentActivity?.findViewById(id.toInt())
-      if (view != null) Shake.addPrivateView(view)
+        val view: View? = currentActivity?.findViewById(id.toInt())
+        if (view != null) Shake.addPrivateView(view)
     }
 
     override fun removePrivateView(id: Double) {
-      val view: View? = currentActivity?.findViewById(id.toInt())
-      if (view != null) Shake.removePrivateView(view)
+        val view: View? = currentActivity?.findViewById(id.toInt())
+        if (view != null) Shake.removePrivateView(view)
     }
 
     override fun clearPrivateViews() {
-      Shake.clearPrivateViews()
+        Shake.clearPrivateViews()
     }
 
     override fun isSensitiveDataRedactionEnabled(): Boolean {
@@ -313,51 +312,51 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setSensitiveDataRedactionEnabled(sensitiveDataRedactionEnabled: Boolean) {
         reactContext.runOnUiQueueThread {
-          Shake.getReportConfiguration().isSensitiveDataRedactionEnabled =
-            sensitiveDataRedactionEnabled
+            Shake.getReportConfiguration().isSensitiveDataRedactionEnabled =
+                sensitiveDataRedactionEnabled
         }
     }
 
     override fun startNotificationsEmitter() {
         reactContext.runOnUiQueueThread {
-          Shake.setNotificationEventsFilter { notificationEventEditor ->
-            val map: WritableMap =
-              mapper.notificationEventToMap(notificationEventEditor.build())
-            emitter.sendEvent(Emitter.EVENT_NOTIFICATION, map)
-            null
-          }
+            Shake.setNotificationEventsFilter { notificationEventEditor ->
+                val map: WritableMap =
+                    mapper.mapToNotificationEventMap(notificationEventEditor.build())
+                emitter.sendEvent(Emitter.EVENT_NOTIFICATION, map)
+                null
+            }
         }
     }
 
     override fun stopNotificationsEmitter() {
         reactContext.runOnUiQueueThread {
-          Shake.setNotificationEventsFilter(
-            null
-          )
+            Shake.setNotificationEventsFilter(
+                null
+            )
         }
     }
 
     override fun startUnreadChatMessagesEmitter() {
         reactContext.runOnUiQueueThread {
-          Shake.setUnreadChatMessagesListener(object : UnreadChatMessagesListener {
-            override fun onUnreadMessagesCountChanged(count: Int) {
-              emitter.sendEvent(Emitter.EVENT_UNREAD_MESSAGES, count)
-            }
-          })
+            Shake.setUnreadChatMessagesListener(object : UnreadChatMessagesListener {
+                override fun onUnreadMessagesCountChanged(count: Int) {
+                    emitter.sendEvent(Emitter.EVENT_UNREAD_MESSAGES, count)
+                }
+            })
         }
     }
 
     override fun stopUnreadChatMessagesEmitter() {
         reactContext.runOnUiQueueThread {
-          Shake.setUnreadChatMessagesListener(
-            null
-          )
+            Shake.setUnreadChatMessagesListener(
+                null
+            )
         }
     }
 
     override fun showNotificationsSettings() {
         reactContext.runOnUiQueueThread {
-          currentActivity?.startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+            currentActivity?.startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
         }
     }
 
@@ -371,8 +370,8 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun updateUserMetadata(metadataMap: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val metadata: Map<String, String?> = mapper.mapToUserMetadata(metadataMap)
-          Shake.updateUserMetadata(metadata)
+            val metadata: Map<String, String?> = mapper.mapToUserMetadata(metadataMap)
+            Shake.updateUserMetadata(metadata)
         }
     }
 
@@ -382,58 +381,58 @@ class ShakeModule(private val reactContext: ReactApplicationContext): NativeShak
 
     override fun setPushNotificationsToken(token: String?) {
         reactContext.runOnUiQueueThread {
-          Shake.setPushNotificationsToken(token)
+            Shake.setPushNotificationsToken(token)
         }
     }
 
     override fun showChatNotification(notificationData: ReadableMap) {
         reactContext.runOnUiQueueThread {
-          val chatNotification: ChatNotification? = mapper.mapToChatNotification(notificationData)
-          if (chatNotification != null) {
-            Shake.showChatNotification(chatNotification)
-          }
+            val chatNotification: ChatNotification? = mapper.mapToChatNotification(notificationData)
+            if (chatNotification != null) {
+                Shake.showChatNotification(chatNotification)
+            }
         }
     }
 
     override fun setTags(tagsArray: ReadableArray) {
-      Shake.getReportConfiguration().tags = mapper.mapToTagsList(tagsArray)
+        Shake.getReportConfiguration().tags = mapper.mapToTagsList(tagsArray)
     }
 
     // Event listeners
     override fun addListener(eventType: String?) {
-      // Ignore
+        // Ignore
     }
 
     override fun removeListeners(count: Double) {
-      // Ignore
+        // Ignore
     }
 
     /*
      * Callbacks starters.
      */
     private fun startShakeCallbacksEmitter() {
-      Shake.getReportConfiguration().shakeOpenListener = object : ShakeOpenListener {
-        override fun onShakeOpen() {
-          emitter.sendEvent(Emitter.EVENT_SHAKE_OPEN, "open")
+        Shake.getReportConfiguration().shakeOpenListener = object : ShakeOpenListener {
+            override fun onShakeOpen() {
+                emitter.sendEvent(Emitter.EVENT_SHAKE_OPEN, "open")
+            }
         }
-      }
-      Shake.getReportConfiguration().shakeDismissListener = object : ShakeDismissListener {
-        override fun onShakeDismiss() {
-          emitter.sendEvent(Emitter.EVENT_SHAKE_DISMISS, "dismiss")
+        Shake.getReportConfiguration().shakeDismissListener = object : ShakeDismissListener {
+            override fun onShakeDismiss() {
+                emitter.sendEvent(Emitter.EVENT_SHAKE_DISMISS, "dismiss")
+            }
         }
-      }
-      Shake.getReportConfiguration().shakeSubmitListener = object : ShakeSubmitListener {
-        override fun onShakeSubmit(reportType: String, fields: Map<String, String>) {
-          val fieldsMap: WritableMap = WritableNativeMap()
-          for ((key, value) in fields) {
-            fieldsMap.putString(key, value)
-          }
-          val eventData: WritableMap = WritableNativeMap()
-          eventData.putString("type", reportType)
-          eventData.putMap("fields", fieldsMap)
-          emitter.sendEvent(Emitter.EVENT_SHAKE_SUBMIT, eventData)
+        Shake.getReportConfiguration().shakeSubmitListener = object : ShakeSubmitListener {
+            override fun onShakeSubmit(reportType: String, fields: Map<String, String>) {
+                val fieldsMap: WritableMap = WritableNativeMap()
+                for ((key, value) in fields) {
+                    fieldsMap.putString(key, value)
+                }
+                val eventData: WritableMap = WritableNativeMap()
+                eventData.putString("type", reportType)
+                eventData.putMap("fields", fieldsMap)
+                emitter.sendEvent(Emitter.EVENT_SHAKE_SUBMIT, eventData)
+            }
         }
-      }
     }
 
     companion object {
