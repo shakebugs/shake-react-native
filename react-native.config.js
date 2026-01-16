@@ -5,7 +5,6 @@ module.exports = {
   dependency: {
     platforms: {
       android: {
-        cmakeListsPath: 'generated/jni/CMakeLists.txt',
         packageImportPath: 'import com.shakebugs.react.ShakePackage;',
       },
     },
