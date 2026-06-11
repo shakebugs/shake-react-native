@@ -18,7 +18,11 @@ RCT_EXPORT_MODULE()
 {
     self = [super init];
     if (self) {
-        [self setPlatformInfo];
+         NSDictionary *shakeInfo = @{
+             @"platform": @"ReactNative",
+             @"sdkVersion": @"17.0.0"
+         };
+         [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
     }
     return self;
 }
@@ -228,14 +232,14 @@ RCT_EXPORT_MODULE()
 - (void)insertNetworkRequest:(JS::NativeShake::NetworkRequest &)nativeNetworkRequest {
     NSDictionary *networkRequest = [self mapToNetworkRequestToDict:nativeNetworkRequest];
     if (networkRequest != nil) {
-        [self insertRNNetworkRequest:networkRequest];
+        [SHKShake performSelector:sel_getUid(@"_insertNetworkRequest:".UTF8String) withObject:networkRequest];
     }
 }
 
 - (void)insertNotificationEvent:(JS::NativeShake::NotificationEvent &)nativeNotification {
     NSDictionary *notificationEvent = [self mapToNotificationEvent:nativeNotification];
     if (notificationEvent != nil) {
-        [self insertRNNotificationEvent:notificationEvent];
+        [SHKShake performSelector:sel_getUid(@"_reportNotification:".UTF8String) withObject:notificationEvent];
     }
 }
 
@@ -333,7 +337,7 @@ RCT_EXPORT_MODULE()
 - (ShakeLogLevel)mapToLogLevel:(JS::NativeShake::LogLevel &)nativeLogLevel
 {
     NSString *value = nativeLogLevel.value();
-    
+
     ShakeLogLevel logLevel = LogLevelInfo;
 
     if ([value isEqualToString:@"VERBOSE"])
@@ -794,27 +798,6 @@ RCT_EXPORT_MODULE()
     NSData *data = UIImagePNGRepresentation(image);
     NSString *base64String = [data base64EncodedStringWithOptions:0];
     return base64String;
-}
-
-// Private native SDK methods
-
-- (void)setPlatformInfo
-{
-    NSDictionary *shakeInfo = @{
-        @"platform": @"ReactNative",
-        @"sdkVersion": @"17.0.0"
-    };
-    [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
-}
-
-- (void)insertRNNotificationEvent:(nonnull NSDictionary*)notificationEvent
-{
-    [SHKShake performSelector:sel_getUid(@"_reportNotification:".UTF8String) withObject:notificationEvent];
-}
-
-- (void)insertRNNetworkRequest:(nonnull NSDictionary*)networkRequest
-{
-    [SHKShake performSelector:sel_getUid(@"_reportRequestCompleted:".UTF8String) withObject:networkRequest];
 }
 
 @end
