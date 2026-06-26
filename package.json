@@ -1,7 +1,7 @@
 {
   "name": "@shakebugs/react-native-shake",
   "title": "React Native Shake SDK",
-  "version": "17.0.0",
+  "version": "18.0.0",
   "description": "Shake SDK wrapper",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",

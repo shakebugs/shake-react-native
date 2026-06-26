@@ -20,7 +20,7 @@ RCT_EXPORT_MODULE()
     if (self) {
          NSDictionary *shakeInfo = @{
              @"platform": @"ReactNative",
-             @"sdkVersion": @"17.0.0"
+             @"sdkVersion": @"18.0.0"
          };
          [SHKShake performSelector:sel_getUid(@"_setPlatformAndSDKVersion:".UTF8String) withObject:shakeInfo];
     }
