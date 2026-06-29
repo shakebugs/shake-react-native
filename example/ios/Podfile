@@ -3,6 +3,15 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 ENV['RCT_NEW_ARCH_ENABLED'] = '1'
 
+# Build React-Core from source instead of using RN 0.86's prebuilt binary.
+# The prebuilt React-Core, combined with use_frameworks! :linkage => :static and
+# Xcode's explicitly-built Clang modules, breaks @react-native-firebase's iOS
+# compilation ("RCTPromiseRejectBlock must be imported from module ... before it
+# is required"). Building from source restores the header behavior RNFB expects.
+# Note: the fmt/folly prebuilt (ReactNativeDependencies) is unaffected, so the
+# original fmt consteval error stays fixed.
+ENV['RCT_USE_PREBUILT_RNCORE'] = '0'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -51,5 +60,16 @@ target 'example' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # @react-native-firebase headers include React headers (RCTConvert.h,
+    # RCTBridgeModule.h, ...) non-modularly. Under `use_frameworks! :linkage => :static`
+    # on RN 0.86 (prebuilt React-Core) clang treats these as a hard error
+    # (-Werror=non-modular-include-in-framework-module). Allow non-modular includes
+    # inside framework modules so the Firebase pods compile.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      end
+    end
   end
 end
