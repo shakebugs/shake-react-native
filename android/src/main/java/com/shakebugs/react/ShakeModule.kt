@@ -63,7 +63,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext) :
     override fun start(apiKey: String, promise: Promise) {
         reactContext.runOnUiQueueThread {
             ShakeReflection.setShakeInfo(buildShakePlatformInfo())
-            val activity: Activity? = currentActivity
+            val activity: Activity? = reactContext.currentActivity
             if (activity != null) {
                 ShakeReflection.start(activity, apiKey)
             } else {
@@ -293,12 +293,12 @@ class ShakeModule(private val reactContext: ReactApplicationContext) :
     }
 
     override fun addPrivateView(id: Double) {
-        val view: View? = currentActivity?.findViewById(id.toInt())
+        val view: View? = reactContext.currentActivity?.findViewById(id.toInt())
         if (view != null) Shake.addPrivateView(view)
     }
 
     override fun removePrivateView(id: Double) {
-        val view: View? = currentActivity?.findViewById(id.toInt())
+        val view: View? = reactContext.currentActivity?.findViewById(id.toInt())
         if (view != null) Shake.removePrivateView(view)
     }
 
@@ -356,7 +356,7 @@ class ShakeModule(private val reactContext: ReactApplicationContext) :
 
     override fun showNotificationsSettings() {
         reactContext.runOnUiQueueThread {
-            currentActivity?.startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+            reactContext.currentActivity?.startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
         }
     }
 
